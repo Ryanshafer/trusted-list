@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowUpRight, BellPlus, BellRing, Hand, HeartHandshake, OctagonMinus } from "lucide-react";
+import { ArrowUpRight, BellPlus, BellRing, HeartHandshake, OctagonMinus } from "lucide-react";
 
 import type { CardData } from "../types";
 import { ChatDialog, type ChatMessage } from "./ChatDialog";
@@ -75,7 +75,7 @@ const DismissButton = ({ onClear, disabled }: { onClear?: () => void; disabled?:
             <span className="sr-only">Dismiss</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Clear request</TooltipContent>
+        <TooltipContent>Remove request</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
@@ -97,7 +97,7 @@ const CardActions = ({
   <div className="mt-6 flex flex-col gap-2 sm:flex-row">
     <div className="relative sm:flex-1">
       <Button className="relative z-10 w-full overflow-hidden" onClick={onPrimary}>
-        <Hand className="mr-2 h-4 w-4" />
+        <HeartHandshake className="mr-2 h-4 w-4" />
         {primaryLabel}
       </Button>
       {celebrating ? <ConfettiBurst /> : null}
@@ -393,18 +393,15 @@ const CircleHelpCard = ({
 };
 
 const RequestPreview = ({ text, onExpand }: { text: string; onExpand: () => void }) => (
-  <div className="flex min-h-[138px] items-start gap-3 rounded-3xl bg-rose-50 p-4 dark:bg-rose-900/30">
-    <span className="mt-1 inline-flex h-10 w-10 flex-none items-center justify-center rounded-full bg-rose-200 text-rose-700 dark:bg-rose-900 dark:text-rose-200">
-      <HeartHandshake className="h-5 w-5" />
-    </span>
-    <div className="flex-1 space-y-3">
-      <div className="flex h-full flex-col justify-between rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-50">
+  <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
+    <div className="space-y-3">
+      <div className="flex h-full flex-col justify-between rounded-2xl bg-white/90 px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-50">
         <p className="flex-1 line-clamp-2 text-foreground dark:text-slate-100">{text}</p>
       </div>
       <Button
         variant="ghost"
         size="sm"
-        className="w-full justify-center rounded-full bg-white/60 text-xs font-semibold text-foreground hover:bg-rose-100 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-800"
+        className="w-full justify-center rounded-full bg-white text-xs font-semibold text-foreground hover:bg-muted dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
         onClick={onExpand}
       >
         Read request
@@ -617,11 +614,8 @@ const RequestDialog = ({
       ) : null}
     </CardHeader>
     <CardContent className="space-y-4">
-      <div className="flex items-start gap-3 rounded-3xl bg-rose-50 p-4 dark:bg-rose-900/30">
-        <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-full bg-rose-200 text-rose-700 dark:bg-rose-900 dark:text-rose-200">
-          <HeartHandshake className="h-5 w-5" />
-        </span>
-        <p className="flex-1 rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-100">
+      <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
+        <p className="rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-100">
           {request}
         </p>
       </div>
@@ -671,18 +665,15 @@ const ExpandedHelpDialog = ({
           ) : null}
         </div>
       </div>
-      <div className="flex items-start gap-3 rounded-3xl bg-rose-50 p-4 dark:bg-rose-900/30">
-        <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-full bg-rose-200 text-rose-700 dark:bg-rose-900 dark:text-rose-200">
-          <HeartHandshake className="h-5 w-5" />
-        </span>
-        <p className="flex-1 rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-100">
+      <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
+        <p className="rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-100">
           {request}
         </p>
       </div>
       <div className="mt-10 flex flex-col gap-8 sm:flex-row">
         <div className="relative w-full sm:flex-1">
           <Button className="relative z-10 w-full overflow-hidden" onClick={onPrimaryAction}>
-            <Hand className="mr-2 h-4 w-4" />
+            <HeartHandshake className="mr-2 h-4 w-4" />
             {primaryLabel}
           </Button>
           {confettiActive ? <ConfettiBurst /> : null}
