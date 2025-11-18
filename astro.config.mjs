@@ -11,8 +11,8 @@ import tailwindcss from "@tailwindcss/vite";
  * * https://your-username.github.io/<desired-url>/
  */
 const SITE_URL =
-  process.env.ASTRO_SITE ?? "https://ryanshafer.github.io/proto-template/";
-const BASE_PATH = process.env.ASTRO_BASE ?? "/proto-template/";
+  process.env.ASTRO_SITE ?? "https://ryanshafer.github.io/trusted-list/";
+const BASE_PATH = process.env.ASTRO_BASE ?? "/trusted-list/";
 
 // https://astro.build/config
 export default defineConfig({
