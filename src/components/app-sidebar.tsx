@@ -22,7 +22,7 @@ const navLinks: {
   icon?: LucideIcon
   isActive?: boolean
 }[] = [
-  { title: "Dashboard", url: "#", icon: SquareTerminal, isActive: true },
+  { title: "How can you help", url: "#", icon: SquareTerminal, isActive: true },
   { title: "People I trust", url: "#", icon: Users },
   { title: "People who trust me", url: "#", icon: UserCheck },
   { title: "Your Shortlists", url: "#", icon: ListChecks },
@@ -34,8 +34,9 @@ const user = {
   avatar: "https://media.licdn.com/dms/image/v2/C4E03AQGoFA-9wu70Og/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517731083735?e=1764806400&v=beta&t=BxRL0Gye0EILeBGBt-aZi_VNXi5BZNxK6KnxuXQGgXk",
 }
 
-const logoLight = new URL("../assets/logo-light.svg", import.meta.url).href
-const logoDark = new URL("../assets/logo-dark.svg", import.meta.url).href
+const base = import.meta.env.BASE_URL ?? "/"
+const logoLight = `${base}logo-light.svg`
+const logoDark = `${base}logo-dark.svg`
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (

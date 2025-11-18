@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Loader2 } from "lucide-react";
 
 import dashboardData from "../../data/dashboard-content.json";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -46,12 +45,23 @@ const askForHelpCard = content.askForHelpCard;
 const sectionOrder: SectionKey[] = ["circle", "network", "opportunities"];
 
 const AppShell = () => {
-  const [sectionState] = React.useState(
-    () =>
-      Object.fromEntries(
-        sectionOrder.map((key) => [key, { cards: helpSectionData[key].batches.flat(), refreshing: false }])
-      ) as Record<SectionKey, { cards: CardData[]; refreshing: boolean }>
+  const [sections, setSections] = React.useState<Record<
+    SectionKey,
+    { cards: CardData[] }
+  >>(() =>
+    Object.fromEntries(
+      sectionOrder.map((key) => [key, { cards: helpSectionData[key].batches.flat() }])
+    ) as Record<SectionKey, { cards: CardData[] }>
   );
+
+  const handleClearCard = (section: SectionKey, cardId: string) => {
+    setSections((prev) => ({
+      ...prev,
+      [section]: {
+        cards: prev[section].cards.filter((card) => card.id !== cardId),
+      },
+    }));
+  };
 
   return (
     <SidebarProvider>
@@ -60,17 +70,14 @@ const AppShell = () => {
         <SidebarInset className="flex min-h-screen w-full flex-1 flex-col overflow-x-hidden">
           <div className="flex items-center gap-3 border-b bg-background px-4 py-3 lg:hidden">
             <SidebarTrigger className="border border-border" />
-            <p className="text-base font-semibold">The Trusted List</p>
           </div>
           <div className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
             <div className="flex w-full max-w-7xl flex-col gap-8 overflow-hidden">
               <header className="space-y-3">
-                <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">The Trusted List</p>
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
                     How can you help today?
                   </h1>
-                  <p className="text-muted-foreground">See who you can support right now.</p>
                 </div>
               </header>
 
@@ -78,13 +85,13 @@ const AppShell = () => {
 
               <main className="space-y-10">
                 {sectionOrder.map((key) => (
-                  <React.Fragment key={key}>
-                    <HelpSection
-                      title={helpSectionData[key].title}
-                      cards={sectionState[key].cards}
-                      refreshing={sectionState[key].refreshing}
-                    />
-                  </React.Fragment>
+                  <HelpSection
+                    key={key}
+                    section={key}
+                    title={helpSectionData[key].title}
+                    cards={sections[key].cards}
+                    onClearCard={handleClearCard}
+                  />
                 ))}
                 <AskForHelp />
               </main>
@@ -97,58 +104,46 @@ const AppShell = () => {
 };
 
 type HelpSectionProps = {
+  section: SectionKey;
   title: string;
   cards: CardData[];
-  refreshing: boolean;
+  onClearCard: (section: SectionKey, cardId: string) => void;
 };
 
-const HelpSection = ({ title, cards, refreshing }: HelpSectionProps) => {
+const HelpSection = ({ section, title, cards, onClearCard }: HelpSectionProps) => {
   return (
     <section className="space-y-4">
-      <SectionHeader title={title} refreshing={refreshing} />
-      {refreshing ? (
-        <SectionSkeleton />
-      ) : (
-        <div className="w-full overflow-hidden p-1">
-          <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full">
-          <CarouselContent>
-            {cards.map((card) => (
-              <CarouselItem key={card.id} className="px-3 sm:px-4 md:basis-1/2 xl:basis-1/3">
-                <div className="h-full">
-                  <HelpRequestCard {...card} />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="mt-4 flex justify-end gap-2">
-            <CarouselPrevious className="static translate-y-0" />
-            <CarouselNext className="static translate-y-0" />
-          </div>
-          </Carousel>
+      <SectionHeader title={title} count={cards.length} />
+      <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full overflow-hidden">
+        <CarouselContent>
+          {cards.map((card) => (
+            <CarouselItem key={card.id} className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
+              <div className="h-full p-1">
+                <HelpRequestCard {...card} onClear={() => onClearCard(section, card.id)} />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="mt-4 flex justify-end gap-2 p-1">
+          <CarouselPrevious className="static translate-y-0" />
+          <CarouselNext className="static translate-y-0" />
         </div>
-      )}
+      </Carousel>
     </section>
   );
 };
 
 type SectionHeaderProps = {
   title: string;
-  refreshing: boolean;
+  count: number;
 };
 
-const SectionHeader = ({ title, refreshing }: SectionHeaderProps) => (
-  <div className="flex items-center gap-2">
+const SectionHeader = ({ title, count }: SectionHeaderProps) => (
+  <div className="flex items-center gap-3">
     <h2 className="text-lg font-semibold leading-tight">{title}</h2>
-    {refreshing ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : null}
-  </div>
-);
-
-const SectionSkeleton = () => (
-  <div className="rounded-2xl border border-dashed border-muted-foreground/40 p-6 text-sm text-muted-foreground">
-    <div className="flex items-center gap-2">
-      <Loader2 className="h-4 w-4 animate-spin" />
-      <span>Refreshing recommendations…</span>
-    </div>
+    <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary h-8 w-8 flex items-center justify-center">
+      {count}
+    </span>
   </div>
 );
 

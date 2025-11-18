@@ -1,0 +1,290 @@
+{
+  "summaryHighlights": [
+    {
+      "title": "Your Impact",
+      "body": "You helped 3 people move toward their goals this month."
+    },
+    {
+      "title": "Your Helpfulness Score",
+      "body": "Top 10% of helpers on The Trusted List."
+    }
+  ],
+  "askForHelpCard": {
+    "title": "Need a hand today?",
+    "subtitle": "Ask your trusted circle for advice, introductions, or support.",
+    "cta": "Ask for help"
+  },
+  "navLinks": [
+    { "label": "Dashboard", "href": "#", "active": true },
+    { "label": "People I trust", "href": "#", "active": false },
+    { "label": "People who trust me", "href": "#", "active": false },
+    { "label": "Your Shortlists", "href": "#", "active": false }
+  ],
+  "userProfile": {
+    "name": "Elena Santos",
+    "role": "Connector"
+  },
+  "helpSections": {
+    "circle": {
+      "title": "People you know that need your help",
+      "batches": [
+        [
+          {
+            "id": "circle-jen",
+            "variant": "circle",
+            "name": "Jen Morris",
+            "subtitle": "Product marketing at Strove",
+            "connectedVia": "Alicia Gomez",
+            "relationshipTag": "Direct connection",
+            "requestSummary": "Help me review my résumé",
+            "request": "My résumé feels disjointed after three different roles in product marketing. Could you do a thorough pass, suggest stronger accomplishment language, and highlight which sections to shrink?",
+            "primaryCTA": "Help Jen",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&w=320&q=80"
+          },
+          {
+            "id": "circle-marcus",
+            "variant": "circle",
+            "name": "Marcus Lee",
+            "subtitle": "Product lead at Northwind",
+            "connectedVia": "Northwind",
+            "relationshipTag": "Direct connection",
+            "requestSummary": "Gut check my promotion packet",
+            "request": "I'm assembling the promotion packet for Director and the narrative feels flat. Would you read the whole draft, flag any missing proof points, and help me craft a tighter summary statement?",
+            "primaryCTA": "Give feedback",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&w=320&q=80"
+          },
+          {
+            "id": "circle-anika",
+            "variant": "circle",
+            "name": "Anika Chang",
+            "subtitle": "Design lead, mentor last fall",
+            "connectedVia": "Mentor circle",
+            "relationshipTag": "Direct connection",
+            "requestSummary": "Run a salary negotiation rehearsal",
+            "request": "I have a compensation conversation next week and need to run through the script end-to-end, including objections. Can you play the manager role and help me refine the phrasing and pacing?",
+            "primaryCTA": "Run a practice",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&w=320&q=80"
+          }
+        ],
+        [
+          {
+            "id": "circle-devon",
+            "variant": "circle",
+            "name": "Devon Paul",
+            "subtitle": "Neighbor, volunteered last month",
+            "connectedVia": "Community build day",
+            "relationshipTag": "Direct connection",
+            "requestSummary": "Polish volunteer site copy",
+            "request": "My volunteer org's website relaunch is stuck because the hero copy and call-to-action read generic. Could you skim the new layout and give me 2-3 sharper lines that capture the mission?",
+            "primaryCTA": "Review copy",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+          }
+        ]
+      ]
+    },
+    "network": {
+      "title": "People connected to you that need help",
+      "batches": [
+        [
+          {
+            "id": "network-monica",
+            "variant": "network",
+            "name": "Monica Patel",
+            "connectedBy": "Bryan Lewis",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Help steer my portfolio",
+            "request": "Bryan said you're great at sharpening design narratives. My portfolio feels scattered—can you highlight which case studies to lean into and how to frame the through-line?",
+            "primaryCTA": "Offer feedback",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+          },
+          {
+            "id": "network-leo",
+            "variant": "network",
+            "name": "Leo Ortiz",
+            "connectedBy": "Priya Raman",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Coach me on recruiter intros",
+            "request": "Priya mentioned you know fintech recruiters well. I have three warm intros queued—could you help me script how to position my wins and what pitfalls to avoid?",
+            "primaryCTA": "Share intro tips",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&w=320&q=80"
+          },
+          {
+            "id": "network-marisol",
+            "variant": "network",
+            "name": "Marisol Andrews",
+            "connectedBy": "Design Guild",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Review my agency pitch",
+            "request": "Our guild said you're a sharp reviewer. I’m pitching a boutique design agency next week—can you scan the deck and call out any weak narrative or missing proof?",
+            "primaryCTA": "Review deck",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&w=320&q=80"
+          }
+        ],
+        [
+          {
+            "id": "network-delia",
+            "variant": "network",
+            "name": "Delia Roberts",
+            "connectedBy": "Serena Patel",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Gather trust-building stories",
+            "request": "Serena said you keep a story bank on trust. I'm keynoting a leadership offsite and need 2-3 vivid anecdotes—could we chat about the ones that land best?",
+            "primaryCTA": "Share story bank",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+          },
+          {
+            "id": "network-nico",
+            "variant": "network",
+            "name": "Nico Alvarez",
+            "connectedBy": "Omar Castillo",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Shape my product vision",
+            "request": "Omar said you're gifted at tightening product narratives. My team's new vision doc is too tactical—could you help me zoom it out and make the stakes clearer?",
+            "primaryCTA": "Jam on product vision",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&w=320&q=80"
+          },
+          {
+            "id": "network-chen",
+            "variant": "network",
+            "name": "Yuan Chen",
+            "connectedBy": "Alumni Board",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Perspective on an interdisciplinary portfolio",
+            "request": "Our alumni board said you reviewed their portfolios. I’m blending clinical research with service design—could you help me articulate the through-line so it resonates with product leaders?",
+            "primaryCTA": "Provide perspective",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1526476148966-98bd039463ea?auto=format&w=320&q=80"
+          },
+          {
+            "id": "network-caleb",
+            "variant": "network",
+            "name": "Caleb Walters",
+            "connectedBy": "Marcus Lee",
+            "relationshipTag": "Second-degree connection",
+            "requestSummary": "Prep for a board interview",
+            "request": "Marcus said you’ve coached nonprofit board candidates. I have a panel on Friday and need to rehearse the scenario questions—could you run a mock session with me?",
+            "primaryCTA": "Mock interview",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&w=320&q=80"
+          }
+        ]
+      ]
+    },
+    "opportunities": {
+      "title": "People outside your network you could help",
+      "batches": [
+        [
+          {
+            "id": "opportunity-avery",
+            "variant": "opportunities",
+            "name": "Avery Chen",
+            "level": "Mid-career",
+            "profession": "Product Designer",
+            "connectionReason": "You share similar skills: UX, wireframing, product thinking",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Coach me on interview practice",
+            "request": "I'm prepping for onsite interviews and need someone who speaks the same UX language to run mock sessions. Could you help me refine my story arcs and answer follow-ups?",
+            "primaryCTA": "Share advice",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&w=320&q=80"
+          },
+          {
+            "id": "opportunity-noah",
+            "variant": "opportunities",
+            "name": "Noah Rivera",
+            "level": "Early-career",
+            "profession": "Product Manager",
+            "connectionReason": "You share similar skills: discovery workshops, prioritization",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Help me frame product wins",
+            "request": "I struggle to describe my wins in a way that sounds strategic. Could you help translate my feature launches into customer/problem framing before my next round?",
+            "primaryCTA": "Coach on narrative",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+          },
+          {
+            "id": "opportunity-simone",
+            "variant": "opportunities",
+            "name": "Simone Patel",
+            "level": "Late-career",
+            "profession": "Service Designer",
+            "connectionReason": "You share similar skills: storytelling, stakeholder management",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Mock interview buddy",
+            "request": "I’m transitioning from agency to product and need a partner for mock portfolio presentations. Could you critique how I navigate the slides and handle cross-functional questions?",
+            "primaryCTA": "Volunteer time",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&w=320&q=80"
+          }
+        ],
+        [
+          {
+            "id": "opportunity-jordan",
+            "variant": "opportunities",
+            "name": "Jordan Ellis",
+            "level": "Mid-career",
+            "profession": "Growth Marketer",
+            "connectionReason": "You share similar skills: lifecycle strategy, experimentation",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Review my onboarding flow",
+            "request": "I’m designing a lifecycle experiment for a SaaS onboarding and would love your critique on the flows, success metrics, and copy. Could we do a 30-minute async review?",
+            "primaryCTA": "Review onboarding plan",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&w=320&q=80"
+          },
+          {
+            "id": "opportunity-maya",
+            "variant": "opportunities",
+            "name": "Maya Sterling",
+            "level": "Late-career",
+            "profession": "Non-profit Founder",
+            "connectionReason": "You share similar skills: storytelling, fundraising decks",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Punch up my pitch deck",
+            "request": "I’m pitching an accelerator and the deck lacks punch. Could you help me rewrite the problem/opportunity slides so they land with the same urgency as your product narratives?",
+            "primaryCTA": "Tighten pitch",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&w=320&q=80"
+          },
+          {
+            "id": "opportunity-darius",
+            "variant": "opportunities",
+            "name": "Darius Cole",
+            "level": "Early-career",
+            "profession": "Accessibility Researcher",
+            "connectionReason": "You share similar skills: inclusive research",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Audit my workshop plan",
+            "request": "I'm running an inclusion workshop for a civic tech team. Could you scan the flow to ensure the prompts and exercises land with diverse audiences?",
+            "primaryCTA": "Audit workshop",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1526476148966-98bd039463ea?auto=format&w=320&q=80"
+          },
+          {
+            "id": "opportunity-lena",
+            "variant": "opportunities",
+            "name": "Lena Brooks",
+            "level": "Mid-career",
+            "profession": "UX Strategist",
+            "connectionReason": "You share similar skills: portfolio strategy",
+            "relationshipTag": "Skill-aligned opportunity",
+            "requestSummary": "Guide my case studies",
+            "request": "I’m rebuilding my portfolio and unsure how to structure two complicated case studies. Could you help me outline the narrative so they read like decision-making stories?",
+            "primaryCTA": "Guide on case study",
+            "secondaryCTA": "Cannot help",
+            "avatarUrl": "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&w=320&q=80"
+          }
+        ]
+      ]
+    }
+  }
+}
