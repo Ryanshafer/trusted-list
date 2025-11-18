@@ -255,17 +255,20 @@ const ConnectedHelpCard = ({
           isDismissing ? "translate-y-4 scale-95 opacity-0" : "opacity-100"
         }`}
       >
-        <CardContent className="flex-1 space-y-4 p-6">
+        <CardContent className="flex flex-1 flex-col gap-3 p-6 pb-4">
           <DismissButton onClear={handleDismiss} disabled={isDismissing} />
           <ConnectedCardHeader name={name} avatarUrl={avatarUrl} headerLines={headerLines} />
-          <RequestPreview text={requestSummary ?? request} onExpand={() => setOpen(true)} />
-          <CardActions
-            primaryLabel={primaryActionLabel}
-            onPrimary={handlePrimaryClick}
-            onRemind={() => setRemindOpen(true)}
-            reminderActive={reminderActive}
-            celebrating={celebrating && celebrationTarget === "card"}
-          />
+          <div className="flex flex-1 flex-col gap-2">
+            <RequestPreview text={requestSummary ?? request} onExpand={() => setOpen(true)} />
+            <div className="flex-1" />
+            <CardActions
+              primaryLabel={primaryActionLabel}
+              onPrimary={handlePrimaryClick}
+              onRemind={() => setRemindOpen(true)}
+              reminderActive={reminderActive}
+              celebrating={celebrating && celebrationTarget === "card"}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -339,7 +342,7 @@ const DefaultHelpCard = ({
             </CardDescription>
           ) : null}
         </CardHeader>
-        <CardContent className="flex-1 space-y-4">
+          <CardContent className="flex flex-1 flex-col space-y-4 pb-4">
           <RequestPreview text={requestSummary ?? request} onExpand={() => setOpen(true)} />
           <span className="inline-flex items-center rounded-full border border-dashed border-primary/40 px-3 py-1 text-xs font-medium uppercase tracking-wide text-primary">
             {relationshipTag}

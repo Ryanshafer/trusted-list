@@ -81,7 +81,7 @@ const AppShell = () => {
                 </div>
               </header>
 
-              <SummaryModules />
+              <SummaryModules askCard={askForHelpCard} />
 
               <main className="space-y-10">
                 {sectionOrder.map((key) => (
@@ -93,7 +93,6 @@ const AppShell = () => {
                     onClearCard={handleClearCard}
                   />
                 ))}
-                <AskForHelp />
               </main>
             </div>
           </div>
@@ -114,21 +113,32 @@ const HelpSection = ({ section, title, cards, onClearCard }: HelpSectionProps) =
   return (
     <section className="space-y-4">
       <SectionHeader title={title} count={cards.length} />
-      <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full overflow-hidden">
-        <CarouselContent>
-          {cards.map((card) => (
-            <CarouselItem key={card.id} className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
-              <div className="h-full p-1">
-                <HelpRequestCard {...card} onClear={() => onClearCard(section, card.id)} />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <div className="mt-4 flex justify-end gap-2 p-1">
-          <CarouselPrevious className="static translate-y-0" />
-          <CarouselNext className="static translate-y-0" />
-        </div>
-      </Carousel>
+      <div className="relative">
+        <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full overflow-hidden">
+          <CarouselContent>
+            {cards.map((card) => (
+              <CarouselItem key={card.id} className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
+                <div className="h-full p-1">
+                  <HelpRequestCard {...card} onClear={() => onClearCard(section, card.id)} />
+                </div>
+              </CarouselItem>
+            ))}
+            {cards.length === 0 && (
+              <CarouselItem className="px-2 sm:px-3 basis-full">
+                <div className="flex h-full min-h-[380px] w-full items-center justify-center rounded-3xl border border-dashed border-primary/30 bg-primary/10 p-6 mx-1 text-center">
+                  <p className="text-lg font-semibold text-primary">
+                    Your work here is done. Thanks for the help!
+                  </p>
+                </div>
+              </CarouselItem>
+            )}
+          </CarouselContent>
+          <div className="mt-4 flex justify-end gap-2 p-1">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
+          </div>
+        </Carousel>
+      </div>
     </section>
   );
 };
@@ -147,31 +157,27 @@ const SectionHeader = ({ title, count }: SectionHeaderProps) => (
   </div>
 );
 
-const SummaryModules = () => {
-  return (
-    <section className="grid gap-4 sm:grid-cols-2">
-      {summaryHighlights.map((highlight) => (
-        <article key={highlight.title} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-          <p className="text-sm font-medium text-muted-foreground">{highlight.title}</p>
-          <p className="mt-2 text-base font-semibold text-foreground">{highlight.body}</p>
-        </article>
-      ))}
-    </section>
-  );
-};
-
-const AskForHelp = () => {
-  return (
-    <section className="rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-6">
+const SummaryModules = ({ askCard }: { askCard: AskForHelpCard }) => (
+  <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {summaryHighlights.map((highlight) => (
+      <article
+        key={highlight.title}
+        className="rounded-2xl border border-border bg-card p-5 shadow-sm"
+      >
+        <p className="text-sm font-medium text-muted-foreground">{highlight.title}</p>
+        <p className="mt-2 text-base font-semibold text-foreground">{highlight.body}</p>
+      </article>
+    ))}
+    <article className="flex flex-col rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-6 shadow-sm">
       <div className="space-y-2">
-        <p className="text-lg font-semibold">{askForHelpCard.title}</p>
-        <p className="text-sm text-muted-foreground">{askForHelpCard.subtitle}</p>
+        <p className="text-lg font-semibold">{askCard.title}</p>
+        <p className="text-sm text-muted-foreground">{askCard.subtitle}</p>
       </div>
       <div className="mt-4">
-        <Button>{askForHelpCard.cta}</Button>
+        <Button>{askCard.cta}</Button>
       </div>
-    </section>
-  );
-};
+    </article>
+  </section>
+);
 
 export default AppShell;
