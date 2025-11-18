@@ -12,7 +12,17 @@
   "askForHelpCard": {
     "title": "Need a hand today?",
     "subtitle": "Ask your trusted circle for advice, introductions, or support.",
-    "cta": "Ask for help"
+    "cta": "Ask for help",
+    "contacts": [
+      { "id": "contact-1", "name": "Alicia Gomez", "role": "Product leader" },
+      { "id": "contact-2", "name": "Bryan Lewis", "role": "Design director" },
+      { "id": "contact-3", "name": "Sanjay Rao", "role": "Engineer" },
+      { "id": "contact-4", "name": "Priya Mehta", "role": "Recruiter" },
+      { "id": "contact-5", "name": "Marcus Lee", "role": "Product lead" },
+      { "id": "contact-6", "name": "Jen Morris", "role": "Product marketing" },
+      { "id": "contact-7", "name": "Devon Paul", "role": "Community organizer" },
+      { "id": "contact-8", "name": "Anika Chang", "role": "Design lead" }
+    ]
   },
   "navLinks": [
     { "label": "Dashboard", "href": "#", "active": true },

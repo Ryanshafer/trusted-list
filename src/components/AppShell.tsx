@@ -7,6 +7,12 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { HelpRequestCard } from "@/features/dashboard/components/HelpRequestCards";
 import type { CardData, SectionKey } from "@/features/dashboard/types";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Badge } from "./ui/badge";
+import { Loader2, Send, Check, Search } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -26,10 +32,17 @@ type SectionConfig = {
   batches: CardData[][];
 };
 
+type AskContact = {
+  id: string;
+  name: string;
+  role: string;
+};
+
 type AskForHelpCard = {
   title: string;
   subtitle: string;
   cta: string;
+  contacts: AskContact[];
 };
 
 type DashboardContent = {
@@ -53,6 +66,8 @@ const AppShell = () => {
       sectionOrder.map((key) => [key, { cards: helpSectionData[key].batches.flat() }])
     ) as Record<SectionKey, { cards: CardData[] }>
   );
+
+  const [askDialogOpen, setAskDialogOpen] = React.useState(false);
 
   const handleClearCard = (section: SectionKey, cardId: string) => {
     setSections((prev) => ({
@@ -81,7 +96,7 @@ const AppShell = () => {
                 </div>
               </header>
 
-              <SummaryModules askCard={askForHelpCard} />
+              <SummaryModules askCard={askForHelpCard} onAsk={() => setAskDialogOpen(true)} />
 
               <main className="space-y-10">
                 {sectionOrder.map((key) => (
@@ -98,6 +113,11 @@ const AppShell = () => {
           </div>
         </SidebarInset>
       </div>
+      <AskForHelpDialog
+        open={askDialogOpen}
+        onOpenChange={setAskDialogOpen}
+        contacts={askForHelpCard.contacts}
+      />
     </SidebarProvider>
   );
 };
@@ -157,7 +177,7 @@ const SectionHeader = ({ title, count }: SectionHeaderProps) => (
   </div>
 );
 
-const SummaryModules = ({ askCard }: { askCard: AskForHelpCard }) => (
+const SummaryModules = ({ askCard, onAsk }: { askCard: AskForHelpCard; onAsk: () => void }) => (
   <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {summaryHighlights.map((highlight) => (
       <article
@@ -174,10 +194,231 @@ const SummaryModules = ({ askCard }: { askCard: AskForHelpCard }) => (
         <p className="text-sm text-muted-foreground">{askCard.subtitle}</p>
       </div>
       <div className="mt-4">
-        <Button>{askCard.cta}</Button>
+        <Button onClick={onAsk}>{askCard.cta}</Button>
       </div>
     </article>
   </section>
 );
 
 export default AppShell;
+
+type AskMode = "contact" | "circle" | "list";
+
+const AskForHelpDialog = ({
+  open,
+  onOpenChange,
+  contacts,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  contacts: AskContact[];
+}) => {
+  const [shortDescription, setShortDescription] = React.useState("");
+  const [askMode, setAskMode] = React.useState<AskMode>("contact");
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedContacts, setSelectedContacts] = React.useState<AskContact[]>([]);
+  const [requestDetails, setRequestDetails] = React.useState("");
+  const [sendState, setSendState] = React.useState<"idle" | "sending" | "success">("idle");
+
+  const resetForm = React.useCallback(() => {
+    setShortDescription("");
+    setAskMode("contact");
+    setSearchTerm("");
+    setSelectedContacts([]);
+    setRequestDetails("");
+    setSendState("idle");
+  }, []);
+
+  const handleOpenChange = (value: boolean) => {
+    if (!value) {
+      resetForm();
+    }
+    onOpenChange(value);
+  };
+
+  const filteredContacts = React.useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    if (!term) return contacts.filter((contact) => !selectedContacts.some((c) => c.id === contact.id));
+    return contacts.filter(
+      (contact) =>
+        contact.name.toLowerCase().includes(term) &&
+        !selectedContacts.some((selected) => selected.id === contact.id),
+    );
+  }, [contacts, searchTerm, selectedContacts]);
+
+  const canSend =
+    shortDescription.trim().length > 0 &&
+    shortDescription.trim().length <= 32 &&
+    requestDetails.trim().length > 0 &&
+    (askMode !== "contact" || selectedContacts.length > 0);
+
+  const handleSelectContact = (contact: AskContact) => {
+    setSelectedContacts((prev) => [...prev, contact]);
+    setSearchTerm("");
+  };
+
+  const handleRemoveContact = (id: string) => {
+    setSelectedContacts((prev) => prev.filter((contact) => contact.id !== id));
+  };
+
+  const handleSend = () => {
+    if (!canSend || sendState !== "idle") return;
+    setSendState("sending");
+    setTimeout(() => {
+      setSendState("success");
+      setTimeout(() => {
+        handleOpenChange(false);
+      }, 900);
+    }, 1200);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>What help do you need?</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-6">
+          <div className="space-y-2 mt-6">
+            <Label htmlFor="ask-short-desc" className="flex items-center justify-between text-sm font-medium">
+              Short description
+              <span className="text-xs text-muted-foreground">
+                {shortDescription.length}/32 characters
+              </span>
+            </Label>
+            <Input
+              id="ask-short-desc"
+              placeholder="Enter your request"
+              maxLength={32}
+              className="placeholder:text-muted-foreground/50 mt-1 border border-border"
+              value={shortDescription}
+              onChange={(event) => setShortDescription(event.target.value)}
+            />
+          </div>
+
+          <div className="rounded-full bg-muted/80 p-1 text-sm font-medium">
+            <div className="grid grid-cols-3 gap-1">
+              {[
+                { value: "contact", label: "Ask a contact" },
+                { value: "circle", label: "Ask your circle" },
+                { value: "list", label: "Ask the list" },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setAskMode(option.value as AskMode)}
+                  className={`rounded-full px-2 py-1 transition ${
+                    askMode === option.value
+                      ? "bg-background text-foreground shadow"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {askMode === "contact" && (
+            <div className="space-y-2">
+              <div className="space-y-0 mb-1">
+                <div className="relative space-y-1">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Search className="h-4 w-4" />
+                  </span>
+                  <Input
+                    id="contact-search"
+                    placeholder="Search your circle…"
+                    className="placeholder:text-muted-foreground/50 mt-1 border border-border pl-9"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                  />
+                </div>
+              </div>
+              {searchTerm && filteredContacts.length > 0 && (
+                <div className="relative">
+                  <div className="absolute left-0 right-0 z-20 w-full max-h-48 space-y-1 rounded-xl border border-border bg-card p-2 shadow-lg overflow-auto">
+                    {filteredContacts.slice(0, 5).map((contact) => (
+                      <button
+                        key={contact.id}
+                        type="button"
+                        className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-muted"
+                        onClick={() => handleSelectContact(contact)}
+                      >
+                        <p className="font-medium">{contact.name}</p>
+                        <p className="text-xs text-muted-foreground">{contact.role}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {selectedContacts.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {selectedContacts.map((contact) => (
+                    <Badge
+                      key={contact.id}
+                      variant="secondary"
+                      className="flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-sm text-foreground transition hover:bg-muted/70 pointer-events-auto"
+                    >
+                      {contact.name}
+                      <button
+                        type="button"
+                        className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
+                        onClick={() => handleRemoveContact(contact.id)}
+                        aria-label={`Remove ${contact.name}`}
+                      >
+                        ×
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="space-y-5">
+            <Label htmlFor="request-details">Request details</Label>
+            <Textarea
+              id="request-details"
+              placeholder="Ask specifically what you need help with…"
+              rows={5}
+              className="placeholder:text-muted-foreground/50 shadow-sm mt-1 border border-border"
+              value={requestDetails}
+              onChange={(event) => setRequestDetails(event.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <Button variant="ghost" className="" onClick={() => handleOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button
+              className=""
+              onClick={handleSend}
+              disabled={!canSend || sendState !== "idle"}
+            >
+              {sendState === "idle" && (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Send request
+                </>
+              )}
+              {sendState === "sending" && (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending…
+                </>
+              )}
+              {sendState === "success" && (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  Sent!
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};

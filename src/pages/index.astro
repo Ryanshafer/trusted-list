@@ -10,5 +10,8 @@ import AppShell from "../components/AppShell";
   showHeader={false}
   showFooter={false}
 >
+  <Fragment slot="head">
+    <script src="https://tweakcn.com/live-preview.min.js" is:inline></script>
+  </Fragment>
   <AppShell slot="main" client:load />
 </BaseLayout>
