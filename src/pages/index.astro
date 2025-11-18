@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppShell from "../components/AppShell";
+---
+
+<BaseLayout
+  title="Prototype Starter"
+  description="Drop in your shadcn/ui theme, sync with Figma, and ship a prototype fast."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <AppShell slot="main" client:load />
+</BaseLayout>

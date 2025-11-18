@@ -1,0 +1,130 @@
+name: Deploy Astro site to gh-pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      targetFolder:
+        description: "Optional subfolder (e.g. v1, new-ui) to publish to within gh-pages"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Test
+        run: npm test --if-present
+
+      - name: Configure site/base env
+        env:
+          TARGET_FOLDER: ${{ github.event.inputs.targetFolder }}
+          REPO: ${{ github.repository }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          OWNER="${REPO%%/*}"
+          NAME="${REPO##*/}"
+          TARGET="$TARGET_FOLDER"
+
+          if [ -z "$TARGET" ] && [ "$EVENT_NAME" = "push" ] && [[ "$COMMIT_MESSAGE" =~ targetFolder=([A-Za-z0-9._/-]+) ]]; then
+            TARGET="${BASH_REMATCH[1]}"
+          fi
+
+          if [ -z "$TARGET" ]; then
+            TARGET="$REF_NAME"
+            [ "$TARGET" = "main" ] && TARGET="."
+          fi
+
+          if [ "$TARGET" = "." ]; then
+            BASE_PATH="/${NAME}/"
+            SITE_URL="https://${OWNER}.github.io/${NAME}/"
+          else
+            BASE_PATH="/${NAME}/${TARGET}/"
+            SITE_URL="https://${OWNER}.github.io/${NAME}/${TARGET}/"
+          fi
+
+          echo "RESOLVED_TARGET=${TARGET}" >> $GITHUB_ENV
+          echo "ASTRO_BASE=${BASE_PATH}" >> $GITHUB_ENV
+          echo "ASTRO_SITE=${SITE_URL}" >> $GITHUB_ENV
+
+      - name: Build
+        run: npm run build
+
+      - name: Clone gh-pages
+        run: |
+          git clone --depth=1 --branch gh-pages https://github.com/${{ github.repository }} gh-pages || (
+            git init gh-pages
+            cd gh-pages
+            git checkout -b gh-pages
+          )
+
+      - name: Copy existing version folders
+        run: |
+          if [ -d gh-pages ]; then
+            shopt -s nullglob
+            for dir in gh-pages/v*/ ; do
+              target="dist/$(basename "$dir")"
+              rm -rf "$target"
+              cp -R "$dir" "$target"
+            done
+          fi
+
+      - name: Publish build
+        env:
+          RESOLVED_TARGET: ${{ env.RESOLVED_TARGET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          TARGET="${RESOLVED_TARGET:-.}"
+
+          cd gh-pages
+
+          if [ "$TARGET" = "." ]; then
+            shopt -s dotglob
+            for entry in * .*; do
+              case "$entry" in
+                .|..|.git|v*) continue ;;
+                *) rm -rf "$entry" ;;
+              esac
+            done
+            shopt -u dotglob
+            cp -R ../dist/. .
+            touch .nojekyll
+          else
+            rm -rf "$TARGET"
+            mkdir -p "$TARGET"
+            cp -R ../dist/. "$TARGET"/
+            touch "$TARGET/.nojekyll"
+          fi
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Deploy ${GITHUB_SHA} -> ${TARGET}" || exit 0
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages

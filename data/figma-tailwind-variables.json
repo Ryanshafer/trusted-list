@@ -1,0 +1,230 @@
+{
+  "$schema": "https://www.figma.com/plugin-docs/api/variables/variable-schema.json",
+  "collections": [
+    {
+      "id": "CollectionTailwind",
+      "name": "Tailwind Tokens",
+      "defaultModeId": "ModeBase",
+      "modes": [
+        {
+          "modeId": "ModeBase",
+          "name": "Base"
+        }
+      ],
+      "variableIds": [
+        "VarSpacing0",
+        "VarSpacing0_5",
+        "VarSpacing1",
+        "VarSpacing1_5",
+        "VarSpacing2",
+        "VarSpacing2_5",
+        "VarSpacing3",
+        "VarSpacing4",
+        "VarSpacing5",
+        "VarSpacing6",
+        "VarSpacing8",
+        "VarSpacing10",
+        "VarSpacing12",
+        "VarRadiusNone",
+        "VarRadiusSm",
+        "VarRadiusDefault",
+        "VarRadiusMd",
+        "VarRadiusLg",
+        "VarRadiusXl",
+        "VarRadius2Xl",
+        "VarRadiusFull"
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "VarSpacing0",
+      "name": "spacing/0",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 0
+      }
+    },
+    {
+      "id": "VarSpacing0_5",
+      "name": "spacing/0.5",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 2
+      }
+    },
+    {
+      "id": "VarSpacing1",
+      "name": "spacing/1",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 4
+      }
+    },
+    {
+      "id": "VarSpacing1_5",
+      "name": "spacing/1.5",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 6
+      }
+    },
+    {
+      "id": "VarSpacing2",
+      "name": "spacing/2",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 8
+      }
+    },
+    {
+      "id": "VarSpacing2_5",
+      "name": "spacing/2.5",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 10
+      }
+    },
+    {
+      "id": "VarSpacing3",
+      "name": "spacing/3",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 12
+      }
+    },
+    {
+      "id": "VarSpacing4",
+      "name": "spacing/4",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 16
+      }
+    },
+    {
+      "id": "VarSpacing5",
+      "name": "spacing/5",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 20
+      }
+    },
+    {
+      "id": "VarSpacing6",
+      "name": "spacing/6",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 24
+      }
+    },
+    {
+      "id": "VarSpacing8",
+      "name": "spacing/8",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 32
+      }
+    },
+    {
+      "id": "VarSpacing10",
+      "name": "spacing/10",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 40
+      }
+    },
+    {
+      "id": "VarSpacing12",
+      "name": "spacing/12",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 48
+      }
+    },
+    {
+      "id": "VarRadiusNone",
+      "name": "radius/none",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 0
+      }
+    },
+    {
+      "id": "VarRadiusSm",
+      "name": "radius/sm",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 2
+      }
+    },
+    {
+      "id": "VarRadiusDefault",
+      "name": "radius/default",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 4
+      }
+    },
+    {
+      "id": "VarRadiusMd",
+      "name": "radius/md",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 6
+      }
+    },
+    {
+      "id": "VarRadiusLg",
+      "name": "radius/lg",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 8
+      }
+    },
+    {
+      "id": "VarRadiusXl",
+      "name": "radius/xl",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 12
+      }
+    },
+    {
+      "id": "VarRadius2Xl",
+      "name": "radius/2xl",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 16
+      }
+    },
+    {
+      "id": "VarRadiusFull",
+      "name": "radius/full",
+      "collectionId": "CollectionTailwind",
+      "resolvedType": "FLOAT",
+      "valuesByMode": {
+        "ModeBase": 1000
+      }
+    }
+  ]
+}
