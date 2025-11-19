@@ -12,7 +12,10 @@ import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Badge } from "./ui/badge";
-import { Loader2, Send, Check, Search } from "lucide-react";
+import { Checkbox } from "./ui/checkbox";
+import { Calendar } from "./ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Loader2, Send, Check, Search, ChevronDown } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -219,6 +222,14 @@ const AskForHelpDialog = ({
   const [selectedContacts, setSelectedContacts] = React.useState<AskContact[]>([]);
   const [requestDetails, setRequestDetails] = React.useState("");
   const [sendState, setSendState] = React.useState<"idle" | "sending" | "success">("idle");
+  const defaultEndDate = React.useCallback(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 14);
+    return date;
+  }, []);
+  const [endDateEnabled, setEndDateEnabled] = React.useState(false);
+  const [endDate, setEndDate] = React.useState<Date | undefined>(defaultEndDate);
+  const [endDatePickerOpen, setEndDatePickerOpen] = React.useState(false);
 
   const resetForm = React.useCallback(() => {
     setShortDescription("");
@@ -227,7 +238,9 @@ const AskForHelpDialog = ({
     setSelectedContacts([]);
     setRequestDetails("");
     setSendState("idle");
-  }, []);
+    setEndDateEnabled(false);
+    setEndDate(defaultEndDate());
+  }, [defaultEndDate]);
 
   const handleOpenChange = (value: boolean) => {
     if (!value) {
@@ -387,6 +400,48 @@ const AskForHelpDialog = ({
               onChange={(event) => setRequestDetails(event.target.value)}
             />
           </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="end-date-toggle"
+              checked={endDateEnabled}
+              onCheckedChange={(checked) => setEndDateEnabled(Boolean(checked))}
+            />
+            <Label htmlFor="end-date-toggle" className="text-sm font-medium">
+              Set an end date
+            </Label>
+          </div>
+
+          {endDateEnabled && (
+            <div className="space-y-2">
+              <Label htmlFor="end-date">End date</Label>
+              <Popover open={endDatePickerOpen} onOpenChange={setEndDatePickerOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between font-normal"
+                    id="end-date"
+                  >
+                    {endDate ? endDate.toLocaleDateString() : "Select date"}
+                    <ChevronDown />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    captionLayout="dropdown"
+                    onSelect={(date) => {
+                      if (date) {
+                        setEndDate(date);
+                        setEndDatePickerOpen(false);
+                      }
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
             <Button variant="ghost" className="" onClick={() => handleOpenChange(false)}>
