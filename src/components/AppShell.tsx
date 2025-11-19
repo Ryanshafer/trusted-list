@@ -279,23 +279,6 @@ const AskForHelpDialog = ({
           <DialogTitle>What help do you need?</DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
-          <div className="space-y-2 mt-6">
-            <Label htmlFor="ask-short-desc" className="flex items-center justify-between text-sm font-medium">
-              Short description
-              <span className="text-xs text-muted-foreground">
-                {shortDescription.length}/32 characters
-              </span>
-            </Label>
-            <Input
-              id="ask-short-desc"
-              placeholder="Enter your request"
-              maxLength={32}
-              className="placeholder:text-muted-foreground/50 mt-1 border border-border"
-              value={shortDescription}
-              onChange={(event) => setShortDescription(event.target.value)}
-            />
-          </div>
-
           <div className="rounded-full bg-muted/80 p-1 text-sm font-medium">
             <div className="grid grid-cols-3 gap-1">
               {[
@@ -329,7 +312,7 @@ const AskForHelpDialog = ({
                   <Input
                     id="contact-search"
                     placeholder="Search your circle…"
-                    className="placeholder:text-muted-foreground/50 mt-1 border border-border pl-9"
+                    className="placeholder:text-muted-foreground/50 mt-1 border border-border pl-9 rounded-full shadow-none"
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
                   />
@@ -375,6 +358,23 @@ const AskForHelpDialog = ({
               )}
             </div>
           )}
+
+                    <div className="space-y-2 mt-6">
+            <Label htmlFor="ask-short-desc" className="flex items-center justify-between text-sm font-medium">
+              Short description
+              <span className="text-xs text-muted-foreground">
+                {shortDescription.length}/32 characters
+              </span>
+            </Label>
+            <Input
+              id="ask-short-desc"
+              placeholder="Enter your request"
+              maxLength={32}
+              className="placeholder:text-muted-foreground/50 mt-1 border border-border"
+              value={shortDescription}
+              onChange={(event) => setShortDescription(event.target.value)}
+            />
+          </div>
 
           <div className="space-y-5">
             <Label htmlFor="request-details">Request details</Label>
