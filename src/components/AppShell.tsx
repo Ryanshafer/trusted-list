@@ -476,8 +476,11 @@ const AskForHelpDialog = ({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
-                    className="!w-auto overflow-hidden p-0"
+                    className="!w-auto p-0"
                     align="start"
+                    side="top"
+                    sideOffset={8}
+                    avoidCollisions={false}
                   >
                     <Calendar
                       className="w-56"
