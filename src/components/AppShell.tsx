@@ -15,7 +15,7 @@ import { Badge } from "./ui/badge";
 import { Checkbox } from "./ui/checkbox";
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Loader2, Send, Check, Search, ChevronDown } from "lucide-react";
+import { Loader2, Send, Check, Search, ChevronDownIcon } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -61,13 +61,16 @@ const askForHelpCard = content.askForHelpCard;
 const sectionOrder: SectionKey[] = ["circle", "network", "opportunities"];
 
 const AppShell = () => {
-  const [sections, setSections] = React.useState<Record<
-    SectionKey,
-    { cards: CardData[] }
-  >>(() =>
-    Object.fromEntries(
-      sectionOrder.map((key) => [key, { cards: helpSectionData[key].batches.flat() }])
-    ) as Record<SectionKey, { cards: CardData[] }>
+  const [sections, setSections] = React.useState<
+    Record<SectionKey, { cards: CardData[] }>
+  >(
+    () =>
+      Object.fromEntries(
+        sectionOrder.map((key) => [
+          key,
+          { cards: helpSectionData[key].batches.flat() },
+        ])
+      ) as Record<SectionKey, { cards: CardData[] }>
   );
 
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
@@ -99,7 +102,10 @@ const AppShell = () => {
                 </div>
               </header>
 
-              <SummaryModules askCard={askForHelpCard} onAsk={() => setAskDialogOpen(true)} />
+              <SummaryModules
+                askCard={askForHelpCard}
+                onAsk={() => setAskDialogOpen(true)}
+              />
 
               <main className="space-y-10">
                 {sectionOrder.map((key) => (
@@ -132,17 +138,31 @@ type HelpSectionProps = {
   onClearCard: (section: SectionKey, cardId: string) => void;
 };
 
-const HelpSection = ({ section, title, cards, onClearCard }: HelpSectionProps) => {
+const HelpSection = ({
+  section,
+  title,
+  cards,
+  onClearCard,
+}: HelpSectionProps) => {
   return (
     <section className="space-y-4">
       <SectionHeader title={title} count={cards.length} />
       <div className="relative">
-        <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full overflow-hidden">
+        <Carousel
+          opts={{ align: "start", slidesToScroll: 3 }}
+          className="w-full overflow-hidden"
+        >
           <CarouselContent>
             {cards.map((card) => (
-              <CarouselItem key={card.id} className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
+              <CarouselItem
+                key={card.id}
+                className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3"
+              >
                 <div className="h-full p-1">
-                  <HelpRequestCard {...card} onClear={() => onClearCard(section, card.id)} />
+                  <HelpRequestCard
+                    {...card}
+                    onClear={() => onClearCard(section, card.id)}
+                  />
                 </div>
               </CarouselItem>
             ))}
@@ -180,15 +200,25 @@ const SectionHeader = ({ title, count }: SectionHeaderProps) => (
   </div>
 );
 
-const SummaryModules = ({ askCard, onAsk }: { askCard: AskForHelpCard; onAsk: () => void }) => (
+const SummaryModules = ({
+  askCard,
+  onAsk,
+}: {
+  askCard: AskForHelpCard;
+  onAsk: () => void;
+}) => (
   <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {summaryHighlights.map((highlight) => (
       <article
         key={highlight.title}
         className="rounded-2xl border border-border bg-card p-5 shadow-sm"
       >
-        <p className="text-sm font-medium text-muted-foreground">{highlight.title}</p>
-        <p className="mt-2 text-base font-semibold text-foreground">{highlight.body}</p>
+        <p className="text-sm font-medium text-muted-foreground">
+          {highlight.title}
+        </p>
+        <p className="mt-2 text-base font-semibold text-foreground">
+          {highlight.body}
+        </p>
       </article>
     ))}
     <article className="flex flex-col rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-6 shadow-sm">
@@ -219,16 +249,22 @@ const AskForHelpDialog = ({
   const [shortDescription, setShortDescription] = React.useState("");
   const [askMode, setAskMode] = React.useState<AskMode>("contact");
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedContacts, setSelectedContacts] = React.useState<AskContact[]>([]);
+  const [selectedContacts, setSelectedContacts] = React.useState<AskContact[]>(
+    []
+  );
   const [requestDetails, setRequestDetails] = React.useState("");
-  const [sendState, setSendState] = React.useState<"idle" | "sending" | "success">("idle");
+  const [sendState, setSendState] = React.useState<
+    "idle" | "sending" | "success"
+  >("idle");
   const defaultEndDate = React.useCallback(() => {
     const date = new Date();
     date.setDate(date.getDate() + 14);
     return date;
   }, []);
   const [endDateEnabled, setEndDateEnabled] = React.useState(false);
-  const [endDate, setEndDate] = React.useState<Date | undefined>(defaultEndDate);
+  const [endDate, setEndDate] = React.useState<Date | undefined>(
+    defaultEndDate
+  );
   const [endDatePickerOpen, setEndDatePickerOpen] = React.useState(false);
 
   const resetForm = React.useCallback(() => {
@@ -251,11 +287,14 @@ const AskForHelpDialog = ({
 
   const filteredContacts = React.useMemo(() => {
     const term = searchTerm.toLowerCase();
-    if (!term) return contacts.filter((contact) => !selectedContacts.some((c) => c.id === contact.id));
+    if (!term)
+      return contacts.filter(
+        (contact) => !selectedContacts.some((c) => c.id === contact.id)
+      );
     return contacts.filter(
       (contact) =>
         contact.name.toLowerCase().includes(term) &&
-        !selectedContacts.some((selected) => selected.id === contact.id),
+        !selectedContacts.some((selected) => selected.id === contact.id)
     );
   }, [contacts, searchTerm, selectedContacts]);
 
@@ -342,7 +381,9 @@ const AskForHelpDialog = ({
                         onClick={() => handleSelectContact(contact)}
                       >
                         <p className="font-medium">{contact.name}</p>
-                        <p className="text-xs text-muted-foreground">{contact.role}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {contact.role}
+                        </p>
                       </button>
                     ))}
                   </div>
@@ -372,8 +413,11 @@ const AskForHelpDialog = ({
             </div>
           )}
 
-                    <div className="space-y-2 mt-6">
-            <Label htmlFor="ask-short-desc" className="flex items-center justify-between text-sm font-medium">
+          <div className="space-y-2 mt-6">
+            <Label
+              htmlFor="ask-short-desc"
+              className="flex items-center justify-between text-sm font-medium"
+            >
               Short description
               <span className="text-xs text-muted-foreground">
                 {shortDescription.length}/32 characters
@@ -401,50 +445,64 @@ const AskForHelpDialog = ({
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="end-date-toggle"
-              checked={endDateEnabled}
-              onCheckedChange={(checked) => setEndDateEnabled(Boolean(checked))}
-            />
-            <Label htmlFor="end-date-toggle" className="text-sm font-medium">
-              Set an end date
-            </Label>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="end-date-toggle"
+                checked={endDateEnabled}
+                onCheckedChange={(checked) =>
+                  setEndDateEnabled(Boolean(checked))
+                }
+              />
+              <Label htmlFor="end-date-toggle" className="text-sm font-medium h-9 justify-center flex items-center">
+                Set an end date
+              </Label>
+            </div>
+
+            {endDateEnabled && (
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Popover
+                  open={endDatePickerOpen}
+                  onOpenChange={setEndDatePickerOpen}
+                >
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="justify-between font-normal"
+                      id="end-date"
+                    >
+                      {endDate ? endDate.toLocaleDateString() : "Select date"}
+                      <ChevronDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="!w-auto overflow-hidden p-0"
+                    align="start"
+                  >
+                    <Calendar
+                      className="w-56"
+                      mode="single"
+                      selected={endDate}
+                      captionLayout="dropdown"
+                      onSelect={(date) => {
+                        if (date) {
+                          setEndDate(date);
+                          setEndDatePickerOpen(false);
+                        }
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
           </div>
 
-          {endDateEnabled && (
-            <div className="space-y-2">
-              <Label htmlFor="end-date">End date</Label>
-              <Popover open={endDatePickerOpen} onOpenChange={setEndDatePickerOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between font-normal"
-                    id="end-date"
-                  >
-                    {endDate ? endDate.toLocaleDateString() : "Select date"}
-                    <ChevronDown />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    captionLayout="dropdown"
-                    onSelect={(date) => {
-                      if (date) {
-                        setEndDate(date);
-                        setEndDatePickerOpen(false);
-                      }
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
-
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-            <Button variant="ghost" className="" onClick={() => handleOpenChange(false)}>
+            <Button
+              variant="ghost"
+              className=""
+              onClick={() => handleOpenChange(false)}
+            >
               Cancel
             </Button>
             <Button
