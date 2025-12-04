@@ -103,8 +103,22 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                 <p className="text-muted-foreground text-base">Browse requests tagged for this category.</p>
               </header>
 
-              <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <section className="flex flex-col gap-4 rounded-xl border border-border/50 bg-muted/30 p-4 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm text-muted-foreground whitespace-nowrap">Filter by date</Label>
+                    <Select value={ageFilter} onValueChange={setAgeFilter}>
+                      <SelectTrigger className="h-9 rounded-full border-border bg-background px-3 shrink-0">
+                        <SelectValue placeholder="Age" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="days">Days old</SelectItem>
+                        <SelectItem value="weeks">Weeks old</SelectItem>
+                        <SelectItem value="months">Months old</SelectItem>
+                        <SelectItem value="all">All time</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div className="flex items-center gap-2">
                     <Button
                       variant={layout === "grid" ? "secondary" : "ghost"}
@@ -123,21 +137,8 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                       <List className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm text-muted-foreground">Age of request</Label>
-                    <Select value={ageFilter} onValueChange={setAgeFilter}>
-                      <SelectTrigger className="h-9 rounded-full border-border bg-background px-3">
-                        <SelectValue placeholder="Age" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="days">Days old</SelectItem>
-                        <SelectItem value="weeks">Weeks old</SelectItem>
-                        <SelectItem value="months">Months old</SelectItem>
-                        <SelectItem value="all">All time</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </div>
+              </section>
 
                 <div className={layout === "grid" ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-3" : "space-y-3"}>
                   {filtered.map((card) => (
@@ -151,7 +152,6 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                     </div>
                   )}
                 </div>
-              </section>
             </div>
           </div>
         </SidebarInset>

@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InteractionsPage from "../features/interactions/components/InteractionsPage";
+---
+
+<BaseLayout
+    title="Your Interactions | Trusted List"
+    description="View your history of helping others and your own requests."
+    bodyClass="bg-background"
+    showHeader={false}
+    showFooter={false}
+>
+    <InteractionsPage client:load slot="main" />
+</BaseLayout>

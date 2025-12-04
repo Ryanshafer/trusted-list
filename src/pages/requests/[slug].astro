@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CategoryRequestsPage from "../../features/requests/CategoryRequestsPage";
+
+// Generate static paths for all category pages
+export function getStaticPaths() {
+  const categories = [
+    "career-advice",
+    "introduction",
+    "resume-review",
+    "interview-prep",
+    "general-support",
+    "other",
+  ];
+
+  return categories.map((slug) => ({
+    params: { slug },
+  }));
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout
+  title={`Requests | ${slug}`}
+  description="Browse requests by category on the Trusted List."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <CategoryRequestsPage slug={slug ?? "other"} client:load slot="main" />
+</BaseLayout>

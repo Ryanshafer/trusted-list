@@ -250,6 +250,7 @@ const MyHelpRequestCard = ({
     request.promoted ?? true
   );
   const [isRemoving, setIsRemoving] = React.useState(false);
+  const [showAllResponses, setShowAllResponses] = React.useState(false);
 
   const handleSaveEdit = (updates: Partial<CardData>) => {
     setCurrentRequest(prev => ({
@@ -269,6 +270,14 @@ const MyHelpRequestCard = ({
     relationshipTag: "",
     primaryCTA: "",
   };
+  const formattedEndDate =
+    currentRequest.endDate && !Number.isNaN(Date.parse(currentRequest.endDate))
+      ? new Date(currentRequest.endDate).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+      : null;
 
   const getRequestTypeInfo = (type: MyHelpRequest["type"]) => {
     switch (type) {
@@ -289,9 +298,8 @@ const MyHelpRequestCard = ({
 
   return (
     <div
-      className={`transition-all duration-200 ease-in-out ${
-        isRemoving ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"
-      }`}
+      className={`transition-all duration-200 ease-in-out ${isRemoving ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"
+        }`}
     >
       <Card className="relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
         <CardContent className="flex flex-1 flex-col gap-4 p-6">
@@ -313,7 +321,14 @@ const MyHelpRequestCard = ({
               )}
             </div>
             <div className="flex items-start justify-between">
-              <h3 className="text-lg font-semibold leading-tight pr-8">{currentRequest.requestSummary}</h3>
+              <div className="pr-8">
+                <h3 className="text-lg font-semibold leading-tight">{currentRequest.requestSummary}</h3>
+                {formattedEndDate && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Ends {formattedEndDate}
+                  </p>
+                )}
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 -mt-2 rounded-full text-muted-foreground hover:text-foreground">
@@ -378,19 +393,33 @@ const MyHelpRequestCard = ({
                 <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
                   Responses
                 </div>
-                {currentRequest.responses.map(response => (
-                  <HelperRow
-                    key={response.id}
-                    response={response}
-                    requestSummary={currentRequest.requestSummary}
-                    requestDetails={currentRequest.request}
-                  />
-                ))}
-                {isPromotable && (
-                  <Button
-                    variant={isPromotionActive ? "outline" : "ghost"}
-                    size="sm"
-                    className={`w-full gap-2 mt-2 text-sm ${!isPromotionActive ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : "text-muted-foreground hover:text-foreground"}`}
+            {(showAllResponses ? currentRequest.responses : currentRequest.responses.slice(0, 2)).map(
+              (response) => (
+                <HelperRow
+                  key={response.id}
+                  response={response}
+                  requestSummary={currentRequest.requestSummary}
+                  requestDetails={currentRequest.request}
+                />
+              )
+            )}
+            {currentRequest.responses.length > 2 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full text-sm text-primary"
+                onClick={() => setShowAllResponses((prev) => !prev)}
+              >
+                {showAllResponses
+                  ? "See fewer responses"
+                  : `See ${currentRequest.responses.length - 2} more responses`}
+              </Button>
+            )}
+            {isPromotable && (
+              <Button
+                variant={isPromotionActive ? "outline" : "ghost"}
+                size="sm"
+                className={`w-full gap-2 mt-2 text-sm ${!isPromotionActive ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : "text-muted-foreground hover:text-foreground"}`}
                     onClick={() => setIsPromotionActive(!isPromotionActive)}
                   >
                     {isPromotionActive ? (
@@ -614,79 +643,79 @@ const FilterBar = ({
   primaryAction?: React.ReactNode;
 }) => {
   return (
-    <div className="flex items-center justify-between mb-6 p-4 rounded-xl bg-muted/30 border border-border/50">
-      <div className="flex items-center gap-3">
-        {showCompletedFilter && (
-          <Toggle
-            pressed={hideCompleted}
-            onPressedChange={onHideCompletedChange}
-            aria-label="Toggle completed visibility"
-            className="gap-2"
-          >
-            {hideCompleted ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            <span className="text-sm">Completed</span>
-          </Toggle>
-        )}
-        {showUnpromotedFilter && (
-          <Toggle
-            pressed={hideUnpromoted}
-            onPressedChange={onHideUnpromotedChange}
-            aria-label="Toggle unpromoted visibility"
-            className="gap-2"
-          >
-            {hideUnpromoted ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            <span className="text-sm">Unpromoted</span>
-          </Toggle>
-        )}
-      </div>
-      <div className="flex flex-1 items-center gap-4">
-        {projection && (
-          <div
-            className={`flex items-center gap-3 rounded-lg border px-3 py-2 shadow-sm ${
-              projection.tone === "success"
-                ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+    <section className="mb-6 flex flex-col gap-4 rounded-xl border border-border/50 bg-muted/30 p-4 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          {projection && (
+            <div
+              className={`flex items-center gap-3 rounded-lg border px-3 py-2 shadow-sm ${projection.tone === "success"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-900/20 dark:text-emerald-100"
                 : "border-primary/30 bg-primary/10 text-primary"
-            }`}
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/70">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <div className="leading-tight">
-              <div className="text-xs font-semibold uppercase tracking-wide">{projection.label}</div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-lg font-bold leading-tight">{projection.value}</span>
-                {projection.sublabel && (
-                  <span className="text-[11px] text-muted-foreground leading-tight">{projection.sublabel}</span>
-                )}
+                }`}
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/70 dark:bg-white/10">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div className="leading-tight">
+                <div className="text-xs font-semibold uppercase tracking-wide">{projection.label}</div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-lg font-bold leading-tight">{projection.value}</span>
+                  {projection.sublabel && (
+                    <span className="text-[11px] text-muted-foreground leading-tight">{projection.sublabel}</span>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        <div className="flex items-center gap-2 ml-auto">
+          )}
+          {(showCompletedFilter || showUnpromotedFilter) && (
+            <Label className="text-sm text-muted-foreground whitespace-nowrap">Show:</Label>
+          )}
+          {showCompletedFilter && (
+            <Toggle
+              pressed={hideCompleted}
+              onPressedChange={onHideCompletedChange}
+              aria-label="Toggle completed visibility"
+              className="gap-2"
+            >
+              {hideCompleted ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              <span className="text-sm">Completed</span>
+            </Toggle>
+          )}
+          {showUnpromotedFilter && (
+            <Toggle
+              pressed={hideUnpromoted}
+              onPressedChange={onHideUnpromotedChange}
+              aria-label="Toggle unpromoted visibility"
+              className="gap-2"
+            >
+              {hideUnpromoted ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              <span className="text-sm">Unpromoted</span>
+            </Toggle>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
           {primaryAction}
-          <div className="flex items-center gap-1 rounded-lg bg-background border border-border p-1">
-            <Button
-              variant={layout === "grid" ? "secondary" : "ghost"}
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => onLayoutChange("grid")}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              <span className="sr-only">Grid view</span>
-            </Button>
-            <Button
-              variant={layout === "list" ? "secondary" : "ghost"}
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => onLayoutChange("list")}
-            >
-              <List className="h-4 w-4" />
-              <span className="sr-only">List view</span>
-            </Button>
-          </div>
+          <Button
+            variant={layout === "grid" ? "secondary" : "ghost"}
+            size="icon"
+            className="h-9 w-9"
+            onClick={() => onLayoutChange("grid")}
+          >
+            <LayoutGrid className="h-4 w-4" />
+            <span className="sr-only">Grid view</span>
+          </Button>
+          <Button
+            variant={layout === "list" ? "secondary" : "ghost"}
+            size="icon"
+            className="h-9 w-9"
+            onClick={() => onLayoutChange("list")}
+          >
+            <List className="h-4 w-4" />
+            <span className="sr-only">List view</span>
+          </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -734,11 +763,11 @@ export default function InteractionsPage() {
       const responses =
         payload.askMode === "contact"
           ? payload.selectedContacts.map((contact, idx) => ({
-              id: `${id}-resp-${idx}`,
-              name: contact.name,
-              status: "In Progress" as const,
-              chatId: `${id}-chat-${idx}`,
-            }))
+            id: `${id}-resp-${idx}`,
+            name: contact.name,
+            status: "In Progress" as const,
+            chatId: `${id}-chat-${idx}`,
+          }))
           : [];
 
       const newRequest: MyHelpRequest = {
@@ -750,6 +779,10 @@ export default function InteractionsPage() {
         type: payload.askMode,
         createdAt: new Date().toISOString(),
         promoted: payload.askMode !== "contact",
+        endDate:
+          payload.endDateEnabled && payload.endDate
+            ? payload.endDate.toISOString()
+            : undefined,
       };
 
       setMyRequestsData((prev) => [newRequest, ...prev]);

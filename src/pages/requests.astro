@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AllRequestsPage from "../features/requests/AllRequestsPage";
+---
+
+<BaseLayout
+  title="Requests for Help | Trusted List"
+  description="Browse every open request on the Trusted List, filter by category, and find where you can help most."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <AllRequestsPage client:load slot="main" />
+</BaseLayout>

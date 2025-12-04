@@ -1,0 +1,151 @@
+{
+  "request-1": [
+    { "id": 1, "sender": "user", "text": "I'm considering a move to management and would love to chat with experienced EMs about the transition and what to expect." },
+    { "id": 2, "sender": "contact", "text": "Hi! I'd be happy to share my experience. I made the transition about 3 years ago." },
+    { "id": 3, "sender": "user", "text": "That would be great, thanks Robert! When are you free to chat?" },
+    { "id": 4, "sender": "contact", "text": "How about next Tuesday at 2pm?" },
+    { "id": 5, "sender": "user", "text": "Tuesday at 2pm works perfectly. I'll send a calendar invite." },
+    { "id": 6, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 7, "sender": "user", "text": "+50 Karma • Super helpful advice!", "type": "karma" }
+  ],
+  "request-2": [
+    { "id": 1, "sender": "user", "text": "We're scaling our team and looking for senior frontend engineers. Any referrals would be greatly appreciated!" },
+    { "id": 2, "sender": "contact", "text": "I actually know a couple of great senior engineers who are looking. Let me reach out to them first." },
+    { "id": 3, "sender": "user", "text": "Thanks Amanda, that would be amazing. Let me know if you need a JD link." },
+    { "id": 4, "sender": "contact", "text": "Just introduced you to Sarah and Mike via email. Good luck!" },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "user", "text": "+50 Karma • Great referrals!", "type": "karma" }
+  ],
+  "request-3": [
+    { "id": 1, "sender": "user", "text": "We're scaling our team and looking for senior frontend engineers. Any referrals would be greatly appreciated!" },
+    { "id": 2, "sender": "contact", "text": "I'd love to help! Design systems are my jam. Send over the slides when you have a draft." },
+    { "id": 3, "sender": "user", "text": "Just sent them to your email. Mostly looking for feedback on the flow." },
+    { "id": 4, "sender": "contact", "text": "Got it. I'll take a look this weekend and send you some notes." },
+    { "id": 5, "sender": "contact", "text": "Just sent you my feedback! The structure is really strong." },
+    { "id": 6, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 7, "sender": "user", "text": "+50 Karma • Excellent feedback", "type": "karma" }
+  ],
+  "helped-1": [
+    { "id": 1, "sender": "contact", "text": "I'm redesigning my portfolio and would love feedback on the user experience and visual design. I'm particularly interested in how to showcase my process work effectively." },
+    { "id": 2, "sender": "user", "text": "I'd be happy to review it! Send me the link and I'll take a look this week." },
+    { "id": 3, "sender": "contact", "text": "Just sent it over. Really appreciate you taking the time!" },
+    { "id": 4, "sender": "user", "text": "Just finished my review. Overall it's really strong - I left detailed comments in the doc." },
+    { "id": 5, "sender": "contact", "text": "This feedback is gold! Thank you so much." },
+    { "id": 6, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 7, "sender": "system", "text": "+50 Karma • Highly Recommended", "type": "karma" }
+  ],
+  "helped-2": [
+    { "id": 1, "sender": "contact", "text": "I'm looking to connect with CTOs at early-stage startups. Would you be willing to introduce me to your CTO?" },
+    { "id": 2, "sender": "user", "text": "Absolutely! Let me intro you to Jamie - she's our CTO and always happy to chat with talented folks." },
+    { "id": 3, "sender": "contact", "text": "That would be incredible, thank you!" },
+    { "id": 4, "sender": "user", "text": "Just made the intro via email. Good luck!" },
+    { "id": 5, "sender": "contact", "text": "Had a great conversation with Jamie. Thanks for the connection!" },
+    { "id": 6, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 7, "sender": "system", "text": "+50 Karma • Great Connector", "type": "karma" }
+  ],
+  "helped-3": [
+    { "id": 1, "sender": "contact", "text": "I'm preparing for a technical interview at a FAANG company. Could you help me with system design practice?" },
+    { "id": 2, "sender": "user", "text": "I'd love to help! System design is one of my favorite topics. Want to hop on a call this week?" },
+    { "id": 3, "sender": "contact", "text": "That would be amazing! I'm free Thursday afternoon." },
+    { "id": 4, "sender": "user", "text": "Thursday at 3pm works. I'll send a Zoom link." },
+    { "id": 5, "sender": "contact", "text": "The practice session was so helpful. Feeling much more confident now!" },
+    { "id": 6, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 7, "sender": "system", "text": "+50 Karma • Expert Mentor", "type": "karma" }
+  ],
+  "helped-4": [
+    { "id": 1, "sender": "contact", "text": "I'm refining our go-to-market for a healthcare SaaS. Could you review the deck and pricing strategy?" },
+    { "id": 2, "sender": "user", "text": "Yes, happy to review. Send the deck and I’ll mark pricing notes." },
+    { "id": 3, "sender": "contact", "text": "Shared! The pricing slide is slide 8." },
+    { "id": 4, "sender": "user", "text": "Got it. I’ll return comments by tomorrow." },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "system", "text": "+50 Karma • GTM feedback delivered", "type": "karma" }
+  ],
+  "helped-5": [
+    { "id": 1, "sender": "contact", "text": "Launching a community newsletter—can you help sharpen the story arc and retention plan?" },
+    { "id": 2, "sender": "user", "text": "Love this! Let’s tighten the opener and add a retention loop." },
+    { "id": 3, "sender": "contact", "text": "Awesome, notes added in the doc. Thanks!" },
+    { "id": 4, "sender": "user", "text": "Left comments plus a 4-week cadence outline." },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "system", "text": "+50 Karma • Newsletter coaching", "type": "karma" }
+  ],
+  "helped-6": [
+    { "id": 1, "sender": "contact", "text": "I'm pivoting from QA to automation. Could you suggest a 60-day plan and tools to learn?" },
+    { "id": 2, "sender": "user", "text": "Here’s a 60-day path: Cypress + Playwright, then CI hooks." },
+    { "id": 3, "sender": "contact", "text": "Perfect, that gives me structure. Appreciate it!" },
+    { "id": 4, "sender": "user", "text": "Ping me after week 2 for a quick check-in." },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "system", "text": "+50 Karma • Automation roadmap", "type": "karma" }
+  ],
+  "helped-7": [
+    { "id": 1, "sender": "contact", "text": "Need a mock pitch for a climate-tech seed round. Can you run me through tough investor questions?" },
+    { "id": 2, "sender": "user", "text": "Let’s do 10 tough investor questions. Ready now?" },
+    { "id": 3, "sender": "contact", "text": "Yes—hit me with them!" },
+    { "id": 4, "sender": "user", "text": "Great reps. I’ll send a list to rehearse tonight." },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "system", "text": "+50 Karma • Mock pitch coaching", "type": "karma" }
+  ],
+  "helped-8": [
+    { "id": 1, "sender": "contact", "text": "I'm crafting a promotion packet for Staff Engineer. Can you review my impact narratives?" },
+    { "id": 2, "sender": "user", "text": "Your narratives are strong. Let’s add metrics per project." },
+    { "id": 3, "sender": "contact", "text": "Will do—any template you like?" },
+    { "id": 4, "sender": "user", "text": "Shared a promo packet template. Add impact bullets there." },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "system", "text": "+50 Karma • Staff promo review", "type": "karma" }
+  ],
+  "helped-9": [
+    { "id": 1, "sender": "contact", "text": "I'd love feedback on my case study for a product ops role—does it tell a clear impact story?" },
+    { "id": 2, "sender": "user", "text": "I’ll mark the case study with clearer outcomes and risks." },
+    { "id": 3, "sender": "contact", "text": "Thanks! Curious if the story flows well." },
+    { "id": 4, "sender": "user", "text": "Flow is solid; I suggested two refocus points." },
+    { "id": 5, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 6, "sender": "system", "text": "+50 Karma • Case study feedback", "type": "karma" }
+  ],
+  "helped-10": [
+    { "id": 1, "sender": "contact", "text": "Could you introduce me to design leaders hiring for contract work this quarter?" },
+    { "id": 2, "sender": "user", "text": "Sent two intros to design leads hiring now." },
+    { "id": 3, "sender": "contact", "text": "Got them—really appreciate the boost!" },
+    { "id": 4, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 5, "sender": "system", "text": "+50 Karma • Networked intros", "type": "karma" }
+  ],
+  "helped-11": [
+    { "id": 1, "sender": "contact", "text": "I need a second pair of eyes on my system design for a multi-tenant analytics platform." },
+    { "id": 2, "sender": "user", "text": "Reviewed the architecture—left notes on tenancy and auth." },
+    { "id": 3, "sender": "contact", "text": "Saw them, thank you. Very actionable." },
+    { "id": 4, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 5, "sender": "system", "text": "+50 Karma • Architecture review", "type": "karma" }
+  ],
+  "helped-12": [
+    { "id": 1, "sender": "contact", "text": "Can you mentor me on storytelling for portfolio presentations? I have an interview next week." },
+    { "id": 2, "sender": "user", "text": "Try a 3-act structure: challenge, approach, result." },
+    { "id": 3, "sender": "contact", "text": "Love it—will rehearse with that framing." },
+    { "id": 4, "sender": "system", "text": "Request Completed", "type": "system" },
+    { "id": 5, "sender": "system", "text": "+50 Karma • Storytelling coaching", "type": "karma" }
+  ],
+  "progress-1": [
+    {
+      "id": 1,
+      "sender": "user",
+      "text": "We're scaling our team and looking for senior frontend engineers. Any referrals would be greatly appreciated!"
+    },
+    {
+      "id": 2,
+      "sender": "contact",
+      "text": "I can help find some people for you, Send me the JD and I'll get to work."
+    },
+    {
+      "id": 3,
+      "sender": "user",
+      "text": "Thanks David! Just shared the JD. Appreciate any help you can provide."
+    },
+    {
+      "id": 4,
+      "sender": "contact",
+      "text": "Got it—I'll review today and let you know if I have any leads."
+    }
+  ],
+  "progress-2": [
+    { "id": 1, "sender": "contact", "text": "I'm transitioning from product management to product design. Could you review my case study and provide feedback on how to better showcase my design thinking?" },
+    { "id": 2, "sender": "user", "text": "I made a similar transition a few years ago! I'd love to help. Can you send me the case study?" },
+    { "id": 3, "sender": "contact", "text": "Amazing, thank you! Just sent you the link. Any feedback would be incredibly valuable." }
+  ]
+}

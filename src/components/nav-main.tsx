@@ -14,6 +14,7 @@ export function NavMain({
     title: string
     url: string
     isActive?: boolean
+    children?: { title: string; url: string }[]
   }[]
 }) {
   return (
@@ -31,6 +32,19 @@ export function NavMain({
                 <span>{item.title}</span>
               </a>
             </SidebarMenuButton>
+            {item.children && item.children.length > 0 ? (
+              <div className="ml-4 mt-2 flex flex-col gap-1 border-l border-border/60 pl-3">
+                {item.children.map((child) => (
+                  <a
+                    key={child.title}
+                    href={child.url}
+                    className="text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    {child.title}
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </SidebarMenuItem>
         ))}
       </SidebarMenu>

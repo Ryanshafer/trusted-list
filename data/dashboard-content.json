@@ -10,25 +10,73 @@
     }
   ],
   "askForHelpCard": {
-    "title": "Need a hand today?",
+    "title": "Need some help today?",
     "subtitle": "Ask your trusted circle for advice, introductions, or support.",
     "cta": "Ask for help",
     "contacts": [
-      { "id": "contact-1", "name": "Alicia Gomez", "role": "Product leader" },
-      { "id": "contact-2", "name": "Bryan Lewis", "role": "Design director" },
-      { "id": "contact-3", "name": "Sanjay Rao", "role": "Engineer" },
-      { "id": "contact-4", "name": "Priya Mehta", "role": "Recruiter" },
-      { "id": "contact-5", "name": "Marcus Lee", "role": "Product lead" },
-      { "id": "contact-6", "name": "Jen Morris", "role": "Product marketing" },
-      { "id": "contact-7", "name": "Devon Paul", "role": "Community organizer" },
-      { "id": "contact-8", "name": "Anika Chang", "role": "Design lead" }
+      {
+        "id": "contact-1",
+        "name": "Alicia Gomez",
+        "role": "Product leader"
+      },
+      {
+        "id": "contact-2",
+        "name": "Bryan Lewis",
+        "role": "Design director"
+      },
+      {
+        "id": "contact-3",
+        "name": "Sanjay Rao",
+        "role": "Engineer"
+      },
+      {
+        "id": "contact-4",
+        "name": "Priya Mehta",
+        "role": "Recruiter"
+      },
+      {
+        "id": "contact-5",
+        "name": "Marcus Lee",
+        "role": "Product lead"
+      },
+      {
+        "id": "contact-6",
+        "name": "Jen Morris",
+        "role": "Product marketing"
+      },
+      {
+        "id": "contact-7",
+        "name": "Devon Paul",
+        "role": "Community organizer"
+      },
+      {
+        "id": "contact-8",
+        "name": "Anika Chang",
+        "role": "Design lead"
+      }
     ]
   },
   "navLinks": [
-    { "label": "Dashboard", "href": "#", "active": true },
-    { "label": "People I trust", "href": "#", "active": false },
-    { "label": "People who trust me", "href": "#", "active": false },
-    { "label": "Your Shortlists", "href": "#", "active": false }
+    {
+      "label": "Dashboard",
+      "href": "#",
+      "active": true
+    },
+    {
+      "label": "People I trust",
+      "href": "#",
+      "active": false
+    },
+    {
+      "label": "People who trust me",
+      "href": "#",
+      "active": false
+    },
+    {
+      "label": "Your Shortlists",
+      "href": "#",
+      "active": false
+    }
   ],
   "userProfile": {
     "name": "Elena Santos",
@@ -36,7 +84,7 @@
   },
   "helpSections": {
     "circle": {
-      "title": "People you know that need your help",
+      "title": "Requests for your help",
       "batches": [
         [
           {
@@ -97,7 +145,7 @@
       ]
     },
     "network": {
-      "title": "People connected to you that need help",
+      "title": "People in your circle who could use support",
       "batches": [
         [
           {
@@ -190,7 +238,7 @@
       ]
     },
     "opportunities": {
-      "title": "People outside your network you could help",
+      "title": "People you could help in the wider community",
       "batches": [
         [
           {

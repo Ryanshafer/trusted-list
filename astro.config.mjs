@@ -25,6 +25,7 @@ export default defineConfig({
         "tailwind-merge",
         "class-variance-authority",
         "@radix-ui/react-slot",
+        "@radix-ui/react-tabs",
       ],
     },
   },

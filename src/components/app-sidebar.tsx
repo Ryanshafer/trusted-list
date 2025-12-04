@@ -21,10 +21,23 @@ const navLinks: {
   url: string
   icon?: LucideIcon
   isActive?: boolean
+  children?: {
+    title: string
+    url: string
+  }[]
 }[] = [
-  { title: "How can you help", url: "#", icon: SquareTerminal, isActive: true },
-  { title: "People I trust", url: "#", icon: Users },
-  { title: "People who trust me", url: "#", icon: UserCheck },
+  {
+    title: "How Can You Help",
+    url: "/trusted-list/",
+    icon: SquareTerminal,
+    isActive: true,
+    children: [
+      { title: "Your Help Activity", url: "/trusted-list/interactions" },
+      { title: "All Requests For Help", url: "/trusted-list/requests" },
+    ],
+  },
+  { title: "People I Trust", url: "#", icon: Users },
+  { title: "People Who Trust Me", url: "#", icon: UserCheck },
   { title: "Your Shortlists", url: "#", icon: ListChecks },
 ]
 
