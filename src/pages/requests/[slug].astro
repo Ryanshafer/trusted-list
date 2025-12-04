@@ -5,12 +5,22 @@ import CategoryRequestsPage from "../../features/requests/CategoryRequestsPage";
 // Generate static paths for all category pages
 export function getStaticPaths() {
   const categories = [
+    // Primary categories used across the requests UI
+    "career",
+    "design",
+    "product",
+    "business",
+    "health",
+    "education",
+    "tech",
+    "network",
+    "other",
+    // Legacy/alternate slugs from creation flow to keep links working
     "career-advice",
     "introduction",
     "resume-review",
     "interview-prep",
     "general-support",
-    "other",
   ];
 
   return categories.map((slug) => ({

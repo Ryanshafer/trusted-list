@@ -30,7 +30,21 @@ const categoryOptions = [
   { value: "tech", label: "Dev & tools" },
   { value: "network", label: "Networking" },
   { value: "other", label: "Other" },
+  // Legacy/alternate slugs from creation flow
+  { value: "career-advice", label: "Career development" },
+  { value: "interview-prep", label: "Career development" },
+  { value: "resume-review", label: "Design" },
+  { value: "introduction", label: "Networking" },
+  { value: "general-support", label: "Other" },
 ];
+
+const slugAlias: Record<string, string> = {
+  "career-advice": "career",
+  "interview-prep": "career",
+  "resume-review": "design",
+  introduction: "network",
+  "general-support": "other",
+};
 
 const deriveCategory = (card: CardData) => {
   const haystack = `${card.requestSummary ?? ""} ${card.request}`.toLowerCase();
@@ -47,7 +61,8 @@ const deriveCategory = (card: CardData) => {
 };
 
 const buildCategoryRequests = (slug: string) => {
-  const filtered = allRequests.filter((card) => deriveCategory(card) === slug);
+  const target = slugAlias[slug] ?? slug;
+  const filtered = allRequests.filter((card) => deriveCategory(card) === target);
   if (filtered.length > 0) return filtered;
   // Mock a few requests to ensure the category isn't empty
   return [1, 2, 3].map((idx) => ({
