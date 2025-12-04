@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowUpRight, BellPlus, BellRing, HeartHandshake, OctagonMinus } from "lucide-react";
+import { ArrowUpRight, BellPlus, BellRing, EyeOff, Flag, Hand, MoreHorizontal } from "lucide-react";
 
 import type { CardData } from "../types";
 import { ChatDialog, type ChatMessage } from "./ChatDialog";
@@ -21,6 +21,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -58,7 +64,7 @@ export const HelpRequestCard = (card: HelpRequestCardProps) => {
   return <DefaultHelpCard {...card} />;
 };
 
-const DismissButton = ({ onClear, disabled }: { onClear?: () => void; disabled?: boolean }) => {
+const DismissButton = ({ onClear, disabled, className }: { onClear?: () => void; disabled?: boolean; className?: string }) => {
   if (!onClear) return null;
   return (
     <TooltipProvider>
@@ -67,55 +73,85 @@ const DismissButton = ({ onClear, disabled }: { onClear?: () => void; disabled?:
           <Button
             size="icon"
             variant="ghost"
-            className="absolute right-2.5 top-2.5 h-8 w-8 rounded-full border border-dashed border-border/60"
+            className={className ?? "h-8 w-8 rounded-full border border-dashed border-border/60"}
             onClick={onClear}
             disabled={disabled}
           >
-            <OctagonMinus className="h-4 w-4" />
+            <EyeOff className="h-4 w-4" />
             <span className="sr-only">Dismiss</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Remove request</TooltipContent>
+        <TooltipContent>Hide request</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
 };
+
+const MoreOptionsButton = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" size="icon" className="absolute right-2.5 top-2.5 h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
+        <MoreHorizontal className="h-4 w-4" />
+        <span className="sr-only">More options</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem className="text-destructive focus:text-destructive">
+        <Flag className="mr-2 h-4 w-4" />
+        Flag this request
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
 
 const CardActions = ({
   primaryLabel,
   onPrimary,
   onRemind,
   reminderActive,
+  reminderLabel,
   celebrating,
+  onDismiss,
+  isDismissing,
 }: {
   primaryLabel: string;
   onPrimary: () => void;
   onRemind: () => void;
   reminderActive: boolean;
+  reminderLabel?: string;
   celebrating?: boolean;
+  onDismiss?: () => void;
+  isDismissing?: boolean;
 }) => (
-  <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+  <div className="mt-3 flex flex-col gap-3 sm:flex-row">
     <div className="relative sm:flex-1">
-      <Button className="relative z-10 w-full overflow-hidden" onClick={onPrimary}>
-        <HeartHandshake className="mr-2 h-4 w-4" />
+      <Button className="relative z-10 w-full overflow-hidden gap-1" onClick={onPrimary}>
+        <Hand className="mr-1 h-4 w-4" />
         {primaryLabel}
       </Button>
       {celebrating ? <ConfettiBurst /> : null}
     </div>
     <Button
       variant="ghost"
-      className={`w-full sm:flex-1 ${
+      className={`w-full sm:flex-1 gap-1 ${
         reminderActive ? "bg-lime-100 text-lime-900 hover:bg-lime-200" : ""
       }`}
       onClick={onRemind}
     >
       {reminderActive ? (
-        <BellRing className="mr-2 h-4 w-4" />
+        <BellRing className="mr-1 h-4 w-4" />
       ) : (
-        <BellPlus className="mr-2 h-4 w-4" />
+        <BellPlus className="mr-1 h-4 w-4" />
       )}
-      {reminderActive ? "Reminder set" : "Remind me"}
+      {reminderActive ? reminderLabel ?? "Reminder set" : "Remind me"}
     </Button>
+    {onDismiss ? (
+      <DismissButton 
+        onClear={onDismiss} 
+        disabled={isDismissing} 
+        className="h-9 w-9 shrink-0 rounded-md text-muted-foreground" 
+      />
+    ) : null}
   </div>
 );
 
@@ -136,13 +172,13 @@ const ConnectedCardHeader = ({
     .toUpperCase();
 
   return (
-    <div className="flex items-start gap-4 pr-10">
+    <div className="flex items-center gap-3 pr-10">
       <Avatar className="h-12 w-12">
         {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} className="object-cover" /> : null}
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
-      <div>
-        <p className="text-lg font-semibold">{name}</p>
+      <div className="mb-1">
+        <p className="text-lg font-semibold leading-tight">{name}</p>
         {headerLines.map(({ text, className }, index) => (
           <p key={`${text}-${index}`} className={className ?? "text-xs text-muted-foreground/80"}>
             {text}
@@ -174,8 +210,16 @@ const ConnectedHelpCard = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [chatOpen, setChatOpen] = React.useState(false);
+  const initialLead = React.useMemo(() => {
+    const trimmedSummary = requestSummary?.trim() ?? "";
+    const trimmedDetails = request.trim();
+    if (!trimmedSummary) return trimmedDetails;
+    const cleanSummary = trimmedSummary.replace(/[.!?]\s*$/, "");
+    return `${cleanSummary}. ${trimmedDetails}`;
+  }, [request, requestSummary]);
+
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>(() => [
-    { id: Date.now(), sender: "contact", text: request },
+    { id: Date.now(), sender: "contact", text: initialLead },
   ]);
   const [composer, setComposer] = React.useState("");
   const [celebrating, setCelebrating] = React.useState(false);
@@ -255,18 +299,21 @@ const ConnectedHelpCard = ({
           isDismissing ? "translate-y-4 scale-95 opacity-0" : "opacity-100"
         }`}
       >
-        <CardContent className="flex flex-1 flex-col gap-3 p-6 pb-4">
-          <DismissButton onClear={handleDismiss} disabled={isDismissing} />
+        <CardContent className="flex flex-1 flex-col gap-5 p-6 pb-4">
+          <MoreOptionsButton />
           <ConnectedCardHeader name={name} avatarUrl={avatarUrl} headerLines={headerLines} />
           <div className="flex flex-1 flex-col gap-2">
-            <RequestPreview text={requestSummary ?? request} onExpand={() => setOpen(true)} />
+            <RequestPreview text={request} onExpand={() => setOpen(true)} />
             <div className="flex-1" />
             <CardActions
               primaryLabel={primaryActionLabel}
               onPrimary={handlePrimaryClick}
               onRemind={() => setRemindOpen(true)}
               reminderActive={reminderActive}
+              reminderLabel={reminderActive ? `${remindOption}` : undefined}
               celebrating={celebrating && celebrationTarget === "card"}
+              onDismiss={handleDismiss}
+              isDismissing={isDismissing}
             />
           </div>
         </CardContent>
@@ -396,19 +443,16 @@ const CircleHelpCard = ({
 };
 
 const RequestPreview = ({ text, onExpand }: { text: string; onExpand: () => void }) => (
-  <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
-    <div className="space-y-3">
-      <div className="flex h-full flex-col justify-between rounded-2xl bg-white/90 px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-50">
-        <p className="flex-1 line-clamp-2 text-foreground dark:text-slate-100">{text}</p>
-      </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="w-full justify-center rounded-full bg-white text-xs font-semibold text-foreground hover:bg-muted dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-        onClick={onExpand}
-      >
-        Read request
-      </Button>
+  <div className="group relative cursor-pointer rounded-3xl bg-muted/50 p-4 transition-colors hover:bg-muted/70 dark:bg-muted/40" onClick={onExpand}>
+    <div className="relative max-h-[4.5rem] overflow-hidden [mask-image:linear-gradient(to_bottom,black_30%,transparent_100%)]">
+      <p className="text-base text-foreground/90 dark:text-slate-100 leading-relaxed">
+        {text}
+      </p>
+    </div>
+    <div className="mt-2 flex items-center justify-center">
+      <span className="text-xs font-medium text-primary py-1 px-3 rounded-full group-hover:bg-muted">
+        Read more
+      </span>
     </div>
   </div>
 );
@@ -669,20 +713,20 @@ const ExpandedHelpDialog = ({
         </div>
       </div>
       <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
-        <p className="rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-100">
+        <p className="text-base text-foreground leading-relaxed">
           {request}
         </p>
       </div>
       <div className="mt-10 flex flex-col gap-8 sm:flex-row">
         <div className="relative w-full sm:flex-1">
           <Button className="relative z-10 w-full overflow-hidden" onClick={onPrimaryAction}>
-            <HeartHandshake className="mr-2 h-4 w-4" />
+            <Hand className="mr-1 h-4 w-4" />
             {primaryLabel}
           </Button>
           {confettiActive ? <ConfettiBurst /> : null}
         </div>
         <Button variant="ghost" className="sm:flex-1" onClick={onRemindAction}>
-          <BellPlus className="mr-2 h-4 w-4" />
+          <BellPlus className="mr-1 h-4 w-4" />
           Remind me
         </Button>
       </div>

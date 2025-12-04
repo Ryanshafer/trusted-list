@@ -1,0 +1,326 @@
+{
+  "helped": [
+    {
+      "id": "helped-1",
+      "variant": "circle",
+      "name": "Sarah Chen",
+      "request": "I'm redesigning my portfolio and would love feedback on the user experience and visual design. I'm particularly interested in how to showcase my process work effectively.",
+      "requestSummary": "Portfolio review and UX feedback needed",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "2 days ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-2",
+      "variant": "network",
+      "name": "Michael Ross",
+      "request": "I'm looking to connect with CTOs at early-stage startups. Would you be willing to introduce me to your CTO?",
+      "requestSummary": "Introduction to CTO needed",
+      "connectedBy": "Alex Johnson",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Network Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "1 week ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-3",
+      "variant": "circle",
+      "name": "Jessica Martinez",
+      "request": "I'm preparing for a technical interview at a FAANG company. Could you help me with system design practice?",
+      "requestSummary": "System design interview prep",
+      "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "3 days ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-4",
+      "variant": "network",
+      "name": "Priya Desai",
+      "request": "I'm refining our go-to-market for a healthcare SaaS. Could you review the deck and pricing strategy?",
+      "requestSummary": "Review GTM deck and pricing",
+      "connectedBy": "VC Guild",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Network Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "4 days ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-5",
+      "variant": "circle",
+      "name": "Leo Park",
+      "request": "Launching a community newsletter—can you help sharpen the story arc and retention plan?",
+      "requestSummary": "Newsletter launch feedback",
+      "avatarUrl": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "5 days ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-6",
+      "variant": "opportunities",
+      "name": "Camila Torres",
+      "request": "I'm pivoting from QA to automation. Could you suggest a 60-day plan and tools to learn?",
+      "requestSummary": "QA to automation roadmap",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-0f7c05a4b4aa?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Skill-aligned opportunity",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "1 week ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-7",
+      "variant": "network",
+      "name": "Jonah Feldman",
+      "request": "Need a mock pitch for a climate-tech seed round. Can you run me through tough investor questions?",
+      "requestSummary": "Mock pitch for climate-tech seed",
+      "connectedBy": "Green Founders",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-eee52c5ac525?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Network Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "1 week ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-8",
+      "variant": "circle",
+      "name": "Aisha Khan",
+      "request": "I'm crafting a promotion packet for Staff Engineer. Can you review my impact narratives?",
+      "requestSummary": "Staff promo packet review",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-0f73bc9e0b6c?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "8 days ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-9",
+      "variant": "opportunities",
+      "name": "Mateo Rivera",
+      "request": "I'd love feedback on my case study for a product ops role—does it tell a clear impact story?",
+      "requestSummary": "Product ops case study feedback",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-1c1e1b406a55?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Skill-aligned opportunity",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "9 days ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-10",
+      "variant": "network",
+      "name": "Nina Patel",
+      "request": "Could you introduce me to design leaders hiring for contract work this quarter?",
+      "requestSummary": "Intros to design leaders",
+      "connectedBy": "Founder Circle",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c9d7b6d8b6?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Network Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "2 weeks ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-11",
+      "variant": "circle",
+      "name": "Ethan Wright",
+      "request": "I need a second pair of eyes on my system design for a multi-tenant analytics platform.",
+      "requestSummary": "System design review",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-a1c73c9a4b3a?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "2 weeks ago",
+      "karma": 50
+    },
+    {
+      "id": "helped-12",
+      "variant": "opportunities",
+      "name": "Sofia Leone",
+      "request": "Can you mentor me on storytelling for portfolio presentations? I have an interview next week.",
+      "requestSummary": "Portfolio storytelling coaching",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-9c9e9b4b4b4a?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Skill-aligned opportunity",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "3 weeks ago",
+      "karma": 50
+    }
+  ],
+  "inProgress": [
+    {
+      "id": "progress-1",
+      "variant": "network",
+      "name": "David Kim",
+      "request": "I'm raising a seed round and would appreciate feedback on my pitch deck, especially the market sizing and competitive analysis slides.",
+      "requestSummary": "Pitch deck feedback for seed round",
+      "connectedBy": "Sarah Lee",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Network Connection",
+      "primaryCTA": "View Details",
+      "status": "In Progress",
+      "statusDate": "Yesterday"
+    },
+    {
+      "id": "progress-2",
+      "variant": "opportunities",
+      "name": "Emily Watson",
+      "request": "I'm transitioning from product management to product design. Could you review my case study and provide feedback on how to better showcase my design thinking?",
+      "requestSummary": "Career transition guidance",
+      "profession": "Product Manager",
+      "level": "Senior",
+      "connectionReason": "Product Design, UX Research",
+      "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Skill Match",
+      "primaryCTA": "View Details",
+      "status": "In Progress",
+      "statusDate": "2 days ago"
+    }
+  ],
+  "myRequests": [
+    {
+      "id": "request-1",
+      "variant": "circle",
+      "name": "Robert Chen",
+      "request": "I'm considering a career move into engineering management. What advice would you give someone making this transition?",
+      "requestSummary": "Career advice for EM transition",
+      "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "3 days ago",
+      "responses": [
+        {
+          "id": "resp-1",
+          "name": "Robert Chen",
+          "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
+          "status": "Completed",
+          "chatId": "request-1"
+        }
+      ],
+      "type": "contact",
+      "createdAt": "2 days ago"
+    },
+    {
+      "id": "request-2",
+      "variant": "network",
+      "name": "Amanda Foster",
+      "request": "I'm looking to hire a senior frontend engineer. Do you know anyone who might be interested or could you share this with your network?",
+      "requestSummary": "Help finding senior frontend engineer",
+      "connectedBy": "Mark Thompson",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Network Connection",
+      "primaryCTA": "View Details",
+      "status": "In Progress",
+      "statusDate": "1 day ago",
+      "responses": [],
+      "type": "list",
+      "createdAt": "1 week ago"
+    },
+    {
+      "id": "request-3",
+      "variant": "circle",
+      "name": "Lisa Park",
+      "request": "I'm preparing a talk on design systems for a conference. Would you be willing to review my slides and provide feedback?",
+      "requestSummary": "Conference talk feedback",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=faces",
+      "relationshipTag": "Direct Connection",
+      "primaryCTA": "View Details",
+      "status": "Completed",
+      "statusDate": "1 week ago",
+      "responses": [],
+      "type": "circle",
+      "createdAt": "3 days ago"
+    }
+  ],
+  "myHelpRequests": [
+    {
+      "id": "req-1",
+      "requestSummary": "Introduction to CTO needed",
+      "request": "I'm looking to connect with CTOs at early-stage startups in the fintech space. Ideally looking for folks who have scaled from Seed to Series A.",
+      "responses": [],
+      "status": "Open",
+      "type": "list",
+      "createdAt": "2 days ago"
+    },
+    {
+      "id": "req-2",
+      "requestSummary": "Transition to Engineering Manager",
+      "request": "I'm considering a move to management and would love to chat with experienced EMs about the transition and what to expect.",
+      "responses": [
+        {
+          "id": "resp-1",
+          "name": "Robert Chen",
+          "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
+          "status": "Completed",
+          "chatId": "request-1"
+        }
+      ],
+      "status": "Open",
+      "type": "contact",
+      "createdAt": "1 week ago"
+    },
+    {
+      "id": "req-3",
+      "requestSummary": "Hiring Senior Engineers",
+      "request": "We're scaling our team and looking for senior frontend engineers. Any referrals would be greatly appreciated!",
+      "responses": [
+        {
+          "id": "resp-2",
+          "name": "Amanda Foster",
+          "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=faces",
+          "status": "Completed",
+          "chatId": "request-2"
+        },
+        {
+          "id": "resp-3",
+          "name": "David Kim",
+          "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
+          "status": "In Progress",
+          "chatId": "progress-1"
+        },
+        {
+          "id": "resp-5",
+          "name": "Priya Desai",
+          "avatarUrl": "https://images.unsplash.com/photo-1524504388940-9c9e9b4b4b4a?w=150&h=150&fit=crop&crop=faces",
+          "status": "Completed",
+          "chatId": "helped-4"
+        },
+        {
+          "id": "resp-6",
+          "name": "Leo Park",
+          "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop&crop=faces",
+          "status": "In Progress",
+          "chatId": "helped-5"
+        }
+      ],
+      "status": "Open",
+      "type": "circle",
+      "createdAt": "3 days ago"
+    },
+    {
+      "id": "req-4",
+      "requestSummary": "Visibility for an open role",
+      "request": "We have an open Staff Designer role and want to tap the broader list—could you help boost and refer great candidates?",
+      "responses": [],
+      "status": "Open",
+      "type": "list",
+      "createdAt": "Today",
+      "promoted": false
+    }
+  ]
+}
