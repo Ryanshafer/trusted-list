@@ -198,10 +198,14 @@ const HelpSection = ({
             ))}
             {cards.length === 0 && (
               <CarouselItem className="basis-full">
-                <div className="flex h-full min-h-[380px] w-full items-center justify-center rounded-3xl border border-dashed border-primary/30 bg-primary/10 p-6 mx-1 text-center">
-                  <p className="text-lg font-semibold text-primary">
+                <div className="flex h-full min-h-[380px] w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-primary/30 bg-primary/10 p-6 mx-1 text-center">
+                  <p className="text-lg font-semibold">
                     Your work here is done. Thanks for the help!
                   </p>
+                  <p className="text-base font-medium text-muted-foreground">Looking for more people to help?</p>
+                  <Button asChild variant="default" className="px-5">
+                    <a href="/trusted-list/requests">Explore all requests</a>
+                  </Button>
                 </div>
               </CarouselItem>
             )}
