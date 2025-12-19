@@ -144,8 +144,10 @@ const AppShell = () => {
                       initialIndex={0}
                       targetIndex={greetingTargetIndex}
                       className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground"
-                      wordClassName="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-primary"
-                      intervalMs={800}
+                      wordClassName="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground"
+                      intervalMs={600}
+                      startDelayMs={0}
+                      animateInitial={false}
                     />
                     <span className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground">
                       Ryan.
