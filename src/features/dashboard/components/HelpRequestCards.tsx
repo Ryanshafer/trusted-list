@@ -1,5 +1,17 @@
 import * as React from "react";
-import { ArrowUpRight, BellPlus, BellRing, EyeOff, Flag, Hand, MoreHorizontal } from "lucide-react";
+import {
+  BellPlus,
+  BellRing,
+  Clock,
+  EyeOff,
+  Flag,
+  Globe,
+  Hand,
+  Link2,
+  MoreHorizontal,
+  Users,
+  X,
+} from "lucide-react";
 
 import type { CardData } from "../types";
 import { ChatDialog, type ChatMessage } from "./ChatDialog";
@@ -8,10 +20,8 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Dialog,
@@ -28,27 +38,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
+import { Badge } from "@/components/ui/badge";
 
 type HelpRequestCardProps = CardData & {
   onClear?: () => void;
 };
 
-type HeaderLine = {
-  text: string;
-  className?: string;
-};
+// Relationship type matching Variant G logic
+export type RelationshipType = "direct" | "through-contact" | "skills-match";
+
+// Helper to format end date as human-readable relative time
+export function formatEndDate(endDate: string | null | undefined): string {
+  if (!endDate) return "No deadline";
+
+  const end = new Date(endDate);
+  const now = new Date();
+  const diffMs = end.getTime() - now.getTime();
+
+  if (diffMs < 0) return "Ended";
+
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+  // Under 60 minutes
+  if (diffMinutes < 60) {
+    return diffMinutes === 1 ? "Help needed in next 1 minute" : `Help needed in next ${diffMinutes} minutes`;
+  }
+
+  // Under 24 hours
+  if (diffHours < 24) {
+    return diffHours === 1 ? "Help needed in next 1 hour" : `Help needed in next ${diffHours} hours`;
+  }
+
+  // Default: show the date
+  return `Help needed until ${end.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
+}
 
 export const HelpRequestCard = (card: HelpRequestCardProps) => {
   if (card.variant === "circle") {
@@ -64,105 +95,56 @@ export const HelpRequestCard = (card: HelpRequestCardProps) => {
   return <DefaultHelpCard {...card} />;
 };
 
-const DismissButton = ({ onClear, disabled, className }: { onClear?: () => void; disabled?: boolean; className?: string }) => {
-  if (!onClear) return null;
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className={className ?? "h-8 w-8 rounded-full border border-dashed border-border/60"}
-            onClick={onClear}
-            disabled={disabled}
-          >
-            <EyeOff className="h-4 w-4" />
-            <span className="sr-only">Dismiss</span>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Hide request</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
-
-const MoreOptionsButton = () => (
+const MoreOptionsButton = ({
+  onDismiss,
+  onFlag,
+}: {
+  onDismiss?: () => void;
+  onFlag?: () => void;
+}) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <Button variant="ghost" size="icon" className="absolute right-2.5 top-2.5 h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8 text-muted-foreground"
+      >
         <MoreHorizontal className="h-4 w-4" />
-        <span className="sr-only">More options</span>
+        <span className="sr-only">Open menu</span>
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuItem className="text-destructive focus:text-destructive">
+      {onDismiss && (
+        <DropdownMenuItem onClick={onDismiss}>
+          <EyeOff className="mr-2 h-4 w-4" />
+          I can't help with this request
+        </DropdownMenuItem>
+      )}
+      <DropdownMenuItem
+        className="text-destructive focus:text-destructive"
+        onClick={onFlag}
+      >
         <Flag className="mr-2 h-4 w-4" />
-        Flag this request
+        Flag as inappropriate
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 );
 
-const CardActions = ({
-  primaryLabel,
-  onPrimary,
-  onRemind,
-  reminderActive,
-  reminderLabel,
-  celebrating,
-  onDismiss,
-  isDismissing,
-}: {
-  primaryLabel: string;
-  onPrimary: () => void;
-  onRemind: () => void;
-  reminderActive: boolean;
-  reminderLabel?: string;
-  celebrating?: boolean;
-  onDismiss?: () => void;
-  isDismissing?: boolean;
-}) => (
-  <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-    <div className="relative sm:flex-1">
-      <Button className="relative z-10 w-full overflow-hidden gap-1" onClick={onPrimary}>
-        <Hand className="mr-1 h-4 w-4" />
-        {primaryLabel}
-      </Button>
-      {celebrating ? <ConfettiBurst /> : null}
-    </div>
-    <Button
-      variant="ghost"
-      className={`w-full sm:flex-1 gap-1 ${
-        reminderActive ? "bg-lime-100 text-lime-900 hover:bg-lime-200" : ""
-      }`}
-      onClick={onRemind}
-    >
-      {reminderActive ? (
-        <BellRing className="mr-1 h-4 w-4" />
-      ) : (
-        <BellPlus className="mr-1 h-4 w-4" />
-      )}
-      {reminderActive ? reminderLabel ?? "Reminder set" : "Remind me"}
-    </Button>
-    {onDismiss ? (
-      <DismissButton 
-        onClear={onDismiss} 
-        disabled={isDismissing} 
-        className="h-9 w-9 shrink-0 rounded-md text-muted-foreground" 
-      />
-    ) : null}
-  </div>
-);
-
-const ConnectedCardHeader = ({
+export const ConnectedCardHeader = ({
   name,
   avatarUrl,
-  headerLines,
+  relationshipType,
+  relationshipLabel,
+  onDismiss,
+  onFlag,
 }: {
   name: string;
   avatarUrl?: string | null;
-  headerLines: HeaderLine[];
+  relationshipType: RelationshipType;
+  relationshipLabel: string;
+  onDismiss?: () => void;
+  onFlag?: () => void;
 }) => {
   const initials = name
     .split(" ")
@@ -172,18 +154,24 @@ const ConnectedCardHeader = ({
     .toUpperCase();
 
   return (
-    <div className="flex items-center gap-3 pr-10">
-      <Avatar className="h-12 w-12">
-        {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} className="object-cover" /> : null}
+    <div className="flex flex-row items-start gap-3 pb-2 pt-5 select-none">
+      <Avatar className="h-10 w-10 shrink-0 border border-border mt-0.5">
+        {avatarUrl ? (
+          <AvatarImage src={avatarUrl} alt={name} className="object-cover" />
+        ) : null}
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
-      <div className="mb-1">
-        <p className="text-lg font-semibold leading-tight">{name}</p>
-        {headerLines.map(({ text, className }, index) => (
-          <p key={`${text}-${index}`} className={className ?? "text-xs text-muted-foreground/80"}>
-            {text}
-          </p>
-        ))}
+      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+        <span className="font-semibold text-base truncate">{name}</span>
+        <span className="text-xs text-muted-foreground flex items-start gap-1">
+          {relationshipType === "direct" && <Link2 className="h-3 w-3 shrink-0 mt-0.5" />}
+          {relationshipType === "through-contact" && <Users className="h-3 w-3 shrink-0 mt-0.5" />}
+          {relationshipType === "skills-match" && <Globe className="h-3 w-3 shrink-0 mt-0.5" />}
+          {relationshipLabel}
+        </span>
+      </div>
+      <div className="-mt-2 -mr-2">
+        <MoreOptionsButton onDismiss={onDismiss} onFlag={onFlag} />
       </div>
     </div>
   );
@@ -194,22 +182,27 @@ const ConnectedHelpCard = ({
   request,
   requestSummary,
   avatarUrl,
-  headerLines,
+  relationshipType,
   connectionLabel,
   primaryActionLabel,
+  endDate,
   onClear,
 }: {
   name: string;
   request: string;
   requestSummary?: string | null;
   avatarUrl?: string | null;
-  headerLines: HeaderLine[];
+  relationshipType: RelationshipType;
   connectionLabel: string;
   primaryActionLabel: string;
+  endDate?: string | null;
   onClear?: () => void;
 }) => {
   const [open, setOpen] = React.useState(false);
   const [chatOpen, setChatOpen] = React.useState(false);
+  const [flagOpen, setFlagOpen] = React.useState(false);
+
+  // Prepare initial chat message
   const initialLead = React.useMemo(() => {
     const trimmedSummary = requestSummary?.trim() ?? "";
     const trimmedDetails = request.trim();
@@ -227,7 +220,10 @@ const ConnectedHelpCard = ({
   const [remindOption, setRemindOption] = React.useState("3 days");
   const [reminderActive, setReminderActive] = React.useState(false);
   const [isDismissing, setIsDismissing] = React.useState(false);
+  const [isHidden, setIsHidden] = React.useState(false);
   const [celebrationTarget, setCelebrationTarget] = React.useState<"card" | "dialog">("card");
+
+  // Refs for timeouts
   const celebrationTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const chatOpenTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialogCloseTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -288,35 +284,121 @@ const ConnectedHelpCard = ({
     if (isDismissing) return;
     setIsDismissing(true);
     dismissTimeoutRef.current = setTimeout(() => {
-      onClear?.();
+      if (onClear) {
+        onClear();
+      } else {
+        setIsHidden(true);
+      }
     }, 250);
   }, [isDismissing, onClear]);
+
+  if (isHidden) return null;
+
+  // Variant G Content Display
+  const contentText = requestSummary || request;
 
   return (
     <>
       <Card
-        className={`relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm transition-all duration-300 ease-in-out ${
-          isDismissing ? "translate-y-4 scale-95 opacity-0" : "opacity-100"
-        }`}
+        className={`flex flex-col overflow-hidden transition-all hover:shadow-md border-border/80 bg-card ${isDismissing ? "translate-y-4 scale-95 opacity-0" : "opacity-100"
+          } duration-300 ease-in-out`}
       >
-        <CardContent className="flex flex-1 flex-col gap-5 p-6 pb-4">
-          <MoreOptionsButton />
-          <ConnectedCardHeader name={name} avatarUrl={avatarUrl} headerLines={headerLines} />
-          <div className="flex flex-1 flex-col gap-2">
-            <RequestPreview text={request} onExpand={() => setOpen(true)} />
-            <div className="flex-1" />
-            <CardActions
-              primaryLabel={primaryActionLabel}
-              onPrimary={handlePrimaryClick}
-              onRemind={() => setRemindOpen(true)}
-              reminderActive={reminderActive}
-              reminderLabel={reminderActive ? `${remindOption}` : undefined}
-              celebrating={celebrating && celebrationTarget === "card"}
-              onDismiss={handleDismiss}
-              isDismissing={isDismissing}
-            />
+        <CardHeader className="p-0 px-5">
+          <ConnectedCardHeader
+            name={name}
+            avatarUrl={avatarUrl}
+            relationshipType={relationshipType}
+            relationshipLabel={connectionLabel}
+            onDismiss={onClear ? handleDismiss : undefined}
+            onFlag={() => setFlagOpen(true)}
+          />
+        </CardHeader>
+
+        <CardContent className="pb-0 px-5">
+          <div
+            className="bg-muted/40 p-4 rounded-md cursor-pointer hover:bg-muted/60 transition-colors group/bubble relative mt-2 space-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            onClick={() => setOpen(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setOpen(true);
+              }
+            }}
+          >
+            {requestSummary ? (
+              <p className="font-bold text-foreground leading-relaxed mb-0">
+                {requestSummary}
+              </p>
+            ) : null}
+
+            {/* End date display */}
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground py-0.5">
+              <Clock className="w-3 h-3" />
+              <span>{formatEndDate(endDate)}</span>
+            </div>
+
+            <p className="text-sm text-foreground leading-relaxed">
+              {request.length > 80 ? (
+                <>
+                  {request.slice(0, 80).trim()}
+                  <span className="text-muted-foreground">... </span>
+                  <span className="text-muted-foreground font-medium">more</span>
+                </>
+              ) : (
+                request
+              )}
+            </p>
+
+            {/* Overlay for View Details */}
+            <div className="absolute inset-0 flex items-center justify-center rounded-md bg-background/60 backdrop-blur-[1px] opacity-0 transition-opacity duration-200 group-hover/bubble:opacity-100">
+              <div className="inline-flex h-8 items-center justify-center rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground shadow-sm">
+                Read details
+              </div>
+            </div>
           </div>
         </CardContent>
+
+        <CardFooter className="pt-6 pb-5 px-5 flex justify-end items-center">
+          <div className="flex flex-row-reverse gap-2 w-full justify-start relative">
+            <div className="relative">
+              <Button
+                onClick={handlePrimaryClick}
+                variant="outline"
+                className="font-semibold shadow-sm px-8 relative z-10 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                size="sm"
+              >
+                {primaryActionLabel}
+              </Button>
+              {celebrating && celebrationTarget === "card" ? <ConfettiBurst /> : null}
+            </div>
+
+            {reminderActive ? (
+              <Button
+                onClick={() => setReminderActive(false)}
+                variant="outline"
+                size="sm"
+                className="shrink-0 transition-all border-lime-200 bg-lime-50 text-lime-700 hover:bg-amber-100 hover:text-amber-800 hover:border-amber-300 group/remind"
+                title="Cancel reminder"
+              >
+                <BellRing className="w-3.5 h-3.5 mr-2 group-hover/remind:hidden" />
+                <X className="w-3.5 h-3.5 mr-2 hidden group-hover/remind:block" />
+                <span className="text-xs font-medium">Reminder: {remindOption}</span>
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setRemindOpen(true)}
+                variant="outline"
+                size="sm"
+                className="shrink-0 w-9 p-0 transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-primary"
+                title="Remind me later"
+              >
+                <BellPlus className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+        </CardFooter>
       </Card>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -324,8 +406,11 @@ const ConnectedHelpCard = ({
           <ExpandedHelpDialog
             name={name}
             request={request}
+            requestSummary={requestSummary}
             avatarUrl={avatarUrl}
+            relationshipType={relationshipType}
             connectionLabel={connectionLabel}
+            endDate={endDate}
             primaryLabel={primaryActionLabel}
             onPrimaryAction={handleDialogPrimary}
             onRemindAction={openRemindDialog}
@@ -361,69 +446,43 @@ const ConnectedHelpCard = ({
           setRemindOpen(false);
         }}
       />
+
+      <FlagRequestDialog
+        open={flagOpen}
+        onOpenChange={setFlagOpen}
+        requestorName={name}
+        requestorAvatarUrl={avatarUrl || undefined}
+        requestSummary={requestSummary}
+        requestText={request}
+        onSubmit={() => handleDismiss()}
+      />
     </>
   );
 };
 
-const DefaultHelpCard = ({
-  name,
-  request,
-  relationshipTag,
-  primaryCTA,
-  secondaryCTA = "Cannot help",
-  subtitle,
-  connectedVia,
-  requestSummary,
-  onClear,
-}: HelpRequestCardProps) => {
-  const [open, setOpen] = React.useState(false);
-
+// Default implementation wrapper
+const DefaultHelpCard = (props: HelpRequestCardProps) => {
   return (
-    <>
-      <Card className="flex h-full flex-col rounded-2xl border border-border bg-card shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold">{name}</CardTitle>
-          {subtitle || connectedVia ? (
-            <CardDescription>
-              Connected via <span className="font-medium text-foreground">{connectedVia ?? subtitle}</span>
-            </CardDescription>
-          ) : null}
-        </CardHeader>
-          <CardContent className="flex flex-1 flex-col space-y-4 pb-4">
-          <RequestPreview text={requestSummary ?? request} onExpand={() => setOpen(true)} />
-          <span className="inline-flex items-center rounded-full border border-dashed border-primary/40 px-3 py-1 text-xs font-medium uppercase tracking-wide text-primary">
-            {relationshipTag}
-          </span>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-2 pt-0 sm:flex-row">
-          <Button>
-            {primaryCTA}
-            <ArrowUpRight className="ml-2 h-4 w-4" />
-          </Button>
-          <Button variant="outline">{secondaryCTA}</Button>
-        </CardFooter>
-      </Card>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl">
-          <RequestDialog
-            name={name}
-            subtitle={connectedVia ?? subtitle ?? ""}
-            request={request}
-            primaryCTA={primaryCTA}
-            secondaryCTA={secondaryCTA}
-          />
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-};
+    <ConnectedHelpCard
+      name={props.name}
+      request={props.request}
+      requestSummary={props.requestSummary}
+      relationshipType="through-contact"
+      connectionLabel={props.subtitle || "Connected"}
+      primaryActionLabel={props.primaryCTA || "Help"}
+      endDate={props.endDate}
+      onClear={props.onClear}
+      avatarUrl={null}
+    />
+  )
+}
 
 const CircleHelpCard = ({
   name,
   request,
   avatarUrl,
   requestSummary,
+  endDate,
   onClear,
 }: HelpRequestCardProps) => {
   const firstName = name.split(" ")[0] ?? name;
@@ -434,28 +493,74 @@ const CircleHelpCard = ({
       request={request}
       requestSummary={requestSummary}
       avatarUrl={avatarUrl}
+      relationshipType="direct"
       connectionLabel="Directly Connected"
       primaryActionLabel={`Help ${firstName}`}
-      headerLines={[{ text: "Directly Connected", className: "text-xs text-muted-foreground/60" }]}
+      endDate={endDate}
       onClear={onClear}
     />
   );
 };
 
-const RequestPreview = ({ text, onExpand }: { text: string; onExpand: () => void }) => (
-  <div className="group relative cursor-pointer rounded-3xl bg-muted/50 p-4 transition-colors hover:bg-muted/70 dark:bg-muted/40" onClick={onExpand}>
-    <div className="relative max-h-[4.5rem] overflow-hidden [mask-image:linear-gradient(to_bottom,black_30%,transparent_100%)]">
-      <p className="text-base text-foreground/90 dark:text-slate-100 leading-relaxed">
-        {text}
-      </p>
-    </div>
-    <div className="mt-2 flex items-center justify-center">
-      <span className="text-xs font-medium text-primary py-1 px-3 rounded-full group-hover:bg-muted">
-        Read more
-      </span>
-    </div>
-  </div>
-);
+const NetworkHelpCard = ({
+  name,
+  request,
+  requestSummary,
+  connectedBy,
+  endDate,
+  onClear,
+  avatarUrl,
+}: HelpRequestCardProps) => {
+  const connector = connectedBy ?? "your trusted network";
+  const firstName = name.split(" ")[0] ?? name;
+
+  return (
+    <ConnectedHelpCard
+      name={name}
+      request={request}
+      requestSummary={requestSummary}
+      avatarUrl={avatarUrl}
+      relationshipType="through-contact"
+      connectionLabel={`Connected by ${connector}`}
+      primaryActionLabel={`Help ${firstName}`}
+      endDate={endDate}
+      onClear={onClear}
+    />
+  );
+};
+
+const OpportunityHelpCard = ({
+  name,
+  request,
+  requestSummary,
+  connectionReason,
+  profession,
+  level,
+  endDate,
+  onClear,
+  avatarUrl,
+}: HelpRequestCardProps) => {
+  const firstName = name.split(" ")[0] ?? name;
+  const connectionLine = connectionReason
+    ? connectionReason.toLowerCase().startsWith("you share similar skills")
+      ? connectionReason
+      : `You share similar skills: ${connectionReason}`
+    : "Skill-aligned opportunity";
+
+  return (
+    <ConnectedHelpCard
+      name={name}
+      request={request}
+      requestSummary={requestSummary}
+      avatarUrl={avatarUrl}
+      relationshipType="skills-match"
+      connectionLabel={connectionLine}
+      primaryActionLabel={`Help ${firstName}`}
+      endDate={endDate}
+      onClear={onClear}
+    />
+  );
+};
 
 const confettiColors = ["bg-primary", "bg-amber-400", "bg-emerald-400", "bg-rose-400", "bg-sky-400", "bg-purple-400"];
 const remindOptions = ["4 hours", "12 hours", "1 day", "3 days", "1 week", "2 weeks"];
@@ -574,116 +679,14 @@ const RemindDialog = ({
   </Dialog>
 );
 
-const NetworkHelpCard = ({
-  name,
-  request,
-  requestSummary,
-  connectedBy,
-  onClear,
-  avatarUrl,
-}: HelpRequestCardProps) => {
-  const connector = connectedBy ?? "your trusted network";
-  const firstName = name.split(" ")[0] ?? name;
-  const headerLines: HeaderLine[] = [
-    { text: `Connected by ${connector}`, className: "text-xs text-muted-foreground/60" },
-  ];
-
-  return (
-    <ConnectedHelpCard
-      name={name}
-      request={request}
-      requestSummary={requestSummary}
-      avatarUrl={avatarUrl}
-      connectionLabel={`Connected by ${connector}`}
-      primaryActionLabel={`Help ${firstName}`}
-      headerLines={headerLines}
-      onClear={onClear}
-    />
-  );
-};
-
-const OpportunityHelpCard = ({
-  name,
-  request,
-  requestSummary,
-  connectionReason,
-  profession,
-  level,
-  onClear,
-  avatarUrl,
-}: HelpRequestCardProps) => {
-  const firstName = name.split(" ")[0] ?? name;
-  const connectionLine = connectionReason
-    ? connectionReason.toLowerCase().startsWith("you share similar skills")
-      ? connectionReason
-      : `You share similar skills: ${connectionReason}`
-    : null;
-  const levelLine = [level, profession].filter(Boolean).join(" ").trim();
-  const headerLines: HeaderLine[] = [
-    ...(levelLine ? [{ text: levelLine, className: "text-sm text-muted-foreground" }] : []),
-    ...(connectionLine ? [{ text: connectionLine, className: "text-xs text-muted-foreground/60" }] : []),
-  ];
-
-  return (
-    <ConnectedHelpCard
-      name={name}
-      request={request}
-      requestSummary={requestSummary}
-      avatarUrl={avatarUrl}
-      connectionLabel={connectionLine ?? "Skill-aligned opportunity"}
-      primaryActionLabel={`Help ${firstName}`}
-      headerLines={headerLines}
-      onClear={onClear}
-    />
-  );
-};
-
-const RequestDialog = ({
-  name,
-  subtitle,
-  request,
-  primaryCTA,
-  secondaryCTA,
-}: {
-  name: string;
-  subtitle?: string;
-  request: string;
-  primaryCTA: string;
-  secondaryCTA?: string;
-}) => (
-  <Card className="border-none shadow-none">
-    <CardHeader>
-      <CardTitle className="text-xl font-semibold">{name}</CardTitle>
-      {subtitle ? (
-        <CardDescription>
-          Connected via <span className="font-medium text-foreground">{subtitle}</span>
-        </CardDescription>
-      ) : null}
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
-        <p className="rounded-2xl bg-white px-4 py-3 text-base text-foreground shadow-sm dark:bg-slate-900 dark:text-slate-100">
-          {request}
-        </p>
-      </div>
-    </CardContent>
-    <CardFooter className="mt-8 flex flex-col gap-2 sm:flex-row">
-      <Button className="sm:flex-1">
-        {primaryCTA}
-        <ArrowUpRight className="ml-2 h-4 w-4" />
-      </Button>
-      <Button variant="ghost" className="sm:flex-1">
-        {secondaryCTA}
-      </Button>
-    </CardFooter>
-  </Card>
-);
-
 const ExpandedHelpDialog = ({
   name,
   request,
+  requestSummary,
   avatarUrl,
+  relationshipType,
   connectionLabel,
+  endDate,
   primaryLabel,
   onPrimaryAction,
   onRemindAction,
@@ -691,8 +694,11 @@ const ExpandedHelpDialog = ({
 }: {
   name: string;
   request: string;
+  requestSummary?: string | null;
   avatarUrl?: string | null;
+  relationshipType?: RelationshipType;
   connectionLabel?: string;
+  endDate?: string | null;
   primaryLabel: string;
   onPrimaryAction?: () => void;
   onRemindAction?: () => void;
@@ -701,34 +707,60 @@ const ExpandedHelpDialog = ({
   <Card className="border-none shadow-none">
     <CardContent className="space-y-4 p-3">
       <div className="flex items-start gap-4">
-        <Avatar className="h-12 w-12">
+        <Avatar className="h-12 w-12 border border-border mt-0.5">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} className="object-cover" /> : null}
           <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
-        <div>
+        <div className="flex flex-col gap-0.5">
           <p className="text-lg font-semibold">{name}</p>
           {connectionLabel ? (
-            <p className="text-xs text-muted-foreground">{connectionLabel}</p>
+            <p className="text-xs text-muted-foreground flex items-start gap-1">
+              {relationshipType === "direct" && <Link2 className="h-3 w-3 shrink-0 mt-0.5" />}
+              {relationshipType === "through-contact" && <Users className="h-3 w-3 shrink-0 mt-0.5" />}
+              {relationshipType === "skills-match" && <Globe className="h-3 w-3 shrink-0 mt-0.5" />}
+              {connectionLabel}
+            </p>
           ) : null}
         </div>
       </div>
-      <div className="rounded-3xl bg-muted/50 p-4 dark:bg-muted/40">
-        <p className="text-base text-foreground leading-relaxed">
+      <div className="rounded-md bg-muted/50 p-4 space-y-2">
+        {requestSummary ? (
+          <p className="font-bold text-foreground leading-relaxed mb-0">
+            {requestSummary}
+          </p>
+        ) : null}
+        {/* End date display - between short and long description */}
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground pb-0.5">
+          <Clock className="h-3.5 w-3.5" />
+          <span>{formatEndDate(endDate)}</span>
+        </div>
+        <p className="text-sm text-foreground leading-relaxed max-w-prose">
           {request}
         </p>
       </div>
-      <div className="mt-10 flex flex-col gap-8 sm:flex-row">
-        <div className="relative w-full sm:flex-1">
-          <Button className="relative z-10 w-full overflow-hidden" onClick={onPrimaryAction}>
-            <Hand className="mr-1 h-4 w-4" />
-            {primaryLabel}
+      <div className="pt-4 flex justify-end items-center">
+        <div className="flex gap-2 justify-end relative">
+          <Button
+            onClick={onRemindAction}
+            variant="outline"
+            size="sm"
+            className="shrink-0 w-9 p-0 transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-primary"
+            title="Remind me later"
+          >
+            <BellPlus className="w-4 h-4" />
           </Button>
-          {confettiActive ? <ConfettiBurst /> : null}
+          <div className="relative">
+            <Button
+              onClick={onPrimaryAction}
+              className="font-semibold shadow-sm px-8 relative z-10"
+              size="sm"
+              autoFocus
+            >
+              {primaryLabel}
+            </Button>
+            {confettiActive ? <ConfettiBurst /> : null}
+          </div>
         </div>
-        <Button variant="ghost" className="sm:flex-1" onClick={onRemindAction}>
-          <BellPlus className="mr-1 h-4 w-4" />
-          Remind me
-        </Button>
       </div>
     </CardContent>
   </Card>

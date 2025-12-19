@@ -2,21 +2,31 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, MessageCircle, Edit, Trash2, MoreHorizontal, Flag, User, Users, Globe, Megaphone, MegaphoneOff, LayoutGrid, List, Eye, EyeOff, Sparkles, Hand } from "lucide-react";
+import { ChevronLeft, MessageCircle, Edit, Trash2, MoreHorizontal, Flag, User, Users, Globe, Megaphone, MegaphoneOff, LayoutGrid, List, Eye, EyeOff, Sparkles, Hand, Clock, BellPlus, Check, Filter } from "lucide-react";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { HelpRequestCard } from "@/features/dashboard/components/HelpRequestCards";
+import { HelpRequestCard, formatEndDate, ConnectedCardHeader, type RelationshipType } from "@/features/dashboard/components/HelpRequestCards";
 import { ChatDialog, type ChatMessage, type CompletionData } from "@/features/dashboard/components/ChatDialog";
 import type { CardData } from "@/features/dashboard/types";
 import { interactions, myHelpRequests, interactionChats, type HelperResponse, type MyHelpRequest } from "@/features/interactions/data";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +49,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
 import askContent from "../../../../data/dashboard-content.json";
 
+// Simple date formatter for list views (just the date, no "Help needed" text)
+const formatDateOnly = (endDate: string | null | undefined): string => {
+  if (!endDate) return "No deadline";
+  const date = new Date(endDate);
+  if (isNaN(date.getTime())) return "No deadline";
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+};
 
 // Enhanced HelpRequestCard wrapper with status badge
 const InteractionCardWithStatus = ({ card }: { card: CardData & { status?: string; statusDate?: string } }) => {
@@ -235,14 +252,111 @@ const HelperRow = ({
   );
 };
 
+const HelperAvatar = ({
+  response,
+  requestSummary,
+  requestDetails,
+}: {
+  response: HelperResponse;
+  requestSummary: string;
+  requestDetails: string;
+}) => {
+  const [chatOpen, setChatOpen] = React.useState(false);
+  const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>(() =>
+    getMockMessages(response.chatId, requestSummary, requestDetails)
+  );
+  const [composer, setComposer] = React.useState("");
+  const [status, setStatus] = React.useState(response.status);
+
+  const handleSendMessage = (content: string) => {
+    const trimmed = content.trim();
+    if (!trimmed) return;
+    setChatMessages((prev) => [...prev, { id: Date.now(), sender: "user", text: trimmed }]);
+    setComposer("");
+  };
+
+  const handleComplete = (data: CompletionData) => {
+    setChatMessages(prev => [
+      ...prev,
+      { id: Date.now(), sender: "system", text: "Request Completed", type: "system" },
+      { id: Date.now() + 1, sender: "user", text: `+50 Karma • ${data.note || "Thank you!"}`, type: "karma" }
+    ]);
+    setStatus("Completed");
+  };
+
+  const handleUndoComplete = () => {
+    setChatMessages(prev => {
+      const newMessages = [...prev];
+      if (newMessages.length > 0 && newMessages[newMessages.length - 1].type === "karma") newMessages.pop();
+      if (newMessages.length > 0 && newMessages[newMessages.length - 1].type === "system") newMessages.pop();
+      return newMessages;
+    });
+    setStatus("In Progress");
+  };
+
+  const initials = response.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className="relative cursor-pointer transition-transform hover:scale-105 hover:z-10 group/avatar"
+              onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
+            >
+              <Avatar className="h-8 w-8 border-2 border-background ring-1 ring-border/10">
+                {response.avatarUrl ? <AvatarImage src={response.avatarUrl} alt={response.name} className="object-cover" /> : null}
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+              {status === "Completed" && (
+                <div className="absolute -bottom-0.5 -right-0.5 bg-emerald-500 rounded-full p-[1px] border-2 border-background text-white shadow-sm">
+                  <Check className="h-2 w-2 stroke-[3]" />
+                </div>
+              )}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Chat with {response.name}</p>
+            <TooltipPrimitive.Arrow className="fill-primary" width={10} height={5} />
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <ChatDialog
+        open={chatOpen}
+        onOpenChange={setChatOpen}
+        contactName={response.name}
+        messages={chatMessages}
+        composer={composer}
+        onComposerChange={setComposer}
+        onSend={handleSendMessage}
+        isHelpRequest={true}
+        isCompleted={status === "Completed"}
+        onComplete={handleComplete}
+        onUndoComplete={handleUndoComplete}
+      />
+    </>
+  );
+};
+
 const MyHelpRequestCard = ({
   request,
   hideUnpromoted = false,
   onDelete,
+  onUpdate,
+  layout = "grid",
 }: {
   request: MyHelpRequest;
   hideUnpromoted?: boolean;
   onDelete?: (id: string) => void;
+  onUpdate?: (updatedRequest: MyHelpRequest) => void;
+  layout?: "grid" | "list";
 }) => {
   const [currentRequest, setCurrentRequest] = React.useState(request);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -251,13 +365,39 @@ const MyHelpRequestCard = ({
   );
   const [isRemoving, setIsRemoving] = React.useState(false);
   const [showAllResponses, setShowAllResponses] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    setCurrentRequest(request);
+    setIsPromotionActive(request.promoted ?? true);
+  }, [request]);
 
   const handleSaveEdit = (updates: Partial<CardData>) => {
-    setCurrentRequest(prev => ({
-      ...prev,
-      requestSummary: updates.requestSummary || prev.requestSummary,
-      request: updates.request || prev.request
-    }));
+    const updated = {
+      ...currentRequest,
+      requestSummary: updates.requestSummary || currentRequest.requestSummary,
+      request: updates.request || currentRequest.request
+    };
+    setCurrentRequest(updated);
+    onUpdate?.(updated);
+  };
+
+  const handleCompleteRequest = () => {
+    const updated = {
+      ...currentRequest,
+      status: "Closed" as const,
+      promoted: false
+    };
+    setCurrentRequest(updated);
+    setIsPromotionActive(false);
+    onUpdate?.(updated);
+  };
+
+  const togglePromotion = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newValue = !isPromotionActive;
+    setIsPromotionActive(newValue);
+    onUpdate?.({ ...currentRequest, promoted: newValue });
   };
 
   // Convert to CardData shape for EditRequestDialog
@@ -270,193 +410,356 @@ const MyHelpRequestCard = ({
     relationshipTag: "",
     primaryCTA: "",
   };
-  const formattedEndDate =
-    currentRequest.endDate && !Number.isNaN(Date.parse(currentRequest.endDate))
-      ? new Date(currentRequest.endDate).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-      : null;
+  const formattedEndDate = formatEndDate(currentRequest.endDate);
+  const listViewDate = formatDateOnly(currentRequest.endDate);
 
   const getRequestTypeInfo = (type: MyHelpRequest["type"]) => {
     switch (type) {
-      case "contact": return { label: "Ask a contact", icon: User };
-      case "circle": return { label: "Ask your circle", icon: Users };
-      case "list": return { label: "Ask the list", icon: Globe };
+      case "contact": return { label: "Contact", icon: User };
+      case "circle": return { label: "Circle", icon: Users };
+      case "list": return { label: "List", icon: Globe };
     }
   };
 
   const typeInfo = getRequestTypeInfo(currentRequest.type);
   const TypeIcon = typeInfo.icon;
-  const isPromotable = ["circle", "list"].includes(currentRequest.type);
+  const isPromotable = ["circle", "list"].includes(currentRequest.type) && currentRequest.status !== "Closed";
 
   // Hide card if hideUnpromoted is true and promotion is stopped
   if (hideUnpromoted && !isPromotionActive && isPromotable) {
     return null;
   }
 
+  // Calculate Status Label
+  const isCompleted = currentRequest.status === "Closed" || (currentRequest.type === "contact" && currentRequest.responses.some(r => r.status === "Completed"));
+  const isEditable = !isCompleted && (!isPromotable || !isPromotionActive);
+
+  let statusLabel = "Active";
+  let statusColor = "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+
+  if (isCompleted) {
+    statusLabel = "Completed";
+    statusColor = "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+  } else if (isPromotable && !isPromotionActive) {
+    statusLabel = "Paused";
+    statusColor = "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
+  }
+
+  const RowView = (
+    <div className={`hidden lg:grid grid-cols-12 gap-4 px-6 py-4 text-sm ${isExpanded ? "items-start" : "items-center"}`}>
+      {/* Request: Col 4 */}
+      <div className="col-span-4 min-w-0 pr-6">
+        <div className={`font-semibold ${isExpanded ? "whitespace-normal" : "truncate"}`}>
+          {currentRequest.requestSummary}
+        </div>
+        <div className="text-xs text-muted-foreground">
+          {isExpanded ? (
+            <>
+              {currentRequest.request}
+              <span
+                className="text-primary hover:underline ml-1 cursor-pointer font-medium"
+                onClick={(e) => { e.stopPropagation(); setIsExpanded(false); }}
+              >
+                less
+              </span>
+            </>
+          ) : (
+            <div className="flex">
+              <span className="truncate">
+                {currentRequest.request}
+              </span>
+              {currentRequest.request.length > 60 && (
+                <span
+                  className="text-primary hover:underline ml-1 cursor-pointer font-medium whitespace-nowrap"
+                  onClick={(e) => { e.stopPropagation(); setIsExpanded(true); }}
+                >
+                  more
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Type: Col 1 (Text Only, Shortened) */}
+      <div className="col-span-1 flex items-center min-w-0">
+        <span className="font-medium text-muted-foreground truncate">{typeInfo.label}</span>
+      </div>
+
+      {/* End Date: Col 1 */}
+      <div className="col-span-1 text-xs text-muted-foreground min-w-0">
+        <div className="flex items-center gap-1.5 truncate">
+          <span>{listViewDate}</span>
+        </div>
+      </div>
+
+      {/* Status: Col 1 */}
+      <div className="col-span-1">
+        <Badge variant="secondary" className={`text-[10px] h-5 px-1.5 font-normal ${statusColor}`}>
+          {statusLabel}
+        </Badge>
+      </div>
+
+      {/* Responses: Col 3 */}
+      <div className={`col-span-3 flex pl-2 justify-start ${showAllResponses ? "flex-wrap gap-1 space-x-0" : "-space-x-2 overflow-hidden"}`}>
+        {(showAllResponses ? currentRequest.responses : currentRequest.responses.slice(0, 7)).map(response => (
+          <HelperAvatar
+            key={response.id}
+            response={response}
+            requestSummary={currentRequest.requestSummary}
+            requestDetails={currentRequest.request}
+          />
+        ))}
+
+        {!showAllResponses && currentRequest.responses.length > 7 && (
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-[10px] font-medium border-2 border-background ring-2 ring-background hover:bg-muted/80 transition-colors z-10"
+            onClick={(e) => { e.stopPropagation(); setShowAllResponses(true); }}
+          >
+            +{currentRequest.responses.length - 7}
+          </button>
+        )}
+
+        {showAllResponses && currentRequest.responses.length > 7 && (
+          <button
+            className="text-[10px] text-primary hover:underline ml-2 self-center font-medium"
+            onClick={(e) => { e.stopPropagation(); setShowAllResponses(false); }}
+          >
+            Show less
+          </button>
+        )}
+
+        {currentRequest.responses.length === 0 && (
+          <div className="h-8 w-8 rounded-full bg-muted/30 border-2 border-dashed border-muted-foreground/30" />
+        )}
+      </div>
+
+      {/* Action & More: Col 2 */}
+      <div className="col-span-2 flex justify-end items-center gap-1">
+        {isPromotable ? (
+          <Button
+            variant={isPromotionActive ? "outline" : "secondary"}
+            size="sm"
+            className={`w-auto px-3 h-8 text-xs font-semibold gap-1.5 border shadow-sm ${!isPromotionActive ? "text-amber-700 bg-amber-50 hover:bg-amber-100 border-amber-200" : "hover:bg-accent hover:text-accent-foreground"}`}
+            onClick={togglePromotion}
+          >
+            {isPromotionActive ? (
+              <>
+                <MegaphoneOff className="h-3.5 w-3.5" /> Stop Promotion
+              </>
+            ) : (
+              <>
+                <Megaphone className="h-3.5 w-3.5" /> Resume Promotion
+              </>
+            )}
+          </Button>
+        ) : (
+          <span className="w-auto"></span>
+        )}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0" onClick={e => e.stopPropagation()}>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setEditOpen(true)} disabled={!isEditable}>
+              <Edit className="mr-2 h-4 w-4" /> Edit Request
+            </DropdownMenuItem>
+            {!isCompleted && (
+              <DropdownMenuItem onClick={handleCompleteRequest}>
+                <Check className="mr-2 h-4 w-4" /> Complete request
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem className="text-destructive" onClick={() => { setIsRemoving(true); setTimeout(() => onDelete?.(currentRequest.id), 180); }}>
+              <Trash2 className="mr-2 h-4 w-4" /> Delete Request
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
+  );
+
   return (
     <div
-      className={`transition-all duration-200 ease-in-out ${isRemoving ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"
-        }`}
+      className={`transition-all duration-200 ease-in-out relative h-full ${isRemoving ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"
+        } ${layout === "list" ? "lg:border-b lg:border-border/50 lg:last:border-0" : ""}`}
     >
-      <Card className="relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
-        <CardContent className="flex flex-1 flex-col gap-4 p-6">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <TypeIcon className="h-3.5 w-3.5" />
-                {typeInfo.label}
-              </div>
-              {!isPromotionActive && isPromotable && (
-                <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-normal bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400">
-                  Promotion Stopped
-                </Badge>
-              )}
-              {currentRequest.type === "contact" && currentRequest.responses[0]?.status === "Completed" && (
-                <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-normal bg-blue-100 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
-                  Completed
-                </Badge>
-              )}
-            </div>
-            <div className="flex items-start justify-between">
-              <div className="pr-8">
-                <h3 className="text-lg font-semibold leading-tight">{currentRequest.requestSummary}</h3>
-                {formattedEndDate && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Ends {formattedEndDate}
-                  </p>
-                )}
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 -mt-2 rounded-full text-muted-foreground hover:text-foreground">
-                    <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">More options</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    className="text-destructive focus:text-destructive"
-                    onClick={() => {
-                      setIsRemoving(true);
-                      setTimeout(() => onDelete?.(currentRequest.id), 180);
-                    }}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete request
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-
-          <div className="text-sm text-muted-foreground">
-            {currentRequest.request}
-          </div>
-
-          <div className="mt-auto pt-2">
-            {currentRequest.responses.length === 0 ? (
-              <div className="flex flex-row gap-2">
-                <Button
-                  variant="outline"
-                  className="flex-1 gap-2 border-dashed text-sm"
-                  onClick={() => setEditOpen(true)}
-                  disabled={isPromotionActive}
-                >
-                  <Edit className="h-4 w-4" />
-                  Edit Request
-                </Button>
-                {isPromotable && (
-                  <Button
-                    variant={isPromotionActive ? "outline" : "ghost"}
-                    className={`flex-1 gap-2 text-sm ${!isPromotionActive ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : "text-muted-foreground hover:text-foreground"}`}
-                    onClick={() => setIsPromotionActive(!isPromotionActive)}
-                  >
-                    {isPromotionActive ? (
-                      <>
-                        <MegaphoneOff className="h-4 w-4" />
-                        Stop promotion
-                      </>
-                    ) : (
-                      <>
-                        <Megaphone className="h-4 w-4" />
-                        Resume promotion
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                  Responses
+      <div className={layout === "list" ? "lg:hidden h-full" : "h-full"}>
+        <Card className="relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
+          <CardContent className="flex flex-1 flex-col gap-4 p-6">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                  <TypeIcon className="h-3.5 w-3.5" />
+                  {typeInfo.label}
                 </div>
-            {(showAllResponses ? currentRequest.responses : currentRequest.responses.slice(0, 2)).map(
-              (response) => (
-                <HelperRow
-                  key={response.id}
-                  response={response}
-                  requestSummary={currentRequest.requestSummary}
-                  requestDetails={currentRequest.request}
-                />
-              )
-            )}
-            {currentRequest.responses.length > 2 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-sm text-primary"
-                onClick={() => setShowAllResponses((prev) => !prev)}
-              >
-                {showAllResponses
-                  ? "See fewer responses"
-                  : `See ${currentRequest.responses.length - 2} more responses`}
-              </Button>
-            )}
-            {isPromotable && (
-              <Button
-                variant={isPromotionActive ? "outline" : "ghost"}
-                size="sm"
-                className={`w-full gap-2 mt-2 text-sm ${!isPromotionActive ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : "text-muted-foreground hover:text-foreground"}`}
-                    onClick={() => setIsPromotionActive(!isPromotionActive)}
-                  >
-                    {isPromotionActive ? (
-                      <>
-                        <MegaphoneOff className="h-3.5 w-3.5" />
-                        Stop promotion
-                      </>
-                    ) : (
-                      <>
-                        <Megaphone className="h-3.5 w-3.5" />
-                        Resume promotion
-                      </>
-                    )}
-                  </Button>
+                {!isPromotionActive && isPromotable && (
+                  <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-normal bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400">
+                    Promotion Stopped
+                  </Badge>
+                )}
+                {isCompleted && (
+                  <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-normal bg-blue-100 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
+                    Completed
+                  </Badge>
                 )}
               </div>
-            )}
-          </div>
-        </CardContent>
+              <div className="flex items-start justify-between">
+                <div className="pr-8">
+                  <h3 className="text-lg font-semibold leading-tight">{currentRequest.requestSummary}</h3>
+                  {formattedEndDate && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {formattedEndDate}
+                    </p>
+                  )}
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 -mt-2 rounded-full text-muted-foreground hover:text-foreground">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">More options</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() => setEditOpen(true)}
+                      disabled={!isEditable}
+                    >
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit request
+                    </DropdownMenuItem>
+                    {!isCompleted && (
+                      <DropdownMenuItem onClick={handleCompleteRequest}>
+                        <Check className="mr-2 h-4 w-4" /> Complete request
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive"
+                      onClick={() => {
+                        setIsRemoving(true);
+                        setTimeout(() => onDelete?.(currentRequest.id), 180);
+                      }}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete request
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
 
-        <EditRequestDialog
-          open={editOpen}
-          onOpenChange={setEditOpen}
-          card={cardDataForEdit}
-          onSave={handleSaveEdit}
-        />
-      </Card>
+            <div className="text-sm text-muted-foreground">
+              {currentRequest.request}
+            </div>
+
+            <div className="mt-auto pt-2">
+              {currentRequest.responses.length === 0 ? (
+                <div className="flex flex-row gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1 gap-2 border-dashed text-sm"
+                    onClick={() => setEditOpen(true)}
+                    disabled={!isEditable}
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit Request
+                  </Button>
+                  {isPromotable && (
+                    <Button
+                      variant={isPromotionActive ? "outline" : "ghost"}
+                      className={`flex-1 gap-2 text-sm ${!isPromotionActive ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : "text-muted-foreground hover:text-foreground"}`}
+                      onClick={() => setIsPromotionActive(!isPromotionActive)}
+                    >
+                      {isPromotionActive ? (
+                        <>
+                          <MegaphoneOff className="h-4 w-4" />
+                          Stop promotion
+                        </>
+                      ) : (
+                        <>
+                          <Megaphone className="h-4 w-4" />
+                          Resume promotion
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+                    Responses
+                  </div>
+                  {(showAllResponses ? currentRequest.responses : currentRequest.responses.slice(0, 2)).map(
+                    (response) => (
+                      <HelperRow
+                        key={response.id}
+                        response={response}
+                        requestSummary={currentRequest.requestSummary}
+                        requestDetails={currentRequest.request}
+                      />
+                    )
+                  )}
+                  {currentRequest.responses.length > 2 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full text-sm text-primary"
+                      onClick={() => setShowAllResponses((prev) => !prev)}
+                    >
+                      {showAllResponses
+                        ? "See fewer responses"
+                        : `See ${currentRequest.responses.length - 2} more responses`}
+                    </Button>
+                  )}
+                  {isPromotable && (
+                    <Button
+                      variant={isPromotionActive ? "outline" : "ghost"}
+                      size="sm"
+                      className={`w-full gap-2 mt-2 text-sm ${!isPromotionActive ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : "text-muted-foreground hover:text-foreground"}`}
+                      onClick={() => setIsPromotionActive(!isPromotionActive)}
+                    >
+                      {isPromotionActive ? (
+                        <>
+                          <MegaphoneOff className="h-3.5 w-3.5" />
+                          Stop promotion
+                        </>
+                      ) : (
+                        <>
+                          <Megaphone className="h-3.5 w-3.5" />
+                          Resume promotion
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {layout === "list" && RowView}
+
+      <EditRequestDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        card={cardDataForEdit}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 };
 
-const MyRequestCard = ({ card }: { card: CardData & { status?: string; statusDate?: string } }) => {
+const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: string; statusDate?: string }, layout?: "grid" | "list" }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [badgePosition, setBadgePosition] = React.useState({ top: 88 });
   const [status, setStatus] = React.useState(card.status);
   const [currentCard, setCurrentCard] = React.useState(card);
   const [editOpen, setEditOpen] = React.useState(false);
+
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   // Chat state
   const [chatOpen, setChatOpen] = React.useState(false);
@@ -513,79 +816,187 @@ const MyRequestCard = ({ card }: { card: CardData & { status?: string; statusDat
     }
   }, []);
 
-  const initials = card.name
+  const isMyRequest = card.id.startsWith("request-");
+  const isCompleted = status === "Completed";
+
+  let relationshipType: RelationshipType = "through-contact";
+  let connectionLabel = "Connected";
+
+  if (currentCard.variant === "circle") {
+    relationshipType = "direct";
+    connectionLabel = "Directly Connected";
+  } else if (currentCard.variant === "network") {
+    relationshipType = "through-contact";
+    connectionLabel = currentCard.connectedBy ? `Connected by ${currentCard.connectedBy}` : "Connected by your network";
+  } else if (currentCard.variant === "opportunities") {
+    relationshipType = "skills-match";
+    connectionLabel = currentCard.relationshipTag || "Skill-aligned opportunity";
+  }
+
+  const initials = currentCard.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
 
-  const isMyRequest = card.id.startsWith("request-");
-  const isCompleted = status === "Completed";
-
   return (
-    <div ref={containerRef} className="relative">
-      <Card className="relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
-        <CardContent className="flex flex-1 flex-col gap-5 p-6 pb-4">
-          {/* More Options Button */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="absolute right-2.5 top-2.5 h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">More options</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem className="text-destructive focus:text-destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete request
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+    <div ref={containerRef} className={`relative h-full ${layout === "list" ? "lg:border-b lg:border-border/50 lg:last:border-0" : ""}`}>
+      <div className={layout === "list" ? "lg:hidden h-full" : "h-full"}>
+        <Card className="relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
+          <CardHeader className="p-0 px-5">
+            <ConnectedCardHeader
+              name={currentCard.name}
+              avatarUrl={currentCard.avatarUrl}
+              relationshipType={relationshipType}
+              relationshipLabel={connectionLabel}
+            />
+          </CardHeader>
+          <CardContent className="flex flex-1 flex-col gap-2 p-5 pt-0">
 
-          {/* Header */}
-          <div className="flex items-center gap-3 pr-10">
-            <Avatar className="h-12 w-12">
-              {currentCard.avatarUrl ? <AvatarImage src={currentCard.avatarUrl} alt={currentCard.name} className="object-cover" /> : null}
+            {/* Request Preview */}
+            <div className="flex flex-1 flex-col gap-2">
+              <div
+                className="bg-muted/30 p-4 rounded-md cursor-pointer hover:bg-muted/50 transition-colors group/bubble relative mt-2 space-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                onClick={() => setChatOpen(true)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setChatOpen(true);
+                  }
+                }}
+              >
+                {currentCard.requestSummary ? (
+                  <p className="font-medium text-foreground leading-relaxed mb-0.5">
+                    {currentCard.requestSummary}
+                  </p>
+                ) : null}
+
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground py-0.5">
+                  <Clock className="w-3 h-3" />
+                  <span>{formatEndDate(currentCard.endDate)}</span>
+                </div>
+
+                <p className="text-sm text-foreground leading-relaxed">
+                  {currentCard.request.length > 80 ? (
+                    <>
+                      {currentCard.request.slice(0, 80).trim()}
+                      <span className="text-muted-foreground">... </span>
+                      <span className="text-muted-foreground font-medium">more</span>
+                    </>
+                  ) : (
+                    currentCard.request
+                  )}
+                </p>
+
+                {/* Overlay for View Details */}
+                <div className="absolute inset-0 flex items-center justify-center rounded-md bg-background/60 backdrop-blur-[1px] opacity-0 transition-opacity duration-200 group-hover/bubble:opacity-100">
+                  <div className="inline-flex h-8 items-center justify-center rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground shadow-sm">
+                    Read details
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1" />
+
+              {/* Primary Action */}
+              <div className="mt-3 flex">
+                <Button
+                  variant="outline"
+                  className="w-full gap-1 font-semibold border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => setChatOpen(true)}
+                >
+                  <MessageCircle className="mr-1 h-4 w-4" />
+                  {isCompleted ? "Read chat history" : "Chat"}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {layout === "list" && (
+        <div className={`hidden lg:grid grid-cols-12 gap-4 px-6 py-4 text-sm ${isExpanded ? "items-start" : "items-center"}`}>
+          {/* User: Col 3 (Avatar + Name) */}
+          <div className="col-span-3 flex items-center gap-3 min-w-0">
+            <Avatar className="h-9 w-9 border shrink-0">
+              {currentCard.avatarUrl ? <AvatarImage src={currentCard.avatarUrl} /> : null}
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
-            <div className="mb-1">
-              <p className="text-lg font-semibold leading-tight">{currentCard.name}</p>
-              {currentCard.connectedBy && (
-                <p className="text-xs text-muted-foreground/60">Connected by {currentCard.connectedBy}</p>
+            <div className="flex flex-col min-w-0">
+              <span className="font-medium truncate leading-tight">{currentCard.name}</span>
+              <span className="text-[11px] text-muted-foreground truncate leading-tight">{connectionLabel}</span>
+            </div>
+          </div>
+
+          {/* Request: Col 5 (Expanded) */}
+          <div className="col-span-5 min-w-0 pr-6">
+            <div className={`font-semibold leading-tight mb-0.5 group-hover:text-primary transition-colors ${isExpanded ? "whitespace-normal" : "truncate"}`}>
+              {currentCard.requestSummary}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {isExpanded ? (
+                <>
+                  {currentCard.request}
+                  <span
+                    className="text-primary hover:underline ml-1 cursor-pointer font-medium"
+                    onClick={(e) => { e.stopPropagation(); setIsExpanded(false); }}
+                  >
+                    less
+                  </span>
+                </>
+              ) : (
+                <div className="flex">
+                  <span className="truncate">
+                    {currentCard.request}
+                  </span>
+                  {currentCard.request.length > 60 && (
+                    <span
+                      className="text-primary hover:underline ml-1 cursor-pointer font-medium whitespace-nowrap"
+                      onClick={(e) => { e.stopPropagation(); setIsExpanded(true); }}
+                    >
+                      more
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           </div>
 
-          {/* Request Preview */}
-          <div className="flex flex-1 flex-col gap-2">
-            <div
-              className="group relative cursor-pointer rounded-3xl bg-muted/50 p-4 transition-colors hover:bg-muted/70 dark:bg-muted/40"
-              onClick={() => setChatOpen(true)}
-            >
-              <div className="relative max-h-[4.5rem] overflow-hidden [mask-image:linear-gradient(to_bottom,black_30%,transparent_100%)]">
-                <p className="text-base text-foreground/90 dark:text-slate-100 leading-relaxed">
-                  {currentCard.request}
-                </p>
-              </div>
-              <div className="mt-2 flex items-center justify-center">
-                <span className="text-xs font-medium text-primary py-1 px-3 rounded-full group-hover:bg-muted">
-                  Read more
-                </span>
-              </div>
-            </div>
-            <div className="flex-1" />
-
-            {/* Primary Action */}
-            <div className="mt-3 flex">
-              <Button className="w-full gap-1" onClick={() => setChatOpen(true)}>
-                <MessageCircle className="mr-1 h-4 w-4" />
-                {isCompleted ? "Read chat history" : "Chat"}
-              </Button>
-            </div>
+          {/* End Date: Col 2 */}
+          <div className="col-span-2 text-xs text-muted-foreground flex items-center gap-1.5 min-w-0">
+            {formatDateOnly(currentCard.endDate)}
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Action & More: Col 2 */}
+          <div className="col-span-2 flex justify-end items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-auto px-3 h-8 text-xs font-semibold gap-1.5 border shadow-sm hover:bg-accent hover:text-accent-foreground"
+              onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              {isCompleted ? "Read chat history" : "Chat"}
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0" onClick={(e) => e.stopPropagation()}>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <BellPlus className="mr-2 h-4 w-4" /> Set Reminder
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive">Report</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      )}
 
       {/* Status Badge */}
       {/* Status badge intentionally removed for My Requests view */}
@@ -617,23 +1028,21 @@ const MyRequestCard = ({ card }: { card: CardData & { status?: string; statusDat
 const FilterBar = ({
   layout,
   onLayoutChange,
-  hideCompleted,
-  onHideCompletedChange,
-  hideUnpromoted,
-  onHideUnpromotedChange,
-  showCompletedFilter = true,
-  showUnpromotedFilter = false,
+  filters = {},
+  onFilterChange,
+  availableFilters = {},
+  onResetFilters,
+  showFilter = true,
   projection,
   primaryAction,
 }: {
   layout: "grid" | "list";
   onLayoutChange: (layout: "grid" | "list") => void;
-  hideCompleted: boolean;
-  onHideCompletedChange: (checked: boolean) => void;
-  hideUnpromoted: boolean;
-  onHideUnpromotedChange: (checked: boolean) => void;
-  showCompletedFilter?: boolean;
-  showUnpromotedFilter?: boolean;
+  filters?: Record<string, boolean>;
+  onFilterChange?: (key: string, value: boolean) => void;
+  availableFilters?: Record<string, boolean>;
+  onResetFilters?: () => void;
+  showFilter?: boolean;
   projection?: {
     label: string;
     value: string;
@@ -642,6 +1051,8 @@ const FilterBar = ({
   };
   primaryAction?: React.ReactNode;
 }) => {
+  const isFiltered = Object.values(filters).some(Boolean);
+
   return (
     <section className="mb-6 flex flex-col gap-4 rounded-xl border border-border/50 bg-muted/30 p-4 shadow-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -667,34 +1078,63 @@ const FilterBar = ({
               </div>
             </div>
           )}
-          {(showCompletedFilter || showUnpromotedFilter) && (
-            <Label className="text-sm text-muted-foreground whitespace-nowrap">Show:</Label>
-          )}
-          {showCompletedFilter && (
-            <Toggle
-              pressed={hideCompleted}
-              onPressedChange={onHideCompletedChange}
-              aria-label="Toggle completed visibility"
-              className="gap-2"
-            >
-              {hideCompleted ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              <span className="text-sm">Completed</span>
-            </Toggle>
-          )}
-          {showUnpromotedFilter && (
-            <Toggle
-              pressed={hideUnpromoted}
-              onPressedChange={onHideUnpromotedChange}
-              aria-label="Toggle unpromoted visibility"
-              className="gap-2"
-            >
-              {hideUnpromoted ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              <span className="text-sm">Unpromoted</span>
-            </Toggle>
-          )}
+          {primaryAction}
         </div>
         <div className="flex items-center gap-2">
-          {primaryAction}
+          {showFilter && onFilterChange && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant={isFiltered ? "secondary" : "outline"}
+                  size="sm"
+                  className={`h-9 gap-2 ${isFiltered ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90" : "bg-background"}`}
+                >
+                  <Filter className="h-4 w-4" />
+                  Filter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="flex items-center justify-between">
+                  <span>Hide requests</span>
+                  {isFiltered && onResetFilters && (
+                    <span
+                      className="text-xs font-normal text-muted-foreground hover:text-primary cursor-pointer px-1"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onResetFilters();
+                      }}
+                    >
+                      Reset
+                    </span>
+                  )}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {Object.entries(filters).map(([key, value]) => {
+                  let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                  if (key === 'hideUnpromoted') label = 'Unpromoted'; // Adjust labels as needed
+                  if (key === 'hideActive') label = 'Active';
+                  if (key === 'hideCompleted') label = 'Completed';
+                  if (key === 'hidePaused') label = 'Paused'; // Map 'Unpromoted' to 'Paused' if preferred label
+                  if (key === 'hideContact') label = 'Contact';
+                  if (key === 'hideCircle') label = 'Circle';
+                  if (key === 'hideList') label = 'List';
+
+                  const isDisabled = !value && !availableFilters[key];
+
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={key}
+                      checked={value}
+                      onCheckedChange={(checked) => onFilterChange(key, checked)}
+                      disabled={isDisabled}
+                    >
+                      {label}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <Button
             variant={layout === "grid" ? "secondary" : "ghost"}
             size="icon"
@@ -722,8 +1162,41 @@ const FilterBar = ({
 export default function InteractionsPage() {
   const [activeTab, setActiveTab] = React.useState("in-progress");
   const [layout, setLayout] = React.useState<"grid" | "list">("grid");
-  const [hideCompleted, setHideCompleted] = React.useState(false);
-  const [hideUnpromoted, setHideUnpromoted] = React.useState(false);
+
+  // Set default layout based on active tab
+  React.useEffect(() => {
+    if (activeTab === "in-progress") {
+      setLayout("grid");
+    } else if (activeTab === "helped" || activeTab === "my-requests") {
+      setLayout("list");
+    }
+  }, [activeTab]);
+
+  // Filter states
+  const [filters, setFilters] = React.useState({
+    hideCompleted: false,
+    hideUnpromoted: false, // Paused
+    hideActive: false,
+    hideContact: false,
+    hideCircle: false,
+    hideList: false,
+  });
+
+  const handleFilterChange = (key: string, value: boolean) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      hideCompleted: false,
+      hideUnpromoted: false,
+      hideActive: false,
+      hideContact: false,
+      hideCircle: false,
+      hideList: false,
+    });
+  };
+
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
   const [myRequestsData, setMyRequestsData] = React.useState(myHelpRequests);
 
@@ -733,6 +1206,7 @@ export default function InteractionsPage() {
     0
   );
   const projectedKarma = interactions.inProgress.length * defaultKarma;
+
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -794,6 +1268,77 @@ export default function InteractionsPage() {
     []
   );
 
+  const filteredRequests = React.useMemo(() => {
+    return myRequestsData
+      .filter(request => {
+        const isCompleted = request.status === "Closed" || (request.type === "contact" && request.responses.some(r => r.status === "Completed"));
+        const isPromotable = ["circle", "list"].includes(request.type) && request.status !== "Closed";
+        const isPaused = isPromotable && request.promoted === false;
+        const isActive = isPromotable && (request.promoted ?? true);
+
+        if (filters.hideCompleted && isCompleted) return false;
+        if (filters.hideUnpromoted && isPaused) return false;
+        if (filters.hideActive && isActive) return false;
+        if (filters.hideContact && request.type === "contact") return false;
+        if (filters.hideCircle && request.type === "circle") return false;
+        if (filters.hideList && request.type === "list") return false;
+
+        return true;
+      })
+      .sort((a, b) => {
+        const aIsCompleted = a.status === "Closed" || (a.type === "contact" && a.responses.some(r => r.status === "Completed"));
+        const bIsCompleted = b.status === "Closed" || (b.type === "contact" && b.responses.some(r => r.status === "Completed"));
+
+        // Closed requests go to the end
+        if (aIsCompleted && !bIsCompleted) return 1;
+        if (!aIsCompleted && bIsCompleted) return -1;
+
+        // Both are open or both are closed
+        const aHasDeadline = !!a.endDate;
+        const bHasDeadline = !!b.endDate;
+
+        // Within the same status group, requests with deadlines come before those without
+        if (aHasDeadline && !bHasDeadline) return -1;
+        if (!aHasDeadline && bHasDeadline) return 1;
+
+        // Both have deadlines or both don't have deadlines
+        if (aHasDeadline && bHasDeadline) {
+          // Sort by deadline (soonest first)
+          return new Date(a.endDate!).getTime() - new Date(b.endDate!).getTime();
+        }
+
+        // Both don't have deadlines - maintain original order
+        return 0;
+      });
+  }, [myRequestsData, filters]);
+
+  const availableFilters = React.useMemo(() => {
+    const counts = {
+      hideCompleted: false,
+      hideUnpromoted: false,
+      hideActive: false,
+      hideContact: false,
+      hideCircle: false,
+      hideList: false,
+    };
+
+    filteredRequests.forEach(request => {
+      const isCompleted = request.status === "Closed" || (request.type === "contact" && request.responses.some(r => r.status === "Completed"));
+      const isPromotable = ["circle", "list"].includes(request.type) && request.status !== "Closed";
+      const isPaused = isPromotable && request.promoted === false;
+      const isActive = isPromotable && (request.promoted ?? true);
+
+      if (isCompleted) counts.hideCompleted = true;
+      if (isPaused) counts.hideUnpromoted = true;
+      if (isActive) counts.hideActive = true;
+      if (request.type === "contact") counts.hideContact = true;
+      if (request.type === "circle") counts.hideCircle = true;
+      if (request.type === "list") counts.hideList = true;
+    });
+
+    return counts;
+  }, [filteredRequests]);
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-background w-full">
@@ -807,12 +1352,7 @@ export default function InteractionsPage() {
               {/* Main Header */}
               <header className="mb-8 space-y-3">
                 <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="icon" asChild className="rounded-full hover:bg-white hover:shadow-sm">
-                    <a href="/trusted-list/">
-                      <ChevronLeft className="h-6 w-6" />
-                      <span className="sr-only">Back to Dashboard</span>
-                    </a>
-                  </Button>
+
                   <div>
                     <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">Your Help Activity</h1>
                     <p className="text-muted-foreground">All the ways you help — and get help — in one place.</p>
@@ -833,12 +1373,7 @@ export default function InteractionsPage() {
                     <FilterBar
                       layout={layout}
                       onLayoutChange={setLayout}
-                      hideCompleted={hideCompleted}
-                      onHideCompletedChange={setHideCompleted}
-                      hideUnpromoted={hideUnpromoted}
-                      onHideUnpromotedChange={setHideUnpromoted}
-                      showCompletedFilter={false}
-                      showUnpromotedFilter={false}
+                      showFilter={false}
                       projection={{
                         label: "Karma earned",
                         value: `+${earnedKarma}`,
@@ -846,11 +1381,26 @@ export default function InteractionsPage() {
                         tone: "success",
                       }}
                     />
-                    <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4"}>
+                    {layout === "list" && (
+                      <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                        <div className="col-span-3">Requestor</div>
+                        <div className="col-span-5">Request</div>
+                        <div className="col-span-2">End Date</div>
+                        <div className="col-span-2 text-right pr-2">Action</div>
+                      </div>
+                    )}
+                    <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4 lg:gap-0 lg:border lg:rounded-xl lg:bg-muted/10 lg:overflow-hidden lg:shadow-sm"}>
                       {interactions.helped
-                        .filter(card => !hideCompleted || card.status !== "Completed")
+                        .filter(card => !filters.hideCompleted || card.status !== "Completed")
+                        .sort((a, b) => {
+                          // Sort by end date (most recent first)
+                          if (!a.endDate && !b.endDate) return 0;
+                          if (!a.endDate) return 1;
+                          if (!b.endDate) return -1;
+                          return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
+                        })
                         .map((card) => (
-                          <MyRequestCard key={card.id} card={card} />
+                          <MyRequestCard key={card.id} card={card} layout={layout} />
                         ))}
                     </div>
                   </TabsContent>
@@ -859,12 +1409,7 @@ export default function InteractionsPage() {
                     <FilterBar
                       layout={layout}
                       onLayoutChange={setLayout}
-                      hideCompleted={hideCompleted}
-                      onHideCompletedChange={setHideCompleted}
-                      hideUnpromoted={hideUnpromoted}
-                      onHideUnpromotedChange={setHideUnpromoted}
-                      showCompletedFilter={false}
-                      showUnpromotedFilter={false}
+                      showFilter={false}
                       projection={{
                         label: "Projected karma",
                         value: `+${projectedKarma}`,
@@ -872,12 +1417,53 @@ export default function InteractionsPage() {
                         tone: "info",
                       }}
                     />
-                    <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4"}>
+                    {layout === "list" && (
+                      <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                        <div className="col-span-3">Requestor</div>
+                        <div className="col-span-5">Request</div>
+                        <div className="col-span-2">End Date</div>
+                        <div className="col-span-2 text-right pr-2">Action</div>
+                      </div>
+                    )}
+                    <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4 lg:gap-0 lg:border lg:rounded-xl lg:bg-muted/10 lg:overflow-hidden lg:shadow-sm"}>
                       {interactions.inProgress
-                        .filter(card => !hideCompleted || card.status !== "Completed")
+                        .filter(card => !filters.hideCompleted || card.status !== "Completed")
+                        .sort((a, b) => {
+                          // Requests with deadlines come first, sorted by soonest ending
+                          const aHasDeadline = !!a.endDate;
+                          const bHasDeadline = !!b.endDate;
+
+                          if (aHasDeadline && !bHasDeadline) return -1;
+                          if (!aHasDeadline && bHasDeadline) return 1;
+
+                          if (aHasDeadline && bHasDeadline) {
+                            return new Date(a.endDate!).getTime() - new Date(b.endDate!).getTime();
+                          }
+
+                          return 0;
+                        })
                         .map((card) => (
-                          <MyRequestCard key={card.id} card={card} />
+                          <MyRequestCard key={card.id} card={card} layout={layout} />
                         ))}
+
+                      {interactions.inProgress.filter(card => !filters.hideCompleted || card.status !== "Completed").length === 0 && (
+                        <div className="flex h-full min-h-[380px] w-full items-center justify-center rounded-3xl border border-primary/30 bg-primary/10 p-8 text-center">
+                          <div className="flex flex-col items-center justify-center gap-3 max-w-md">
+                            <div className="space-y-2">
+                              <p className="text-sm font-semibold text-primary">Community spotlight</p>
+                              <h3 className="text-xl font-bold text-foreground">Looking for people to help?</h3>
+                              <p className="text-sm text-muted-foreground">
+                                Browse every open request across the Trusted List and jump into the ones that fit you best.
+                              </p>
+                            </div>
+                            <div className="mt-2">
+                              <Button asChild>
+                                <a href="/trusted-list/requests">Explore all requests</a>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </TabsContent>
 
@@ -885,11 +1471,10 @@ export default function InteractionsPage() {
                     <FilterBar
                       layout={layout}
                       onLayoutChange={setLayout}
-                      hideCompleted={hideCompleted}
-                      onHideCompletedChange={setHideCompleted}
-                      hideUnpromoted={hideUnpromoted}
-                      onHideUnpromotedChange={setHideUnpromoted}
-                      showUnpromotedFilter={true}
+                      filters={filters}
+                      onFilterChange={handleFilterChange}
+                      availableFilters={availableFilters}
+                      onResetFilters={handleResetFilters}
                       primaryAction={
                         <Button onClick={() => setAskDialogOpen(true)}>
                           <Hand className="mr-2 h-4 w-4" />
@@ -897,23 +1482,34 @@ export default function InteractionsPage() {
                         </Button>
                       }
                     />
-                    <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4"}>
-                      {myRequestsData
-                        .filter(request => {
-                          const hasCompletedResponse = request.responses.some(r => r.status === "Completed");
-                          if (hideCompleted && hasCompletedResponse && request.type === "contact") return false;
-                          return true;
-                        })
+                    {layout === "list" && (
+                      <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                        <div className="col-span-4">Request</div>
+                        <div className="col-span-1">Connection</div>
+                        <div className="col-span-1">End Date</div>
+                        <div className="col-span-1">Status</div>
+                        <div className="col-span-3">Responses</div>
+                        <div className="col-span-2 text-right pr-2">Action</div>
+                      </div>
+                    )}
+                    <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4 lg:gap-0 lg:border lg:rounded-xl lg:bg-muted/10 lg:overflow-hidden lg:shadow-sm"}>
+                      {filteredRequests
                         .map((request) => (
                           <MyHelpRequestCard
                             key={request.id}
                             request={request}
-                            hideUnpromoted={hideUnpromoted}
+                            hideUnpromoted={filters.hideUnpromoted} /* Prop might be deprecated in card but keeping for compatibility? */
                             onDelete={(id) =>
                               setMyRequestsData((prev) =>
                                 prev.filter((item) => item.id !== id)
                               )
                             }
+                            onUpdate={(updated) =>
+                              setMyRequestsData((prev) =>
+                                prev.map(item => item.id === updated.id ? updated : item)
+                              )
+                            }
+                            layout={layout}
                           />
                         ))}
                     </div>
