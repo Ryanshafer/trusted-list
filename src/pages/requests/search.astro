@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SearchRequestsPage from "../../features/requests/SearchRequestsPage";
+---
+
+<BaseLayout
+  title="Requests | Search"
+  description="Search all requests on the Trusted List."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <SearchRequestsPage client:load slot="main" />
+</BaseLayout>

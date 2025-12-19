@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import GlobalToaster from "../components/GlobalToaster";
 
 const {
   title = "Astro + React + shadcn Prototype",
@@ -38,6 +39,7 @@ const {
         </div>
       </footer>
     )}
+    <GlobalToaster client:load />
     <slot name="scripts" />
   </body>
 </html>

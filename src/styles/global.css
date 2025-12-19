@@ -183,7 +183,7 @@
 
 :root {
   /* Apple-like Light Mode */
-  --background: oklch(0.96 0 0); /* #F5F5F7 - Light Gray */
+  --background: oklch(1 0 0); /* #F5F5F7 - Light Gray */
   --foreground: oklch(0.14 0 0); /* #1D1D1F - Almost Black */
   --card: oklch(1 0 0); /* #FFFFFF - White */
   --card-foreground: oklch(0.14 0 0);
@@ -191,19 +191,19 @@
   --popover-foreground: oklch(0.14 0 0);
   --primary: oklch(0.62 0.12 199); /* #00A3AD - Teal */
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0 0); /* #F5F5F7 */
+  --secondary: oklch(0.92 0 0); /* #E5E5EA - Darker Gray for contrast */
   --secondary-foreground: oklch(0.14 0 0);
   --muted: oklch(0.92 0 0);
   --muted-foreground: oklch(0.55 0 0); /* #86868B */
-  --accent: oklch(0.96 0 0);
+  --accent: oklch(0.92 0 0);
   --accent-foreground: oklch(0.14 0 0);
   --destructive: oklch(0.57 0.2 27);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.92 0 0); /* #E5E5EA */
   --input: oklch(0.92 0 0);
-  --ring: oklch(0.55 0.22 260);
+  --ring: oklch(0.62 0.12 199);
   
-  --chart-1: oklch(0.55 0.22 260);
+  --chart-1: oklch(0.62 0.12 199);
   --chart-2: oklch(0.6 0.15 150);
   --chart-3: oklch(0.6 0.2 30);
   --chart-4: oklch(0.8 0.15 80);

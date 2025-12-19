@@ -4,11 +4,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { HelpRequestCard } from "@/features/dashboard/components/HelpRequestCards";
 import type { CardData } from "@/features/dashboard/types";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { LayoutGrid, List, HandHelping, MoreHorizontal, BellPlus, Flag, MessageCircle, Search, Filter } from "lucide-react";
+import { LayoutGrid, List, HandHelping, MoreHorizontal, BellPlus, Flag, MessageCircle, Filter } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -20,47 +17,15 @@ import {
 import { ChatDialog, type ChatMessage } from "@/features/dashboard/components/ChatDialog";
 import { RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type RequestCard = CardData & { category: string };
 
 const allRequests = requestsData as RequestCard[];
 
-const categoryOptions = [
-  { value: "career", label: "Career development" },
-  { value: "design", label: "Design" },
-  { value: "product", label: "Product thinking" },
-  { value: "business", label: "Business & finance" },
-  { value: "health", label: "Wellness & lifestyle" },
-  { value: "education", label: "Learning" },
-  { value: "tech", label: "Dev & tools" },
-  { value: "network", label: "Networking" },
-  { value: "other", label: "Other" },
-  // Legacy/alternate slugs from creation flow
-  { value: "career-advice", label: "Career development" },
-  { value: "interview-prep", label: "Career development" },
-  { value: "resume-review", label: "Design" },
-  { value: "introduction", label: "Networking" },
-  { value: "general-support", label: "Other" },
-];
-
-const slugAlias: Record<string, string> = {
-  "career-advice": "career",
-  "interview-prep": "career",
-  "resume-review": "design",
-  introduction: "network",
-  "general-support": "other",
-};
-
-const buildCategoryRequests = (slug: string): RequestCard[] => {
-  const target = slugAlias[slug] ?? slug;
-  return allRequests.filter((card) => card.category === target);
-};
-
-export default function CategoryRequestsPage({ slug }: { slug: string }) {
-  const categoryLabel = categoryOptions.find((opt) => opt.value === slug)?.label || "Requests";
+export default function SearchRequestsPage({ query: initialQuery }: { query?: string }) {
   const [ageFilter, setAgeFilter] = React.useState<string>("all");
   const [layout, setLayout] = React.useState<"grid" | "list">("grid");
-  const [search, setSearch] = React.useState("");
   const [hiddenIds, setHiddenIds] = React.useState<Set<string>>(new Set());
   const [currentCard, setCurrentCard] = React.useState<RequestCard | null>(null);
   const [chatOpen, setChatOpen] = React.useState(false);
@@ -71,39 +36,41 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
   const [remindOption, setRemindOption] = React.useState("3 days");
   const [reminderActive, setReminderActive] = React.useState(false);
 
-  const withAge = React.useMemo(() =>
-    buildCategoryRequests(slug).map((card, index) => {
-      const ageDays = 3 + (index % 60);
-      return { card, ageDays };
-    }),
-  [slug]);
+  const [query, setQuery] = React.useState(initialQuery ?? "");
+  React.useEffect(() => {
+    if (initialQuery) return;
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    const q = url.searchParams.get("q") || "";
+    setQuery(q);
+  }, [initialQuery]);
+
+  const term = query.toLowerCase().trim();
 
   const filtered = React.useMemo(() => {
-    const term = search.toLowerCase().trim();
-    return withAge
-      .filter(({ ageDays }) => {
-        if (ageFilter === "days") return ageDays <= 7;
-        if (ageFilter === "weeks") return ageDays <= 28;
-        if (ageFilter === "months") return ageDays <= 120;
-        return true;
-      })
-      .map(({ card }) => card)
-      .filter((card) => !hiddenIds.has(card.id))
+    return allRequests
       .filter((card) => {
-        if (!term) return true;
         const haystack = `${card.name} ${card.subtitle ?? ""} ${card.requestSummary ?? ""} ${card.request}`.toLowerCase();
-        return haystack.includes(term);
-      });
-  }, [withAge, ageFilter, hiddenIds, search]);
+        return term ? haystack.includes(term) : true;
+      })
+      .filter((card) => !hiddenIds.has(card.id));
+  }, [term, hiddenIds]);
 
-  const handleClear = (id: string) => {
-    setHiddenIds((prev) => new Set([...prev, id]));
+  const formatEndDate = (dateString?: string | null) => {
+    if (!dateString) return "No end date";
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return "No end date";
+    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   };
 
   const prepareLead = (card: RequestCard) => {
     const summary = card.requestSummary?.trim() ?? "";
     const details = card.request.trim();
     return summary ? `${summary.replace(/[.!?]\\s*$/, "")}. ${details}` : details;
+  };
+
+  const handleClear = (id: string) => {
+    setHiddenIds((prev) => new Set([...prev, id]));
   };
 
   const handleHelp = (card: RequestCard) => {
@@ -120,13 +87,6 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
   const handleFlag = (card: RequestCard) => {
     setCurrentCard(card);
     setFlagOpen(true);
-  };
-
-  const formatEndDate = (dateString?: string | null) => {
-    if (!dateString) return "No end date";
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) return "No end date";
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   };
 
   const ListRow = ({
@@ -218,9 +178,10 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
           <div className="col-span-2 flex items-center justify-end gap-2">
             <Button
               variant="outline"
-              className="border hover:bg-accent hover:text-accent-foreground"
+              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
               onClick={onPrimary}
             >
+              <MessageCircle className="mr-2 h-4 w-4" />
               {primaryLabel}
             </Button>
             <DropdownMenu>
@@ -267,24 +228,13 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                 <div className="flex items-center gap-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
                   <a href="/trusted-list/requests" className="hover:underline">All Requests</a>
                   <span className="text-muted-foreground">/</span>
-                  <span>{categoryLabel}</span>
+                  <span>{query || "Search"}</span>
                 </div>
-                <p className="text-muted-foreground text-base">Browse requests tagged for this category.</p>
+                <p className="text-muted-foreground text-base">Results for “{query || "All"}”.</p>
               </header>
 
               <section className="flex flex-col gap-4 rounded-xl border border-border/50 bg-muted/30 p-4 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-3 rounded-full border border-border bg-background px-3 py-1.5 shadow-sm">
-                      <Search className="h-4 w-4 text-muted-foreground" />
-                      <Input
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search requests"
-                        className="h-8 w-56 border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
-                      />
-                    </div>
-                  </div>
                   <div className="flex items-center gap-3">
                     <Select value={ageFilter} onValueChange={setAgeFilter}>
                       <SelectTrigger className="h-10 rounded-full border border-border bg-background px-4 shadow-sm flex items-center gap-2">
@@ -299,24 +249,24 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                         <SelectItem value="all">All time</SelectItem>
                       </SelectContent>
                     </Select>
-                    <div className="flex items-center gap-2 rounded-full bg-muted/40 px-2 py-1.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={`h-9 w-9 ${layout === "grid" ? "bg-background shadow-sm" : ""}`}
-                        onClick={() => setLayout("grid")}
-                      >
-                        <LayoutGrid className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={`h-9 w-9 ${layout === "list" ? "bg-background shadow-sm" : ""}`}
-                        onClick={() => setLayout("list")}
-                      >
-                        <List className="h-4 w-4" />
-                      </Button>
-                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-full bg-muted/40 px-2 py-1.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`h-9 w-9 ${layout === "grid" ? "bg-background shadow-sm" : ""}`}
+                      onClick={() => setLayout("grid")}
+                    >
+                      <LayoutGrid className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`h-9 w-9 ${layout === "list" ? "bg-background shadow-sm" : ""}`}
+                      onClick={() => setLayout("list")}
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </section>
@@ -336,35 +286,33 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                     );
                   })
                 ) : (
-                  <>
-                    <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <div className="hidden lg:block rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
+                    <div className="grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       <div className="col-span-3">Requestor</div>
                       <div className="col-span-5">Request</div>
                       <div className="col-span-2">End Date</div>
                       <div className="col-span-2 text-right pr-2">Action</div>
                     </div>
-                    <div className="hidden lg:block rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-                      {filtered.map((card, index) => {
-                        const firstName = card.name.split(" ")[0] ?? card.name;
-                        return (
-                          <ListRow
-                            key={card.id}
-                            card={card}
-                            primaryLabel={`Help ${firstName}`}
-                            onPrimary={() => handleHelp(card)}
-                            onRemind={() => handleRemind(card)}
-                            onCantHelp={() => handleClear(card.id)}
-                            onFlag={() => handleFlag(card)}
-                            isLast={index === filtered.length - 1}
-                          />
-                        );
-                      })}
-                    </div>
-                  </>
+                    {filtered.map((card, index) => {
+                      const firstName = card.name.split(" ")[0] ?? card.name;
+                      return (
+                        <ListRow
+                          key={card.id}
+                          card={card}
+                          primaryLabel={`Help ${firstName}`}
+                          onPrimary={() => handleHelp(card)}
+                          onRemind={() => handleRemind(card)}
+                          onCantHelp={() => handleClear(card.id)}
+                          onFlag={() => handleFlag(card)}
+                          isLast={index === filtered.length - 1}
+                        />
+                      );
+                    })}
+                  </div>
                 )}
                 {filtered.length === 0 && (
                   <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-6 text-center text-sm text-muted-foreground">
-                    No requests match this filter yet.
+                    No requests match this search yet.
                   </div>
                 )}
               </div>

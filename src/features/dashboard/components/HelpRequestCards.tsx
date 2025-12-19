@@ -545,7 +545,7 @@ const OpportunityHelpCard = ({
     ? connectionReason.toLowerCase().startsWith("you share similar skills")
       ? connectionReason
       : `You share similar skills: ${connectionReason}`
-    : "Skill-aligned opportunity";
+    : "Community request";
 
   return (
     <ConnectedHelpCard
@@ -616,7 +616,7 @@ const ConfettiBurst = () => {
   );
 };
 
-const RemindDialog = ({
+export const RemindDialog = ({
   open,
   onOpenChange,
   selection,

@@ -11,12 +11,12 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Label } from "./ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
 import { Badge } from "./ui/badge";
 import { Checkbox } from "./ui/checkbox";
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Loader2, Send, Check, Search, ChevronDownIcon, Users, CheckCircle2, Clock, ChevronRight, Activity, Sparkles, HandHelping, UserPlus, Hand } from "lucide-react";
+import { Loader2, Send, Check, Search, ChevronDownIcon, Users, CheckCircle2, Clock, ChevronRight, Activity, Sparkles, HandHelping, UserPlus, Hand, MessageCircleQuestionMark, GemIcon } from "lucide-react";
 import { interactions } from "@/features/interactions/data";
 
 
@@ -70,10 +70,29 @@ const AppShell = () => {
   >(
     () =>
       Object.fromEntries(
-        sectionOrder.map((key) => [
-          key,
-          { cards: helpSectionData[key].batches.flat() },
-        ])
+        sectionOrder.map((key) => {
+          // Filter out cards where endDate has passed
+          const activeCards = helpSectionData[key].batches
+            .flat()
+            .filter((card) => {
+              if (!card.endDate) return true;
+              return new Date(card.endDate).getTime() > Date.now();
+            })
+            .sort((a, b) => {
+              // Cards without deadlines go to the end
+              if (!a.endDate && !b.endDate) return 0;
+              if (!a.endDate) return 1;
+              if (!b.endDate) return -1;
+
+              // Sort by deadline (soonest first)
+              return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+            });
+
+          return [
+            key,
+            { cards: activeCards },
+          ];
+        })
       ) as Record<SectionKey, { cards: CardData[] }>
   );
 
@@ -155,7 +174,7 @@ const HelpSection = ({
         title={title}
         count={cards.length}
         showCount={section !== "opportunities"}
-        ctaLabel={section === "opportunities" ? "Explore all requests" : undefined}
+        ctaLabel={section === "opportunities" ? "Explore all open requests" : undefined}
         ctaHref={section === "opportunities" ? "/trusted-list/requests" : undefined}
       />
       <div className="relative">
@@ -163,13 +182,13 @@ const HelpSection = ({
           opts={{ align: "start", slidesToScroll: 3 }}
           className="w-full overflow-hidden"
         >
-          <CarouselContent>
+          <CarouselContent className="gap-1">
             {cards.map((card) => (
               <CarouselItem
                 key={card.id}
-                className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3"
+                className="pl-0 md:basis-1/2 xl:basis-1/3"
               >
-                <div className="h-full p-1">
+                <div className="h-full p-4">
                   <HelpRequestCard
                     {...card}
                     onClear={() => onClearCard(section, card.id)}
@@ -178,7 +197,7 @@ const HelpSection = ({
               </CarouselItem>
             ))}
             {cards.length === 0 && (
-              <CarouselItem className="px-2 sm:px-3 basis-full">
+              <CarouselItem className="basis-full">
                 <div className="flex h-full min-h-[380px] w-full items-center justify-center rounded-3xl border border-dashed border-primary/30 bg-primary/10 p-6 mx-1 text-center">
                   <p className="text-lg font-semibold text-primary">
                     Your work here is done. Thanks for the help!
@@ -187,7 +206,7 @@ const HelpSection = ({
               </CarouselItem>
             )}
             {section === "opportunities" && (
-              <CarouselItem className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
+              <CarouselItem className="md:basis-1/2 xl:basis-1/3">
                 <div className="h-full p-1">
                   <div className="flex h-full flex-col items-center justify-center gap-3 rounded-3xl border border-primary/30 bg-primary/20 p-6 text-center shadow-sm">
                     <div className="space-y-2">
@@ -199,7 +218,7 @@ const HelpSection = ({
                     </div>
                     <div className="mt-2">
                       <Button asChild>
-                        <a href="/trusted-list/requests">Explore all requests</a>
+                        <a href="/trusted-list/requests">Explore all open requests</a>
                       </Button>
                     </div>
                   </div>
@@ -236,8 +255,8 @@ const SectionHeader = ({ title, count, showCount = true, ctaLabel, ctaHref }: Se
       )}
     </div>
     {ctaLabel && ctaHref && (
-      <Button asChild variant="ghost" className="h-auto p-0 text-primary hover:text-primary/80">
-        <a href={ctaHref} className="inline-flex items-center gap-1 text-sm font-medium">
+      <Button asChild variant="ghost" className="h-auto py-1 px-3 text-primary hover:bg-muted/80">
+        <a href={ctaHref} className="inline-flex items-center text-sm font-medium">
           {ctaLabel}
           <ChevronRight className="h-4 w-4" />
         </a>
@@ -330,19 +349,29 @@ const PerformanceGauge = () => {
   const radius = size - stroke;
   const center = size;
 
+  // Scenarios/Levels to cycle through
+  const scenarios = [5, 48, 72, 95];
+  const [scenarioIndex, setScenarioIndex] = React.useState(0);
+  const targetValue = scenarios[scenarioIndex];
+
   // Animation state
   const [displayValue, setDisplayValue] = React.useState(100);
   const [angle, setAngle] = React.useState(180);
 
-  // Target values
-  const targetValue = 5;
-  const targetAngle = 261;
-  const startAngle = 180;
-  const startValue = 100;
+  // Angles mapping
+  // 100% = 180deg
+  // 5% = 261deg
+  // Range = 95 units, 81 degrees
+  const getAngleForValue = (val: number) => {
+    return 180 + (261 - 180) * ((100 - val) / 95);
+  };
 
   React.useEffect(() => {
     const duration = 2000; // 2 seconds
     const startTime = performance.now();
+    const startVal = displayValue;
+    const startAng = angle;
+    const targetAng = getAngleForValue(targetValue);
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
@@ -351,8 +380,8 @@ const PerformanceGauge = () => {
       // Ease out cubic
       const easeOut = 1 - Math.pow(1 - progress, 3);
 
-      const currentAngle = startAngle + (targetAngle - startAngle) * easeOut;
-      const currentValue = startValue - (startValue - targetValue) * easeOut;
+      const currentAngle = startAng + (targetAng - startAng) * easeOut;
+      const currentValue = startVal - (startVal - targetValue) * easeOut;
 
       setAngle(currentAngle);
       setDisplayValue(Math.round(currentValue));
@@ -362,8 +391,16 @@ const PerformanceGauge = () => {
       }
     };
 
-    requestAnimationFrame(animate);
-  }, []);
+    const handle = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(handle);
+  }, [targetValue]); // Run when targetValue changes
+
+  const formatDisplayValue = (val: number) => {
+    if (val === 5) return "Top 5%";
+    if (val === 48) return "Top 48%";
+    if (val === 72) return "Top 72%";
+    return "Top 95%";
+  };
 
   const angleInRadians = (angle * Math.PI) / 180;
 
@@ -380,7 +417,7 @@ const PerformanceGauge = () => {
   // Helper function to get tier message based on percentage
   const getTierMessage = (value: number): string => {
     if (value <= 5) return "You're among the most helpful on the list.";
-    if (value <= 52) return "You're helping steadily — keep going.";
+    if (value <= 52) return "Your help is appreciated — keep going.";
     if (value <= 75) return "You're on your way — every action matters.";
     return "You're just getting started — new chances to help ahead.";
   };
@@ -398,13 +435,20 @@ const PerformanceGauge = () => {
     }
   }, [displayValue, currentMessage]);
 
+  const handleCardClick = () => {
+    setScenarioIndex((prev) => (prev + 1) % scenarios.length);
+  };
+
   return (
-    <div className="col-span-1 relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm h-full min-h-[220px]">
+    <div
+      className="col-span-1 relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm h-full min-h-[220px] cursor-pointer hover:bg-muted/10 transition-colors"
+      onClick={handleCardClick}
+    >
       <div className="absolute top-6 left-6 bottom-6 z-10 flex flex-col">
         <h3 className="text-lg font-semibold text-foreground mb-4">How You Stack Up</h3>
         <div className="flex flex-col gap-2">
           <span className="text-5xl font-bold tracking-tighter text-foreground leading-none">
-            Top {displayValue}%
+            {displayValue === 100 || displayValue === 95 ? "Top 95%" : `Top ${displayValue}%`}
           </span>
           <p
             key={messageKey}
@@ -479,7 +523,7 @@ const SummaryModules = ({
     <article className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-sm">
       <div className="flex flex-col gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-sm">
-          <Hand className="h-6 w-6" />
+          <MessageCircleQuestionMark className="h-6 w-6" />
         </div>
         <div className="space-y-1">
           <h3 className="text-lg font-semibold tracking-tight text-foreground">{askCard.title}</h3>
@@ -513,23 +557,239 @@ const SummaryModules = ({
   </section>
 );
 
-const RecommendationBanner = () => (
-  <section className="flex flex-col items-center justify-center gap-2 pt-3 pb-4 px-4 text-center">
-    <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-3xl">
-      Know someone who belongs on The Trusted List?
-    </h2>
-    <Button variant="link" className="h-auto px-0 text-xl hover:no-underline font-medium group">
-      Recommend a Member
-      <ChevronRight className="ml-1 h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-    </Button>
-  </section>
-);
+
+const RecommendationBanner = () => {
+  const [inviteDialogOpen, setInviteDialogOpen] = React.useState(false);
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [linkedin, setLinkedin] = React.useState("");
+  const [skills, setSkills] = React.useState<string[]>([]);
+  const [skillQuery, setSkillQuery] = React.useState("");
+
+  const skillOptions = React.useMemo(
+    () => [
+      "Design",
+      "Research",
+      "Analysis",
+      "Engineering Management",
+      "Product Strategy",
+      "UX Writing",
+      "Growth",
+      "Data Science",
+      "Mobile",
+      "Infrastructure",
+      "People Management",
+      "Hiring",
+      "Career Coaching",
+      "Fundraising",
+      "Storytelling",
+    ],
+    [],
+  );
+
+  const filteredSkills = React.useMemo(() => {
+    const query = skillQuery.trim().toLowerCase();
+    return skillOptions
+      .filter((option) => !skills.includes(option))
+      .filter((option) => (query ? option.toLowerCase().includes(query) : true))
+      .slice(0, 6);
+  }, [skillOptions, skills, skillQuery]);
+
+  const addSkill = (skill: string) => {
+    if (skills.includes(skill)) return;
+    setSkills((prev) => [...prev, skill]);
+    setSkillQuery("");
+  };
+
+  const removeSkill = (skill: string) => {
+    setSkills((prev) => prev.filter((s) => s !== skill));
+  };
+
+  const handleSubmit = () => {
+    // placeholder submit; hook up to backend when ready
+    setInviteDialogOpen(false);
+  };
+
+  return (
+    <>
+      <section className="mb-6 group">
+        <div
+          className="rounded-2xl bg-primary/10 p-6 cursor-pointer hover:bg-primary/15 transition-colors"
+          onClick={() => setInviteDialogOpen(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setInviteDialogOpen(true);
+            }
+          }}
+        >
+          <div className="flex items-center justify-center gap-6">
+            {/* Large Gem Icon on the left */}
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+              <GemIcon className="h-10 w-10" />
+            </div>
+
+            {/* Text content on the right */}
+            <div className="flex flex-col gap-0.5 text-left">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                You know great people when you see them.
+              </h2>
+              <h3 className="text-base font-medium text-muted-foreground">
+                Help someone out by adding them to The Trusted List.
+              </h3>
+              <div className="h-auto px-0 text-base font-medium w-fit text-primary flex items-center">
+                Invite someone great
+                <ChevronRight className="ml-0 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Invite someone to The Trusted List</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">
+                Great referrals start with great contact details, and a quick double-check goes a long way.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="invite-first-name">First name</Label>
+                <Input
+                  id="invite-first-name"
+                  placeholder="First name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="invite-last-name">Last name</Label>
+                <Input
+                  id="invite-last-name"
+                  placeholder="Last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="invite-email">Email address</Label>
+                <Input
+                  id="invite-email"
+                  type="email"
+                  placeholder="first.last@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="invite-linkedin">LinkedIn profile</Label>
+                <Input
+                  id="invite-linkedin"
+                  placeholder="https://www.linkedin.com/in/username"
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="invite-skills">Highlight their skills</Label>
+              <div className="relative mt-1">
+                <div
+                  className="min-h-[46px] w-full rounded-md border border-input bg-background p-2 flex flex-wrap items-center gap-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
+                  onClick={() => {
+                    const inputEl = document.getElementById("invite-skills-input") as HTMLInputElement | null;
+                    inputEl?.focus();
+                  }}
+                >
+                  {skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="inline-flex items-center gap-2 rounded-sm bg-foreground px-3 py-1 text-sm font-medium text-background"
+                    >
+                      {skill}
+                      <button
+                        type="button"
+                        className="text-muted-foreground hover:text-background"
+                        aria-label={`Remove ${skill}`}
+                        onClick={() => removeSkill(skill)}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    id="invite-skills-input"
+                    className="flex-1 min-w-[120px] bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
+                    placeholder={skills.length === 0 ? "Start typing a skill..." : ""}
+                    value={skillQuery}
+                    onChange={(e) => setSkillQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && skillQuery.trim()) {
+                        e.preventDefault();
+                        addSkill(skillQuery.trim());
+                      }
+                      if (e.key === "Backspace" && !skillQuery && skills.length) {
+                        removeSkill(skills[skills.length - 1]);
+                      }
+                    }}
+                  />
+                </div>
+
+                {skillQuery.trim().length > 0 && filteredSkills.length > 0 && (
+                  <div className="absolute z-10 mt-2 w-full rounded-lg border border-border bg-background shadow-lg">
+                    <ul className="max-h-48 overflow-auto py-2">
+                      {filteredSkills.map((skill) => (
+                        <li key={skill}>
+                          <button
+                            type="button"
+                            className="flex w-full items-center justify-between px-3 py-2 text-sm hover:bg-muted/60"
+                            onClick={() => addSkill(skill)}
+                          >
+                            <span>{skill}</span>
+                            <span className="text-xs text-muted-foreground">Add</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-3">
+            <Button variant="ghost" onClick={() => setInviteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmit} disabled={!firstName || !lastName || !email}>
+              Invite
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
 
 export default AppShell;
 
 type AskMode = "contact" | "circle" | "list";
 
-const AskForHelpDialog = ({
+export const AskForHelpDialog = ({
   open,
   onOpenChange,
   contacts,
@@ -868,5 +1128,3 @@ const AskForHelpDialog = ({
     </Dialog>
   );
 };
-
-export { AskForHelpDialog };

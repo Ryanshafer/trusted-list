@@ -20,7 +20,6 @@ import {
   Coffee,
   Search,
   Clock,
-  ArrowRight,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -143,24 +142,6 @@ export default function AllRequestsPage() {
     return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   };
 
-  // Promo carousel (recent requests)
-  const promoPairs = React.useMemo(() => {
-    const list = allRequests.slice(0, 12);
-    const pairs: RequestCard[][] = [];
-    for (let i = 0; i < list.length; i += 2) {
-      pairs.push(list.slice(i, i + 2));
-    }
-    return pairs;
-  }, []);
-  const [promoIndex, setPromoIndex] = React.useState(0);
-  React.useEffect(() => {
-    if (promoPairs.length < 2) return;
-    const id = setInterval(() => {
-      setPromoIndex((prev) => (prev + 1) % promoPairs.length);
-    }, 4500);
-    return () => clearInterval(id);
-  }, [promoPairs.length]);
-
   const handleSearchSubmit = (value: string) => {
     const trimmed = value.trim();
     if (!trimmed) return;
@@ -246,106 +227,6 @@ export default function AllRequestsPage() {
                 </div>
               </section>
 
-              {promoPairs.length > 0 && (
-                <section className="rounded-2xl border border-border bg-card shadow-sm p-4 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold tracking-tight">Recent requests</h3>
-                  </div>
-                  <div className="grid gap-4 lg:grid-cols-2">
-                    {promoPairs[promoIndex]?.map((card) => {
-                      const firstName = card.name.split(" ")[0] ?? card.name;
-                      const initials = card.name.split(" ").map((n) => n[0]).join("");
-                      return (
-                        <div
-                          key={card.id}
-                          className="flex items-center gap-4 rounded-xl border border-border/50 bg-muted/20 px-4 py-4 transition-all duration-500 ease-in-out animate-in fade-in slide-in-from-right"
-                        >
-                          <Avatar className="h-14 w-14 shrink-0 border border-border/50 shadow-sm">
-                            {card.avatarUrl && <AvatarImage src={card.avatarUrl} alt={card.name} />}
-                            <AvatarFallback>{initials}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0 space-y-1">
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Clock className="h-3.5 w-3.5" />
-                              <span>Help needed until {formatEndDate(card.endDate)}</span>
-                            </div>
-                            <h4 className="font-bold text-base text-foreground leading-tight truncate">
-                              {card.requestSummary}
-                            </h4>
-                            <p className="text-sm text-muted-foreground leading-snug line-clamp-2">
-                              {card.request}
-                            </p>
-                          </div>
-                          <div className="shrink-0">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="font-semibold shadow-sm px-6 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full h-9"
-                            >
-                              Help {firstName}
-                            </Button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </section>
-              )}
-
-              {/* Carousel 1: Career */}
-              {(() => {
-                const slice = categorySlices[0];
-                const cards = allRequests.filter((card) => slice.filter(card));
-                if (!cards.length) return null;
-                return (
-                  <section className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-semibold">{slice.title}</h3>
-                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                          {cards.length}
-                        </span>
-                      </div>
-                    </div>
-                    <Carousel opts={{ align: "start", slidesToScroll: 2 }} className="w-full overflow-hidden">
-                      <CarouselContent>
-                        {cards.map((card) => (
-                          <CarouselItem key={card.id} className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
-                            <div className="h-full p-1">
-                              <HelpRequestCard {...card} />
-                            </div>
-                          </CarouselItem>
-                        ))}
-                        <CarouselItem className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
-                          <div className="h-full p-1">
-                            <div className="flex h-full flex-col items-center justify-center gap-3 rounded-3xl border border-primary/30 bg-primary/20 p-6 text-center shadow-sm">
-                              <div className="space-y-2">
-                                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                                  Explore {slice.title}
-                                </p>
-                                <h3 className="text-lg font-bold text-foreground">{slice.promoTitle}</h3>
-                                <p className="text-sm text-muted-foreground">
-                                  {slice.promoCopy}
-                                </p>
-                              </div>
-                              <div className="mt-2">
-                                <Button asChild>
-                                  <a href={`/trusted-list/requests/${slice.slug}`}>See all {slice.slug} requests</a>
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CarouselItem>
-                      </CarouselContent>
-                      <div className="mt-3 flex justify-end gap-2 p-1">
-                        <CarouselPrevious className="static translate-y-0" />
-                        <CarouselNext className="static translate-y-0" />
-                      </div>
-                    </Carousel>
-                  </section>
-                );
-              })()}
-
               {/* List Blocks: Urgent and History */}
               <div className="grid gap-12 md:grid-cols-2 mt-4 mb-12">
                 {/* List 1: People who need help now */}
@@ -428,7 +309,7 @@ export default function AllRequestsPage() {
                 {/* List 2: People like you have helped with... */}
                 <section className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold tracking-tight">People like you have helped with...</h3>
+                    <h3 className="text-xl font-bold tracking-tight">New requests for help</h3>
                   </div>
                   <div className="divide-y divide-border/50 border-t border-border/50">
                     {helpedLikeYou.map((card) => {
@@ -504,6 +385,60 @@ export default function AllRequestsPage() {
                   </div>
                 </section>
               </div>
+
+              {/* Carousel 1: Career */}
+              {(() => {
+                const slice = categorySlices[0];
+                const cards = allRequests.filter((card) => slice.filter(card));
+                if (!cards.length) return null;
+                return (
+                  <section className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{slice.title}</h3>
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                          {cards.length}
+                        </span>
+                      </div>
+                    </div>
+                    <Carousel opts={{ align: "start", slidesToScroll: 2 }} className="w-full overflow-hidden">
+                      <CarouselContent>
+                        {cards.map((card) => (
+                          <CarouselItem key={card.id} className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
+                            <div className="h-full p-1">
+                              <HelpRequestCard {...card} />
+                            </div>
+                          </CarouselItem>
+                        ))}
+                        <CarouselItem className="px-2 sm:px-3 md:basis-1/2 xl:basis-1/3">
+                          <div className="h-full p-1">
+                            <div className="flex h-full flex-col items-center justify-center gap-3 rounded-3xl border border-primary/30 bg-primary/20 p-6 text-center shadow-sm">
+                              <div className="space-y-2">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                                  Explore {slice.title}
+                                </p>
+                                <h3 className="text-lg font-bold text-foreground">{slice.promoTitle}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {slice.promoCopy}
+                                </p>
+                              </div>
+                              <div className="mt-2">
+                                <Button asChild>
+                                  <a href={`/trusted-list/requests/${slice.slug}`}>See all {slice.slug} requests</a>
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CarouselItem>
+                      </CarouselContent>
+                      <div className="mt-3 flex justify-end gap-2 p-1">
+                        <CarouselPrevious className="static translate-y-0" />
+                        <CarouselNext className="static translate-y-0" />
+                      </div>
+                    </Carousel>
+                  </section>
+                );
+              })()}
 
               {/* Carousels 2 & 3: Design and Product */}
               {categorySlices.slice(1).map(({ title, filter, slug, promoTitle, promoCopy }) => {

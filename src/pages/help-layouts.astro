@@ -1,0 +1,13 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HelpRequestLayoutsPage from "../features/requests/components/HelpRequestLayoutsPage";
+---
+
+<BaseLayout
+    title="Help Request Card Layouts | Trusted List"
+    description="Design review for Help Request Card variants."
+    showHeader={false}
+    showFooter={false}
+>
+    <HelpRequestLayoutsPage client:load />
+</BaseLayout>

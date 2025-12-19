@@ -98,7 +98,8 @@
             "request": "My résumé feels disjointed after three different roles in product marketing. Could you do a thorough pass, suggest stronger accomplishment language, and highlight which sections to shrink?",
             "primaryCTA": "Help Jen",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&w=320&q=80",
+            "endDate": "2026-12-16T18:00:00Z"
           },
           {
             "id": "circle-marcus",
@@ -111,7 +112,8 @@
             "request": "I'm assembling the promotion packet for Director and the narrative feels flat. Would you read the whole draft, flag any missing proof points, and help me craft a tighter summary statement?",
             "primaryCTA": "Give feedback",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&w=320&q=80",
+            "endDate": "2026-12-13T12:00:00Z"
           },
           {
             "id": "circle-anika",
@@ -124,7 +126,8 @@
             "request": "I have a compensation conversation next week and need to run through the script end-to-end, including objections. Can you play the manager role and help me refine the phrasing and pacing?",
             "primaryCTA": "Run a practice",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&w=320&q=80",
+            "endDate": "2026-12-17T09:00:00Z"
           }
         ],
         [
@@ -139,7 +142,8 @@
             "request": "My volunteer org's website relaunch is stuck because the hero copy and call-to-action read generic. Could you skim the new layout and give me 2-3 sharper lines that capture the mission?",
             "primaryCTA": "Review copy",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80",
+            "endDate": null
           }
         ]
       ]
@@ -158,7 +162,8 @@
             "request": "Bryan said you're great at sharpening design narratives. My portfolio feels scattered—can you highlight which case studies to lean into and how to frame the through-line?",
             "primaryCTA": "Offer feedback",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80",
+            "endDate": "2025-12-20T17:00:00Z"
           },
           {
             "id": "network-leo",
@@ -170,7 +175,8 @@
             "request": "Priya mentioned you know fintech recruiters well. I have three warm intros queued—could you help me script how to position my wins and what pitfalls to avoid?",
             "primaryCTA": "Share intro tips",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&w=320&q=80",
+            "endDate": "2025-12-12T15:00:00Z"
           },
           {
             "id": "network-marisol",
@@ -179,10 +185,11 @@
             "connectedBy": "Design Guild",
             "relationshipTag": "Second-degree connection",
             "requestSummary": "Review my agency pitch",
-            "request": "Our guild said you're a sharp reviewer. I’m pitching a boutique design agency next week—can you scan the deck and call out any weak narrative or missing proof?",
+            "request": "Our guild said you're a sharp reviewer. I'm pitching a boutique design agency next week—can you scan the deck and call out any weak narrative or missing proof?",
             "primaryCTA": "Review deck",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&w=320&q=80",
+            "endDate": "2025-12-18T10:00:00Z"
           }
         ],
         [
@@ -196,7 +203,8 @@
             "request": "Serena said you keep a story bank on trust. I'm keynoting a leadership offsite and need 2-3 vivid anecdotes—could we chat about the ones that land best?",
             "primaryCTA": "Share story bank",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80",
+            "endDate": "2025-12-25T09:00:00Z"
           },
           {
             "id": "network-nico",
@@ -208,7 +216,8 @@
             "request": "Omar said you're gifted at tightening product narratives. My team's new vision doc is too tactical—could you help me zoom it out and make the stakes clearer?",
             "primaryCTA": "Jam on product vision",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&w=320&q=80",
+            "endDate": null
           },
           {
             "id": "network-chen",
@@ -217,10 +226,11 @@
             "connectedBy": "Alumni Board",
             "relationshipTag": "Second-degree connection",
             "requestSummary": "Perspective on an interdisciplinary portfolio",
-            "request": "Our alumni board said you reviewed their portfolios. I’m blending clinical research with service design—could you help me articulate the through-line so it resonates with product leaders?",
+            "request": "Our alumni board said you reviewed their portfolios. I'm blending clinical research with service design—could you help me articulate the through-line so it resonates with product leaders?",
             "primaryCTA": "Provide perspective",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1526476148966-98bd039463ea?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1526476148966-98bd039463ea?auto=format&w=320&q=80",
+            "endDate": "2025-12-30T12:00:00Z"
           },
           {
             "id": "network-caleb",
@@ -229,10 +239,11 @@
             "connectedBy": "Marcus Lee",
             "relationshipTag": "Second-degree connection",
             "requestSummary": "Prep for a board interview",
-            "request": "Marcus said you’ve coached nonprofit board candidates. I have a panel on Friday and need to rehearse the scenario questions—could you run a mock session with me?",
+            "request": "Marcus said you've coached nonprofit board candidates. I have a panel on Friday and need to rehearse the scenario questions—could you run a mock session with me?",
             "primaryCTA": "Mock interview",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&w=320&q=80",
+            "endDate": "2025-12-13T14:00:00Z"
           }
         ]
       ]
@@ -253,7 +264,8 @@
             "request": "I'm prepping for onsite interviews and need someone who speaks the same UX language to run mock sessions. Could you help me refine my story arcs and answer follow-ups?",
             "primaryCTA": "Share advice",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&w=320&q=80",
+            "endDate": "2025-12-14T16:00:00Z"
           },
           {
             "id": "opportunity-noah",
@@ -267,7 +279,8 @@
             "request": "I struggle to describe my wins in a way that sounds strategic. Could you help translate my feature launches into customer/problem framing before my next round?",
             "primaryCTA": "Coach on narrative",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&w=320&q=80",
+            "endDate": "2025-12-22T12:00:00Z"
           },
           {
             "id": "opportunity-simone",
@@ -278,10 +291,11 @@
             "connectionReason": "You share similar skills: storytelling, stakeholder management",
             "relationshipTag": "Skill-aligned opportunity",
             "requestSummary": "Mock interview buddy",
-            "request": "I’m transitioning from agency to product and need a partner for mock portfolio presentations. Could you critique how I navigate the slides and handle cross-functional questions?",
+            "request": "I'm transitioning from agency to product and need a partner for mock portfolio presentations. Could you critique how I navigate the slides and handle cross-functional questions?",
             "primaryCTA": "Volunteer time",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&w=320&q=80",
+            "endDate": null
           }
         ],
         [
@@ -294,10 +308,11 @@
             "connectionReason": "You share similar skills: lifecycle strategy, experimentation",
             "relationshipTag": "Skill-aligned opportunity",
             "requestSummary": "Review my onboarding flow",
-            "request": "I’m designing a lifecycle experiment for a SaaS onboarding and would love your critique on the flows, success metrics, and copy. Could we do a 30-minute async review?",
+            "request": "I'm designing a lifecycle experiment for a SaaS onboarding and would love your critique on the flows, success metrics, and copy. Could we do a 30-minute async review?",
             "primaryCTA": "Review onboarding plan",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&w=320&q=80",
+            "endDate": "2025-12-11T10:00:00Z"
           },
           {
             "id": "opportunity-maya",
@@ -308,10 +323,11 @@
             "connectionReason": "You share similar skills: storytelling, fundraising decks",
             "relationshipTag": "Skill-aligned opportunity",
             "requestSummary": "Punch up my pitch deck",
-            "request": "I’m pitching an accelerator and the deck lacks punch. Could you help me rewrite the problem/opportunity slides so they land with the same urgency as your product narratives?",
+            "request": "I'm pitching an accelerator and the deck lacks punch. Could you help me rewrite the problem/opportunity slides so they land with the same urgency as your product narratives?",
             "primaryCTA": "Tighten pitch",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&w=320&q=80",
+            "endDate": "2025-12-19T14:00:00Z"
           },
           {
             "id": "opportunity-darius",
@@ -325,7 +341,8 @@
             "request": "I'm running an inclusion workshop for a civic tech team. Could you scan the flow to ensure the prompts and exercises land with diverse audiences?",
             "primaryCTA": "Audit workshop",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1526476148966-98bd039463ea?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1526476148966-98bd039463ea?auto=format&w=320&q=80",
+            "endDate": "2025-12-28T09:00:00Z"
           },
           {
             "id": "opportunity-lena",
@@ -336,10 +353,11 @@
             "connectionReason": "You share similar skills: portfolio strategy",
             "relationshipTag": "Skill-aligned opportunity",
             "requestSummary": "Guide my case studies",
-            "request": "I’m rebuilding my portfolio and unsure how to structure two complicated case studies. Could you help me outline the narrative so they read like decision-making stories?",
+            "request": "I'm rebuilding my portfolio and unsure how to structure two complicated case studies. Could you help me outline the narrative so they read like decision-making stories?",
             "primaryCTA": "Guide on case study",
             "secondaryCTA": "Cannot help",
-            "avatarUrl": "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&w=320&q=80"
+            "avatarUrl": "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&w=320&q=80",
+            "endDate": "2025-12-15T18:00:00Z"
           }
         ]
       ]

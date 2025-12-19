@@ -9,7 +9,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-12-05T00:00:00Z",
       "statusDate": "2 days ago",
       "karma": 50
     },
@@ -23,7 +23,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Network Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-12-20T00:00:00Z",
       "statusDate": "1 week ago",
       "karma": 50
     },
@@ -36,7 +36,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-01-10T00:00:00Z",
       "statusDate": "3 days ago",
       "karma": 50
     },
@@ -50,7 +50,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Network Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-11-30T00:00:00Z",
       "statusDate": "4 days ago",
       "karma": 50
     },
@@ -63,7 +63,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-02-01T00:00:00Z",
       "statusDate": "5 days ago",
       "karma": 50
     },
@@ -76,7 +76,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-0f7c05a4b4aa?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Skill-aligned opportunity",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-01-25T00:00:00Z",
       "statusDate": "1 week ago",
       "karma": 50
     },
@@ -90,7 +90,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-eee52c5ac525?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Network Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-03-05T00:00:00Z",
       "statusDate": "1 week ago",
       "karma": 50
     },
@@ -103,7 +103,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-0f73bc9e0b6c?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-02-14T00:00:00Z",
       "statusDate": "8 days ago",
       "karma": 50
     },
@@ -116,7 +116,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-1c1e1b406a55?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Skill-aligned opportunity",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-01-05T00:00:00Z",
       "statusDate": "9 days ago",
       "karma": 50
     },
@@ -130,7 +130,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c9d7b6d8b6?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Network Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2026-04-01T00:00:00Z",
       "statusDate": "2 weeks ago",
       "karma": 50
     },
@@ -143,7 +143,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-a1c73c9a4b3a?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-10-15T00:00:00Z",
       "statusDate": "2 weeks ago",
       "karma": 50
     },
@@ -156,7 +156,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1524504388940-9c9e9b4b4b4a?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Skill-aligned opportunity",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-09-20T00:00:00Z",
       "statusDate": "3 weeks ago",
       "karma": 50
     }
@@ -172,7 +172,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Network Connection",
       "primaryCTA": "View Details",
-      "status": "In Progress",
+      "status": "In Progress", "endDate": "2025-12-18T00:00:00Z",
       "statusDate": "Yesterday"
     },
     {
@@ -187,7 +187,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Skill Match",
       "primaryCTA": "View Details",
-      "status": "In Progress",
+      "status": "In Progress", "endDate": "2026-01-07T00:00:00Z",
       "statusDate": "2 days ago"
     }
   ],
@@ -201,14 +201,14 @@
       "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-12-12T00:00:00Z",
       "statusDate": "3 days ago",
       "responses": [
         {
           "id": "resp-1",
           "name": "Robert Chen",
           "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
-          "status": "Completed",
+          "status": "Completed", "endDate": "2025-12-12T00:00:00Z",
           "chatId": "request-1"
         }
       ],
@@ -225,7 +225,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Network Connection",
       "primaryCTA": "View Details",
-      "status": "In Progress",
+      "status": "In Progress", "endDate": "2026-01-30T00:00:00Z",
       "statusDate": "1 day ago",
       "responses": [],
       "type": "list",
@@ -240,7 +240,7 @@
       "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=faces",
       "relationshipTag": "Direct Connection",
       "primaryCTA": "View Details",
-      "status": "Completed",
+      "status": "Completed", "endDate": "2025-11-22T00:00:00Z",
       "statusDate": "1 week ago",
       "responses": [],
       "type": "circle",
@@ -249,7 +249,7 @@
   ],
   "myHelpRequests": [
     {
-      "id": "req-1",
+      "id": "req-1", "endDate": "2026-05-15T00:00:00Z",
       "requestSummary": "Introduction to CTO needed",
       "request": "I'm looking to connect with CTOs at early-stage startups in the fintech space. Ideally looking for folks who have scaled from Seed to Series A.",
       "responses": [],
@@ -258,7 +258,7 @@
       "createdAt": "2 days ago"
     },
     {
-      "id": "req-2",
+      "id": "req-2", "endDate": "2026-02-10T00:00:00Z",
       "requestSummary": "Transition to Engineering Manager",
       "request": "I'm considering a move to management and would love to chat with experienced EMs about the transition and what to expect.",
       "responses": [
@@ -266,7 +266,7 @@
           "id": "resp-1",
           "name": "Robert Chen",
           "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
-          "status": "Completed",
+          "status": "Completed", "endDate": "2025-12-12T00:00:00Z",
           "chatId": "request-1"
         }
       ],
@@ -275,7 +275,7 @@
       "createdAt": "1 week ago"
     },
     {
-      "id": "req-3",
+      "id": "req-3", "endDate": "2026-01-31T00:00:00Z",
       "requestSummary": "Hiring Senior Engineers",
       "request": "We're scaling our team and looking for senior frontend engineers. Any referrals would be greatly appreciated!",
       "responses": [
@@ -283,28 +283,28 @@
           "id": "resp-2",
           "name": "Amanda Foster",
           "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=faces",
-          "status": "Completed",
+          "status": "Completed", "endDate": "2026-01-28T00:00:00Z",
           "chatId": "request-2"
         },
         {
           "id": "resp-3",
           "name": "David Kim",
           "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
-          "status": "In Progress",
+          "status": "In Progress", "endDate": "2026-02-05T00:00:00Z",
           "chatId": "progress-1"
         },
         {
           "id": "resp-5",
           "name": "Priya Desai",
           "avatarUrl": "https://images.unsplash.com/photo-1524504388940-9c9e9b4b4b4a?w=150&h=150&fit=crop&crop=faces",
-          "status": "Completed",
+          "status": "Completed", "endDate": "2026-01-14T00:00:00Z",
           "chatId": "helped-4"
         },
         {
           "id": "resp-6",
           "name": "Leo Park",
           "avatarUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop&crop=faces",
-          "status": "In Progress",
+          "status": "In Progress", "endDate": "2026-02-20T00:00:00Z",
           "chatId": "helped-5"
         }
       ],
@@ -313,7 +313,7 @@
       "createdAt": "3 days ago"
     },
     {
-      "id": "req-4",
+      "id": "req-4", "endDate": "2026-03-20T00:00:00Z",
       "requestSummary": "Visibility for an open role",
       "request": "We have an open Staff Designer role and want to tap the broader list—could you help boost and refer great candidates?",
       "responses": [],

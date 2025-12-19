@@ -9,6 +9,7 @@ import { HelpRequestCard, formatEndDate, ConnectedCardHeader, type RelationshipT
 import { ChatDialog, type ChatMessage, type CompletionData } from "@/features/dashboard/components/ChatDialog";
 import type { CardData } from "@/features/dashboard/types";
 import { interactions, myHelpRequests, interactionChats, type HelperResponse, type MyHelpRequest } from "@/features/interactions/data";
+import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
@@ -752,7 +753,19 @@ const MyHelpRequestCard = ({
   );
 };
 
-const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: string; statusDate?: string }, layout?: "grid" | "list" }) => {
+const MyRequestCard = ({
+  card,
+  layout = "grid",
+  onDismiss,
+  onFlagged,
+  menuContext = "in-progress",
+}: {
+  card: CardData & { status?: string; statusDate?: string };
+  layout?: "grid" | "list";
+  onDismiss?: (id: string) => void;
+  onFlagged?: (id: string) => void;
+  menuContext?: "helped" | "in-progress";
+}) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [badgePosition, setBadgePosition] = React.useState({ top: 88 });
   const [status, setStatus] = React.useState(card.status);
@@ -760,6 +773,8 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
   const [editOpen, setEditOpen] = React.useState(false);
 
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isDismissing, setIsDismissing] = React.useState(false);
+  const [flagOpen, setFlagOpen] = React.useState(false);
 
   // Chat state
   const [chatOpen, setChatOpen] = React.useState(false);
@@ -804,6 +819,15 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
     setCurrentCard(prev => ({ ...prev, ...updates }));
   };
 
+  const handleCantHelp = (event?: React.SyntheticEvent) => {
+    event?.stopPropagation();
+    if (isDismissing) return;
+    setIsDismissing(true);
+    window.setTimeout(() => {
+      onDismiss?.(card.id);
+    }, 250);
+  };
+
   React.useEffect(() => {
     if (!containerRef.current) return;
 
@@ -841,7 +865,12 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
     .toUpperCase();
 
   return (
-    <div ref={containerRef} className={`relative h-full ${layout === "list" ? "lg:border-b lg:border-border/50 lg:last:border-0" : ""}`}>
+    <div
+      ref={containerRef}
+      className={`relative h-full transition-all duration-300 ease-in-out ${
+        isDismissing ? "translate-y-2 scale-[0.98] opacity-0 pointer-events-none" : "opacity-100"
+      } ${layout === "list" ? "lg:border-b lg:border-border/50 lg:last:border-0" : ""}`}
+    >
       <div className={layout === "list" ? "lg:hidden h-full" : "h-full"}>
         <Card className="relative flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
           <CardHeader className="p-0 px-5">
@@ -850,6 +879,8 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
               avatarUrl={currentCard.avatarUrl}
               relationshipType={relationshipType}
               relationshipLabel={connectionLabel}
+              onDismiss={onDismiss ? () => handleCantHelp() : undefined}
+              onFlag={() => setFlagOpen(true)}
             />
           </CardHeader>
           <CardContent className="flex flex-1 flex-col gap-2 p-5 pt-0">
@@ -857,7 +888,7 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
             {/* Request Preview */}
             <div className="flex flex-1 flex-col gap-2">
               <div
-                className="bg-muted/30 p-4 rounded-md cursor-pointer hover:bg-muted/50 transition-colors group/bubble relative mt-2 space-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="bg-muted/40 p-4 rounded-md cursor-pointer hover:bg-muted/60 transition-colors group/bubble relative mt-2 space-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 onClick={() => setChatOpen(true)}
                 role="button"
                 tabIndex={0}
@@ -869,7 +900,7 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
                 }}
               >
                 {currentCard.requestSummary ? (
-                  <p className="font-medium text-foreground leading-relaxed mb-0.5">
+                  <p className="font-bold text-foreground leading-relaxed mb-0.5">
                     {currentCard.requestSummary}
                   </p>
                 ) : null}
@@ -986,17 +1017,34 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0" onClick={(e) => e.stopPropagation()}>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+	            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {menuContext !== "helped" && onDismiss ? (
+                <DropdownMenuItem onClick={handleCantHelp}>
+                  <EyeOff className="mr-2 h-4 w-4" />
+                  I can't help with this request
+                </DropdownMenuItem>
+              ) : null}
+              {menuContext !== "helped" ? (
                 <DropdownMenuItem>
                   <BellPlus className="mr-2 h-4 w-4" /> Set Reminder
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive">Report</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      )}
+              ) : null}
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFlagOpen(true);
+                }}
+              >
+                <Flag className="mr-2 h-4 w-4" />
+                Flag as inappropriate
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+	            </DropdownMenu>
+	          </div>
+	        </div>
+	      )}
 
       {/* Status Badge */}
       {/* Status badge intentionally removed for My Requests view */}
@@ -1013,6 +1061,16 @@ const MyRequestCard = ({ card, layout = "grid" }: { card: CardData & { status?: 
         isCompleted={isCompleted}
         onComplete={handleComplete}
         onUndoComplete={handleUndoComplete}
+      />
+
+      <FlagRequestDialog
+        open={flagOpen}
+        onOpenChange={setFlagOpen}
+        requestorName={currentCard.name}
+        requestorAvatarUrl={currentCard.avatarUrl || undefined}
+        requestSummary={currentCard.requestSummary}
+        requestText={currentCard.request}
+        onSubmit={() => onFlagged?.(card.id)}
       />
 
       <EditRequestDialog
@@ -1199,13 +1257,15 @@ export default function InteractionsPage() {
 
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
   const [myRequestsData, setMyRequestsData] = React.useState(myHelpRequests);
+  const [helpedCards, setHelpedCards] = React.useState(interactions.helped);
+  const [inProgressCards, setInProgressCards] = React.useState(interactions.inProgress);
 
-  const defaultKarma = interactions.helped[0]?.karma ?? 50;
-  const earnedKarma = interactions.helped.reduce(
+  const defaultKarma = helpedCards[0]?.karma ?? 50;
+  const earnedKarma = helpedCards.reduce(
     (sum, card) => sum + (card.karma ?? defaultKarma),
     0
   );
-  const projectedKarma = interactions.inProgress.length * defaultKarma;
+  const projectedKarma = inProgressCards.length * defaultKarma;
 
 
   React.useEffect(() => {
@@ -1390,7 +1450,7 @@ export default function InteractionsPage() {
                       </div>
                     )}
                     <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4 lg:gap-0 lg:border lg:rounded-xl lg:bg-muted/10 lg:overflow-hidden lg:shadow-sm"}>
-                      {interactions.helped
+                      {helpedCards
                         .filter(card => !filters.hideCompleted || card.status !== "Completed")
                         .sort((a, b) => {
                           // Sort by end date (most recent first)
@@ -1400,7 +1460,17 @@ export default function InteractionsPage() {
                           return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
                         })
                         .map((card) => (
-                          <MyRequestCard key={card.id} card={card} layout={layout} />
+                          <MyRequestCard
+                            key={card.id}
+                            card={card}
+                            layout={layout}
+                            menuContext="helped"
+                            onFlagged={(id) =>
+                              setHelpedCards((prev) =>
+                                prev.filter((item) => item.id !== id)
+                              )
+                            }
+                          />
                         ))}
                     </div>
                   </TabsContent>
@@ -1426,7 +1496,7 @@ export default function InteractionsPage() {
                       </div>
                     )}
                     <div className={layout === "grid" ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-4 lg:gap-0 lg:border lg:rounded-xl lg:bg-muted/10 lg:overflow-hidden lg:shadow-sm"}>
-                      {interactions.inProgress
+                      {inProgressCards
                         .filter(card => !filters.hideCompleted || card.status !== "Completed")
                         .sort((a, b) => {
                           // Requests with deadlines come first, sorted by soonest ending
@@ -1443,11 +1513,26 @@ export default function InteractionsPage() {
                           return 0;
                         })
                         .map((card) => (
-                          <MyRequestCard key={card.id} card={card} layout={layout} />
+                          <MyRequestCard
+                            key={card.id}
+                            card={card}
+                            layout={layout}
+                            menuContext="in-progress"
+                            onDismiss={(id) =>
+                              setInProgressCards((prev) =>
+                                prev.filter((item) => item.id !== id)
+                              )
+                            }
+                            onFlagged={(id) =>
+                              setInProgressCards((prev) =>
+                                prev.filter((item) => item.id !== id)
+                              )
+                            }
+                          />
                         ))}
 
-                      {interactions.inProgress.filter(card => !filters.hideCompleted || card.status !== "Completed").length === 0 && (
-                        <div className="flex h-full min-h-[380px] w-full items-center justify-center rounded-3xl border border-primary/30 bg-primary/10 p-8 text-center">
+                      {inProgressCards.filter(card => !filters.hideCompleted || card.status !== "Completed").length === 0 && (
+                        <div className={`flex h-full min-h-[380px] w-full items-center justify-center rounded-3xl border border-primary/30 bg-primary/10 p-8 text-center ${layout === "grid" ? "md:col-span-2 lg:col-span-3" : ""}`}>
                           <div className="flex flex-col items-center justify-center gap-3 max-w-md">
                             <div className="space-y-2">
                               <p className="text-sm font-semibold text-primary">Community spotlight</p>
@@ -1458,7 +1543,7 @@ export default function InteractionsPage() {
                             </div>
                             <div className="mt-2">
                               <Button asChild>
-                                <a href="/trusted-list/requests">Explore all requests</a>
+                                <a href="/trusted-list/requests">Explore all open requests</a>
                               </Button>
                             </div>
                           </div>

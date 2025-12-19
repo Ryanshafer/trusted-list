@@ -17,6 +17,7 @@ export type CardData = {
   profession?: string | null;
   level?: string | null;
   avatarUrl?: string | null;
+  endDate?: string | null; // ISO date string or null for ongoing
 };
 
 export type UserProfile = {
