@@ -1,4 +1,4 @@
-import{c}from"./card.DmnAMBxS.js";/**
+import{c}from"./dialog.DhDyXcH9.js";/**
  * @license lucide-react v0.552.0 - ISC
  *
  * This source code is licensed under the ISC license.
