@@ -63,6 +63,7 @@ const summaryHighlights = content.summaryHighlights;
 const helpSectionData = content.helpSections;
 const askForHelpCard = content.askForHelpCard;
 const sectionOrder: SectionKey[] = ["circle", "network", "opportunities"];
+const firstSectionAnchorId = "requests-for-your-help";
 
 const AppShell = () => {
   const [sections, setSections] = React.useState<
@@ -97,6 +98,19 @@ const AppShell = () => {
   );
 
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
+  const innerCircleCount = sections.circle?.cards.length ?? 0;
+  const [greeting, setGreeting] = React.useState("Hello");
+
+  React.useEffect(() => {
+    const hours = new Date().getHours();
+    if (hours < 12) {
+      setGreeting("Good morning");
+    } else if (hours < 18) {
+      setGreeting("Good afternoon");
+    } else {
+      setGreeting("Good evening");
+    }
+  }, []);
 
   const handleClearCard = (section: SectionKey, cardId: string) => {
     setSections((prev) => ({
@@ -117,12 +131,23 @@ const AppShell = () => {
           </div>
           <div className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
             <div className="flex w-full max-w-7xl flex-col gap-8 overflow-hidden">
-              <header className="space-y-3">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-                    How can you help today?
-                  </h1>
-                </div>
+              <header className="space-y-2">
+                <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground mb-0">
+                  {greeting}, Ryan.
+                </h1>
+                <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl text-primary">
+                  How can you help today?
+                </h2>
+                <span className="text-base sm:text-lg text-muted-foreground inline-flex items-center gap-1">
+                  You've got 
+                <a
+                  href={`#${firstSectionAnchorId}`}
+                  className="text-base sm:text-lg text-primary hover:text-primary/80 transition-colors bg-primary/10 px-1 rounded-xs"
+                >
+                  {innerCircleCount} new requests 
+                </a>
+                for help from your inner circle.
+                </span>
               </header>
 
               <SummaryModules
@@ -132,13 +157,14 @@ const AppShell = () => {
               <RecommendationBanner />
 
               <main className="space-y-10">
-                {sectionOrder.map((key) => (
+                {sectionOrder.map((key, idx) => (
                   <HelpSection
                     key={key}
                     section={key}
                     title={helpSectionData[key].title}
                     cards={sections[key].cards}
                     onClearCard={handleClearCard}
+                    anchorId={idx === 0 ? firstSectionAnchorId : undefined}
                   />
                 ))}
               </main>
@@ -160,6 +186,7 @@ type HelpSectionProps = {
   title: string;
   cards: CardData[];
   onClearCard: (section: SectionKey, cardId: string) => void;
+  anchorId?: string;
 };
 
 const HelpSection = ({
@@ -167,9 +194,10 @@ const HelpSection = ({
   title,
   cards,
   onClearCard,
+  anchorId,
 }: HelpSectionProps) => {
   return (
-    <section className="space-y-4">
+    <section className="space-y-4" id={anchorId}>
       <SectionHeader
         title={title}
         count={cards.length}
