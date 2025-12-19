@@ -18,6 +18,8 @@ import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Loader2, Send, Check, Search, ChevronDownIcon, Users, CheckCircle2, Clock, ChevronRight, Activity, Sparkles, HandHelping, UserPlus, Hand, MessageCircleQuestionMark, GemIcon } from "lucide-react";
 import { interactions } from "@/features/interactions/data";
+import { StaggeredFade } from "./anim/staggered-fade";
+import { RotateWords } from "./anim/rotate-words";
 
 
 import {
@@ -65,6 +67,13 @@ const askForHelpCard = content.askForHelpCard;
 const sectionOrder: SectionKey[] = ["circle", "network", "opportunities"];
 const firstSectionAnchorId = "requests-for-your-help";
 
+const getGreetingForNow = () => {
+  const hours = new Date().getHours();
+  if (hours < 12) return "Good morning";
+  if (hours < 18) return "Good afternoon";
+  return "Good evening";
+};
+
 const AppShell = () => {
   const [sections, setSections] = React.useState<
     Record<SectionKey, { cards: CardData[] }>
@@ -99,17 +108,12 @@ const AppShell = () => {
 
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
   const innerCircleCount = sections.circle?.cards.length ?? 0;
-  const [greeting, setGreeting] = React.useState("Hello");
-
-  React.useEffect(() => {
+  const greetingWords = ["morning,", "afternoon,", "evening,"];
+  const greetingTargetIndex = React.useMemo(() => {
     const hours = new Date().getHours();
-    if (hours < 12) {
-      setGreeting("Good morning");
-    } else if (hours < 18) {
-      setGreeting("Good afternoon");
-    } else {
-      setGreeting("Good evening");
-    }
+    if (hours < 12) return 0;
+    if (hours < 18) return 1;
+    return 2;
   }, []);
 
   const handleClearCard = (section: SectionKey, cardId: string) => {
@@ -132,12 +136,25 @@ const AppShell = () => {
           <div className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
             <div className="flex w-full max-w-7xl flex-col gap-8 overflow-hidden">
               <header className="space-y-2">
-                <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground mb-0">
-                  {greeting}, Ryan.
-                </h1>
-                <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl text-primary">
+                <div className="flex flex-col gap-1">
+                  <div className="flex flex-wrap items-baseline gap-2">
+                    <RotateWords
+                      text="Good"
+                      words={greetingWords}
+                      initialIndex={0}
+                      targetIndex={greetingTargetIndex}
+                      className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground"
+                      wordClassName="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-primary"
+                      intervalMs={800}
+                    />
+                    <span className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground">
+                      Ryan.
+                    </span>
+                  </div>
+                </div>
+                <h3 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl text-primary text-left">
                   How can you help today?
-                </h2>
+                </h3>
                 <span className="text-base sm:text-lg text-muted-foreground inline-flex items-center gap-1">
                   You've got 
                 <a
