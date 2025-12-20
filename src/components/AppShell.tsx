@@ -11,12 +11,12 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Label } from "./ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "./ui/dialog";
 import { Badge } from "./ui/badge";
 import { Checkbox } from "./ui/checkbox";
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Loader2, Send, Check, Search, ChevronDownIcon, Users, CheckCircle2, Clock, ChevronRight, Activity, Sparkles, HandHelping, UserPlus, Hand, MessageCircleQuestionMark, GemIcon } from "lucide-react";
+import { Loader2, Check, Search, ChevronDownIcon, Users, CheckCircle2, Clock, ChevronRight, CirclePlus, Sparkles, HandHelping, UserPlus, Hand, MessageCircleQuestionMark, GemIcon } from "lucide-react";
 import { interactions } from "@/features/interactions/data";
 import { StaggeredFade } from "./anim/staggered-fade";
 import { RotateWords } from "./anim/rotate-words";
@@ -894,6 +894,10 @@ export const AskForHelpDialog = ({
 
   const handleOpenChange = (value: boolean) => {
     if (!value) {
+      if (sendState === "success") {
+        window.location.href = "/trusted-list/interactions?tab=my-requests";
+        return;
+      }
       resetForm();
     }
     onOpenChange(value);
@@ -948,11 +952,25 @@ export const AskForHelpDialog = ({
     }, 1200);
   };
 
+  React.useEffect(() => {
+    if (sendState === "success") {
+      try {
+        localStorage.setItem("interactions-active-tab", "my-requests");
+      } catch {
+        // no-op if storage unavailable
+      }
+      window.location.href = "/trusted-list/interactions?tab=my-requests#my-requests";
+    }
+  }, [sendState]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>What help do you need?</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            Share a quick summary, add details, and pick who you’d like to ask. You can also set an end date.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-6">
           <div className="mt-4 rounded-lg bg-muted p-1 text-[13px] font-medium">
@@ -1156,20 +1174,20 @@ export const AskForHelpDialog = ({
             >
               {sendState === "idle" && (
                 <>
-                  <Send className="mr-1 h-4 w-4" />
-                  Send request
+                  <MessageCircleQuestionMark className="h-4 w-4" />
+                  Request help
                 </>
               )}
               {sendState === "sending" && (
                 <>
-                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                  Sending…
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Working
                 </>
               )}
               {sendState === "success" && (
                 <>
-                  <Check className="mr-1 h-4 w-4" />
-                  Sent!
+                  <Check className="h-4 w-4" />
+                  Request Created!
                 </>
               )}
             </Button>

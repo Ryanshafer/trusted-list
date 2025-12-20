@@ -1217,8 +1217,12 @@ const FilterBar = ({
   );
 };
 
+const validTabs = ["helped", "in-progress", "my-requests"] as const;
+type TabValue = (typeof validTabs)[number];
+
 export default function InteractionsPage() {
-  const [activeTab, setActiveTab] = React.useState("in-progress");
+  // Start with a fixed tab for SSR consistency; adjust after mount.
+  const [activeTab, setActiveTab] = React.useState<TabValue>("in-progress");
   const [layout, setLayout] = React.useState<"grid" | "list">("grid");
 
   // Set default layout based on active tab
@@ -1270,9 +1274,14 @@ export default function InteractionsPage() {
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const tab = params.get("tab");
-    if (tab && ["helped", "in-progress", "my-requests"].includes(tab)) {
-      setActiveTab(tab);
+    const tabParam = params.get("tab");
+    const stored = localStorage.getItem("interactions-active-tab");
+    const next = tabParam || stored;
+    if (next && (validTabs as readonly string[]).includes(next)) {
+      setActiveTab(next as TabValue);
+    }
+    if (stored) {
+      localStorage.removeItem("interactions-active-tab");
     }
   }, []);
 
@@ -1421,7 +1430,11 @@ export default function InteractionsPage() {
               </header>
 
               {/* Tabs */}
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <Tabs
+                value={activeTab}
+                onValueChange={(val) => setActiveTab(val as TabValue)}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-3 rounded-xl bg-muted/50 p-1">
                   <TabsTrigger value="in-progress" className="rounded-lg data-[state=active]:bg-white/70">In Progress</TabsTrigger>
                   <TabsTrigger value="helped" className="rounded-lg data-[state=active]:bg-white/70">Helped</TabsTrigger>
