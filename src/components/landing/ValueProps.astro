@@ -1,0 +1,216 @@
+---
+import { ScrollAnimatedWrapper } from "./ScrollAnimatedWrapper";
+import { ShieldCheck, MessageCircleHeart } from "lucide-react";
+import professionalsImage from "../../assets/images/professionals.png?url";
+import helpImage from "../../assets/images/help.png?url";
+
+const sectionCopy = {
+    title: "Why we built this differently.",
+    subtitleLine1: "Most professional networks optimize for growth.",
+    subtitleLine2: "We optimize for trust.",
+};
+
+const pillars = [
+    {
+        icon: ShieldCheck,
+        label: "People over “followers”",
+        title: "People who’ve proven it",
+        image: professionalsImage,
+        description:
+            "Every member here earned their place — through their track record, their reputation, and a real person vouching for them. No fake profiles, no noise.",
+    },
+    {
+        icon: MessageCircleHeart,
+        label: "The greater good",
+        title: "Help, not hustle",
+        image: helpImage,
+        description:
+            "No spam in your inbox. No cold pitches disguised as ‘networking.’ Just professionals who show up for each other when it actually matters.",
+    },
+];
+
+const styles = {
+    section: "relative",
+    mainBlock: "relative",
+    container: "container mx-auto px-4 md:px-6 text-slate-900 relative z-10",
+    edgeToEdgeRuleTop:
+        "absolute left-[var(--rail-x)] right-[var(--rail-x)] top-0 h-px",
+    edgeToEdgeRuleBottom:
+        "absolute left-[var(--rail-x)] right-[var(--rail-x)] bottom-0 h-px",
+    titleBlock: "relative",
+    titleSurface: "mx-[82px] h-64 border border-white border-10 my-2 bg-stone-50 py-2 px-6 flex items-center justify-center text-center",
+    cardsBlock: "relative",
+    cardsGrid: "grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8",
+    centerDivider:
+        "pointer-events-none hidden lg:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px",
+    reasonPill: "inline-flex items-center gap-3 text-[#00A3AD] mb-6",
+    reasonIcon:
+        "h-9 w-9 rounded-full bg-[#00A3AD] text-white flex items-center justify-center",
+    reasonTitle:
+        "text-4xl md:text-5xl font-bold tracking-tight text-slate-900 leading-[1.06] mb-5",
+    reasonBody: "text-slate-600 text-xl leading-[1.45] max-w-xl",
+    reasonMetrics: "relative z-10 mt-10 px-5 py-4",
+};
+
+const dottedHorizontalStyle =
+    "background-image: repeating-linear-gradient(to right, rgba(176, 188, 203, 0.78) 0 4px, transparent 4px 9px);";
+const dottedVerticalStyle =
+    "background-image: repeating-linear-gradient(to bottom, rgba(176, 188, 203, 0.78) 0 4px, transparent 4px 9px);";
+---
+
+<ScrollAnimatedWrapper>
+    <section class={styles.section} data-value-props>
+        <div class={styles.mainBlock}>
+            <div class={styles.titleBlock}>
+                <div
+                    aria-hidden="true"
+                    class={["pointer-events-none", styles.edgeToEdgeRuleTop].join(" ")}
+                    style={dottedHorizontalStyle}
+                ></div>
+                <div
+                    aria-hidden="true"
+                    class={["pointer-events-none", styles.edgeToEdgeRuleBottom].join(" ")}
+                    style={dottedHorizontalStyle}
+                ></div>
+
+                <div class={styles.titleSurface}>
+                    <div class={styles.container}>
+                        <div class="text-center" data-vp-animate style="--vp-delay: 260ms;">
+                            <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-slate-900">
+                                {sectionCopy.title}
+                            </h2>
+                            <p class="mt-4 text-lg md:text-2xl text-slate-600 max-w-2xl mx-auto">
+                                {sectionCopy.subtitleLine1} <br />{sectionCopy.subtitleLine2}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class={styles.cardsBlock}>
+                <div
+                    aria-hidden="true"
+                    class={["pointer-events-none", styles.edgeToEdgeRuleBottom].join(" ")}
+                    style={dottedHorizontalStyle}
+                ></div>
+                <div aria-hidden="true" class={styles.centerDivider} style={dottedVerticalStyle}></div>
+
+                <div class={styles.container}>
+                    <div class={styles.cardsGrid}>
+                        {
+                            pillars.map((pillar, index) => (
+                                <article
+                                    class="relative overflow-hidden p-8 pb-0 pr-0"
+                                    data-vp-animate
+                                    style={`--vp-delay: ${520 + index * 220}ms;`}
+                                >
+                                    <div class="relative z-10">
+                                        <div class={styles.reasonPill}>
+                                            <span class={styles.reasonIcon}>
+                                                <pillar.icon className="h-5 w-5" />
+                                            </span>
+                                            <span class="text-base md:text-lg font-bold">{pillar.label}</span>
+                                        </div>
+                                        <h3 class={styles.reasonTitle}>
+                                            {pillar.title}
+                                        </h3>
+                                        <p class={styles.reasonBody}>
+                                            {pillar.description}
+                                        </p>
+                                    </div>
+
+                                    <div class="mt-12 mb-[1px]">
+                                        {pillar.image ? (
+                                            <img
+                                                src={pillar.image}
+                                                alt="Trusted professionals connected through referrals"
+                                                class="h-auto w-full object-cover"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        ) : (
+                                            <>
+                                                <div class="h-1.5 w-24 rounded-full bg-[#00A3AD]/35 mb-3"></div>
+                                                <div class="h-1.5 w-full rounded-full bg-slate-200/80 mb-2"></div>
+                                                <div class="h-1.5 w-5/6 rounded-full bg-slate-200/80"></div>
+                                            </>
+                                        )}
+                                    </div>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</ScrollAnimatedWrapper>
+
+<style>
+    [data-vp-animate].vp-rise-init {
+        opacity: 0;
+        transform: translateY(32px);
+        transition:
+            opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+            transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+        transition-delay: 0ms;
+        will-change: opacity, transform;
+    }
+
+    [data-vp-animate].vp-rise-init.vp-rise-visible {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: var(--vp-delay, 0ms);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-vp-animate].vp-rise-init {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+</style>
+
+<script>
+    const section = document.querySelector("[data-value-props]");
+    if (section) {
+        const targets = Array.from(section.querySelectorAll("[data-vp-animate]"));
+
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            let lastScrollY = window.scrollY;
+            let isScrollingUp = false;
+
+            window.addEventListener(
+                "scroll",
+                () => {
+                    const currentScrollY = window.scrollY;
+                    isScrollingUp = currentScrollY < lastScrollY;
+                    lastScrollY = currentScrollY;
+                },
+                { passive: true }
+            );
+
+            targets.forEach((target) => target.classList.add("vp-rise-init"));
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("vp-rise-visible");
+                            return;
+                        }
+
+                        // Keep elements visible while scrolling down; only reset on upward scroll.
+                        if (isScrollingUp) {
+                            entry.target.classList.remove("vp-rise-visible");
+                        }
+                    });
+                },
+                { threshold: 0.35 }
+            );
+
+            targets.forEach((target) => observer.observe(target));
+        }
+    }
+</script>

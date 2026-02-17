@@ -1,0 +1,166 @@
+---
+import LandingLayout from "../../layouts/LandingLayout.astro";
+import { JoinForm } from "../../components/landing/JoinForm";
+import { VectorFieldBackground } from "../../components/landing/VectorFieldBackground";
+import ValueProps from "../../components/landing/ValueProps.astro";
+import Testimonial from "../../components/landing/Testimonial.astro";
+import Footer from "../../components/landing/Footer.astro";
+import { Users, ArrowRight, ChevronDown } from "lucide-react";
+import logo from "../../assets/logo-light.svg?url";
+import MemberCount from "../../components/landing/MemberCount";
+import { ScrollTypewriter } from "../../components/landing/ScrollTypewriter";
+import WaitlistCTA from "../../components/landing/WaitlistCTA";
+---
+
+<LandingLayout title="The Trusted List - A network you can actually count on.">
+    <section
+        class="relative min-h-dvh flex items-center justify-center overflow-hidden bg-[#F4F2EC]"
+    >
+        <VectorFieldBackground client:only="react" />
+        <div class="hero-edge-gradient absolute inset-0 pointer-events-none z-[1]"></div>
+
+        <!-- Background Elements -->
+        <div
+            class="absolute top-0 left-1/2 -px-translate-x-1/2 w-full h-full max-w-7xl pointer-events-none opacity-50 z-10"
+        >
+            <div
+                class="absolute top-20 left-0 w-96 h-96 bg-[#00A3AD]/14 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"
+            >
+            </div>
+            <div
+                class="absolute top-20 right-0 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"
+            >
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 md:px-6 relative z-20 w-full">
+            <div
+                class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center"
+            >
+                <!-- Hero Copy -->
+                <div class="max-w-2xl lg:translate-x-[10%]">
+                    <div class="relative inline-flex mb-8 items-center">
+                        <div
+                            aria-hidden="true"
+                            class="absolute -inset-x-4 -inset-y-2 rounded-[999px] bg-[#F4F2EC]/92 blur-xl pointer-events-none"
+                        >
+                        </div>
+                        <div
+                            aria-hidden="true"
+                            class="absolute -inset-x-8 -inset-y-4 rounded-[999px] bg-[#F4F2EC]/62 blur-2xl pointer-events-none"
+                        >
+                        </div>
+                        <img
+                            src={logo}
+                            alt="The Trusted List Logo"
+                            class="relative h-12 w-auto drop-shadow-[0_0_22px_rgba(244,242,236,0.9)]"
+                        />
+                    </div>
+
+                    <h1
+                        class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-5 leading-[1.05] sm:leading-[1.03] md:leading-[70px]"
+                    >
+                        A network that shows up<span class="text-[#00A3AD]">
+                            when it matters most.</span
+                        >
+                    </h1>
+
+                    <p
+                        class="font-sans text-lg md:text-xl text-slate-600 mb-8 leading-[1.55] md:leading-[1.45]"
+                    >
+                        A more purposeful community of proven
+                        professionals, built to solve problems and share opportunities — not self-promotion.
+                    </p>
+
+                    <MemberCount client:load />
+                </div>
+
+                <!-- Join Form -->
+                <div class="w-full max-w-md mx-auto lg:ml-auto">
+                    <JoinForm client:load />
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <button
+            onclick="window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })"
+            class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-slate-600 hover:text-slate-800 transition-all duration-200 hover:-translate-y-1 z-30 group"
+        >
+            <span class="relative inline-flex items-center justify-center px-2">
+                <span
+                    aria-hidden="true"
+                    class="absolute inset-0 -z-10 rounded-full bg-[#F4F2EC]/80 blur-sm"
+                ></span>
+                <span class="text-xs font-medium uppercase tracking-wider"
+                    >Learn more</span
+                >
+            </span>
+            <ChevronDown className="w-6 h-6 animate-bounce" />
+        </button>
+    </section>
+
+    <section class="relative [--rail-x:0rem] sm:[--rail-x:2.75rem] md:[--rail-x:4rem] xl:[--rail-x:5rem]">
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+            <div
+                class="hidden sm:block absolute left-[var(--rail-x)] top-0 bottom-0 w-px"
+                style="background-image: repeating-linear-gradient(to bottom, rgba(176, 188, 203, 0.78) 0 4px, transparent 4px 9px);"
+            ></div>
+            <div
+                class="hidden sm:block absolute right-[var(--rail-x)] top-0 bottom-0 w-px"
+                style="background-image: repeating-linear-gradient(to bottom, rgba(176, 188, 203, 0.78) 0 4px, transparent 4px 9px);"
+            ></div>
+        </div>
+        <div class="relative z-10">
+            <ScrollTypewriter client:load />
+            <ValueProps />
+        </div>
+    </section>
+
+    <Testimonial />
+
+    <section class="relative overflow-hidden">
+        <VectorFieldBackground client:only="react" />
+
+        <div class="relative z-10">
+            <div class="relative">
+                <div class="hero-edge-gradient absolute inset-0 pointer-events-none z-[1]"></div>
+                <div class="relative z-10">
+                    <WaitlistCTA client:load />
+                </div>
+            </div>
+            <Footer />
+        </div>
+    </section>
+</LandingLayout>
+
+<style>
+    .hero-edge-gradient {
+        background-image:
+            linear-gradient(to bottom, rgba(0, 163, 173, 0.4) 0%, rgba(0, 163, 173, 0) 12%),
+            linear-gradient(to top, rgba(0, 163, 173, 0.4) 0%, rgba(0, 163, 173, 0) 12%),
+            linear-gradient(to right, rgba(0, 163, 173, 0.3) 0%, rgba(0, 163, 173, 0) 8%),
+            linear-gradient(to left, rgba(0, 163, 173, 0.3) 0%, rgba(0, 163, 173, 0) 8%);
+    }
+
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+    @keyframes blob {
+        0% {
+            transform: translate(0px, 0px) scale(1);
+        }
+        33% {
+            transform: translate(30px, -50px) scale(1.1);
+        }
+        66% {
+            transform: translate(-20px, 20px) scale(0.9);
+        }
+        100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+    }
+</style>

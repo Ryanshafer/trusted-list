@@ -1,7 +1,7 @@
 import type { CardData } from "@/features/dashboard/types";
 import type { ChatMessage } from "@/features/dashboard/components/ChatDialog";
-import data from "../../../data/interactions.json" assert { type: "json" };
-import chats from "../../../data/interactions-chats.json" assert { type: "json" };
+import data from "../../../data/interactions.json";
+import chats from "../../../data/interactions-chats.json";
 
 export type InteractionCard = CardData & {
   status?: string;

@@ -1,0 +1,32 @@
+---
+import "../styles/global.css";
+import GlobalToaster from "../components/GlobalToaster";
+
+const {
+    title = "The Trusted List",
+    description = "A network you can actually count on.",
+} = Astro.props;
+---
+
+<html
+    lang="en"
+    class="min-h-dvh bg-stone-50 text-slate-900 antialiased selection:bg-amber-100 selection:text-teal-900"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="stylesheet" href="https://use.typekit.net/zlz3aap.css" />
+    </head>
+    <body
+        class="flex min-h-dvh flex-col font-sans [&_p]:font-serif [&_li]:font-serif [&_blockquote]:font-serif [&_figcaption]:font-serif"
+        style="--font-sans: 'adelle-sans', sans-serif; --font-serif: 'adelle', serif; font-family: 'adelle-sans', sans-serif; font-feature-settings: normal;"
+    >
+        <main class="flex-1">
+            <slot />
+        </main>
+        <GlobalToaster client:load />
+    </body>
+</html>
