@@ -89,7 +89,11 @@ export default function WaitlistCTA() {
             await waitForTop();
         }
 
-        window.dispatchEvent(new Event("open-waitlist"));
+        window.dispatchEvent(
+            new CustomEvent("open-waitlist", {
+                detail: { preserveInvite: isInvited },
+            })
+        );
     };
 
     return (

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+type Referrer = { firstName: string; lastName: string; id: string };
+
 const ReferrerBadge = ({ name }: { name: string }) => (
     <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -34,12 +36,13 @@ export const JoinForm = () => {
         linkedin: "https://linkedin.com/in/jordanrivera",
     };
 
-    const [referrer, setReferrer] = useState<{ firstName: string; lastName: string; id: string } | null>(null);
+    const [referrer, setReferrer] = useState<Referrer | null>(null);
     const [isWaitlist, setIsWaitlist] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [formData, setFormData] = useState(emptyForm);
+    const initialInviteRef = React.useRef<{ referrer: Referrer; formData: typeof emptyForm } | null>(null);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -52,8 +55,10 @@ export const JoinForm = () => {
             // Handle both specific first/last name params and the general name param
             const fName = firstName || fullName?.split(' ')[0] || '';
             const lName = lastName || fullName?.split(' ').slice(1).join(' ') || '';
+            const invitedReferrer = { firstName: fName, lastName: lName, id: refId };
 
-            setReferrer({ firstName: fName, lastName: lName, id: refId });
+            initialInviteRef.current = { referrer: invitedReferrer, formData: invitedPrefill };
+            setReferrer(invitedReferrer);
             setIsWaitlist(false);
             setIsExpanded(true); // Auto-expand for referrals
             setFormData(invitedPrefill);
@@ -61,7 +66,20 @@ export const JoinForm = () => {
     }, []);
 
     useEffect(() => {
-        const handleOpenWaitlist = () => {
+        const handleOpenWaitlist = (event?: Event) => {
+            const preserveInvite = (event as CustomEvent<{ preserveInvite?: boolean }> | undefined)?.detail
+                ?.preserveInvite;
+            const initialInvite = initialInviteRef.current;
+
+            if (preserveInvite && initialInvite) {
+                setReferrer(initialInvite.referrer);
+                setIsWaitlist(false);
+                setIsExpanded(true);
+                setIsSuccess(false);
+                setFormData(initialInvite.formData);
+                return;
+            }
+
             setReferrer(null);
             setIsWaitlist(true);
             setIsExpanded(true);
