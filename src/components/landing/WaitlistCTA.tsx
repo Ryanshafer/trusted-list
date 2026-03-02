@@ -110,10 +110,10 @@ export default function WaitlistCTA() {
                     }
                     className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl bg-stone-50/20 backdrop-blur-sm border border-stone-200/70 shadow-2xl shadow-teal-900/5 px-8 py-12 md:px-12 md:py-16"
                 >
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-amber-50/35 via-stone-50/20 to-stone-100/10" />
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-amber-50/40 via-stone-50/20 to-stone-100/10" />
                     <div className="relative z-10 flex flex-col items-center text-center">
                         <div className="space-y-4 max-w-3xl">
-                            <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-[1.02]">
+                            <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-none">
                                 Curious about a  <br className="hidden md:block" /> better kind of network?
                             </h3>
                             <p className="text-lg md:text-2xl text-slate-600 leading-relaxed">
@@ -134,6 +134,7 @@ export default function WaitlistCTA() {
                         <div className="mt-10">
                             <button
                                 onClick={handleClick}
+                                data-bottom-cta-button
                                 className="inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-10 md:px-12 h-14 text-lg font-semibold shadow-md shadow-slate-900/15 transition transform hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-900 focus-visible:ring-offset-stone-100/70"
                                 type="button"
                             >

@@ -6,6 +6,10 @@ dist/
 # dependencies
 node_modules/
 
+# AI related files
+.interface-design/
+skills/
+
 # logs
 npm-debug.log*
 yarn-debug.log*

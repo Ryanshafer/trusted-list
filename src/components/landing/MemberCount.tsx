@@ -58,7 +58,7 @@ const MemberCount = () => {
     }, [handleNewMember]);
 
     return (
-        <div className="mx-auto flex w-fit flex-col items-center gap-3 text-sm text-slate-500 sm:mx-0 sm:w-auto sm:flex-row sm:items-center sm:gap-6">
+        <div className="mx-auto flex w-fit flex-col items-center gap-3 text-sm text-slate-500 sm:mx-0 sm:w-auto xl:flex-row xl:items-center xl:gap-6">
             <div className="flex items-center">
                 <div className="flex -space-x-3 items-center overflow-visible">
                     <AnimatePresence mode="popLayout" initial={false}>

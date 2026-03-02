@@ -6,14 +6,17 @@ import ValueProps from "../../components/landing/ValueProps.astro";
 import Testimonial from "../../components/landing/Testimonial.astro";
 import Footer from "../../components/landing/Footer.astro";
 import { Users, ArrowRight, ChevronDown } from "lucide-react";
-import logo from "../../assets/logo-light.svg?url";
 import MemberCount from "../../components/landing/MemberCount";
 import { ScrollTypewriter } from "../../components/landing/ScrollTypewriter";
 import WaitlistCTA from "../../components/landing/WaitlistCTA";
+import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
 ---
 
 <LandingLayout title="The Trusted List - A network you can actually count on.">
+    <FloatingHeroBar client:load />
+
     <section
+        data-hero-section
         class="relative min-h-dvh flex items-center justify-center overflow-hidden bg-[#F4F2EC]"
     >
         <VectorFieldBackground client:only="react" />
@@ -33,32 +36,14 @@ import WaitlistCTA from "../../components/landing/WaitlistCTA";
             </div>
         </div>
 
-        <div class="container mx-auto px-4 md:px-6 relative z-20 w-full">
+        <div class="container mx-auto mt-0 w-full px-4 md:mt-0 md:px-6 relative z-20">
             <div
                 class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center"
             >
                 <!-- Hero Copy -->
                 <div class="max-w-2xl lg:translate-x-[10%]">
-                    <div class="relative inline-flex mb-8 items-center">
-                        <div
-                            aria-hidden="true"
-                            class="absolute -inset-x-4 -inset-y-2 rounded-[999px] bg-[#F4F2EC]/92 blur-xl pointer-events-none"
-                        >
-                        </div>
-                        <div
-                            aria-hidden="true"
-                            class="absolute -inset-x-8 -inset-y-4 rounded-[999px] bg-[#F4F2EC]/62 blur-2xl pointer-events-none"
-                        >
-                        </div>
-                        <img
-                            src={logo}
-                            alt="The Trusted List Logo"
-                            class="relative h-12 w-auto drop-shadow-[0_0_22px_rgba(244,242,236,0.9)]"
-                        />
-                    </div>
-
                     <h1
-                        class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-5 leading-[1.05] sm:leading-[1.03] md:leading-[70px]"
+                        class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-5 leading-none sm:leading-none md:leading-tight"
                     >
                         A network that shows up<span class="text-[#00A3AD]">
                             when it matters most.</span
@@ -66,7 +51,7 @@ import WaitlistCTA from "../../components/landing/WaitlistCTA";
                     </h1>
 
                     <p
-                        class="font-sans text-lg md:text-xl text-slate-600 mb-8 leading-[1.55] md:leading-[1.45]"
+                        class="font-sans text-lg md:text-xl text-slate-600 mb-8 leading-normal md:leading-normal"
                     >
                         A more purposeful community of proven
                         professionals, built to solve problems and share opportunities — not self-promotion.
@@ -104,11 +89,11 @@ import WaitlistCTA from "../../components/landing/WaitlistCTA";
         <div aria-hidden="true" class="pointer-events-none absolute inset-0">
             <div
                 class="hidden sm:block absolute left-[var(--rail-x)] top-0 bottom-0 w-px"
-                style="background-image: repeating-linear-gradient(to bottom, rgba(176, 188, 203, 0.78) 0 4px, transparent 4px 9px);"
+                style="background-image: repeating-linear-gradient(to bottom, #a3a3a3 0 4px, transparent 4px 9px);"
             ></div>
             <div
                 class="hidden sm:block absolute right-[var(--rail-x)] top-0 bottom-0 w-px"
-                style="background-image: repeating-linear-gradient(to bottom, rgba(176, 188, 203, 0.78) 0 4px, transparent 4px 9px);"
+                style="background-image: repeating-linear-gradient(to bottom, #a3a3a3 0 4px, transparent 4px 9px);"
             ></div>
         </div>
         <div class="relative z-10">
@@ -119,7 +104,7 @@ import WaitlistCTA from "../../components/landing/WaitlistCTA";
 
     <Testimonial />
 
-    <section class="relative overflow-hidden">
+    <section data-bottom-cta class="relative overflow-hidden">
         <VectorFieldBackground client:only="react" />
 
         <div class="relative z-10">

@@ -136,8 +136,8 @@ export const JoinForm = () => {
                 <div className="h-16 w-16 bg-[#00A3AD]/10 rounded-full flex items-center justify-center mb-6">
                     <Check className="h-8 w-8 text-[#00A3AD]" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">Request Received</h3>
-                <p className="text-slate-500 max-w-xs mx-auto">
+                <h3 className="text-xl font-semibold text-slate-600 mb-2">Request Received</h3>
+                <p className="text-slate-600 max-w-xs mx-auto">
                     We’ll review your details and get back to you within a few days.
                 </p>
             </motion.div>
@@ -146,7 +146,7 @@ export const JoinForm = () => {
 
     return (
         <div
-            className={cn("relative", !isExpanded && "lg:mt-20")}
+            className={cn("relative", !isExpanded && "lg:mt-10")}
             id="join-waitlist"
         >
             <motion.div
@@ -176,7 +176,7 @@ export const JoinForm = () => {
                                 <h2 className="text-2xl font-bold text-slate-900 mb-2">
                                     {referrer ? `${referrer.firstName} vouched for you.` : "Don’t have an invite?"}
                                 </h2>
-                                <p className="text-slate-500">
+                                <p className="text-slate-600">
                                     {referrer
                                         ? "Your invitation is waiting — we just need to confirm `a few details."
                                         : (
@@ -211,10 +211,10 @@ export const JoinForm = () => {
                         >
                             {referrer && <ReferrerBadge name={`${referrer.firstName} ${referrer.lastName}`.trim()} />}
                             <div className="mb-6">
-                                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                                <h2 className="text-2xl font-bold text-slate-600 mb-2">
                                     {referrer ? `${referrer.firstName} vouched for you.` : "Join the waitlist"}
                                 </h2>
-                                <p className="text-slate-500">
+                                <p>
                                     {referrer
                                         ? "Your invitation is waiting — we just need to confirm a few details."
                                         : "We’ll let you know when your invitation is ready."}
@@ -272,7 +272,7 @@ export const JoinForm = () => {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full h-12 text-base font-bold bg-[#00A3AD] hover:bg-[#008A92] text-white rounded-xl shadow-lg shadow-[#00A3AD]/25 mt-2"
+                                    className="w-full h-12 text-base font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-lg shadow-slate-900/20 mt-2"
                                 >
                                     {isSubmitting ? (
                                         <>

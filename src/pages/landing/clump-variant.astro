@@ -1,0 +1,12 @@
+---
+import LandingLayout from "../../layouts/LandingLayout.astro";
+import { AutoClumpVectorField } from "../../components/landing/AutoClumpVectorField";
+---
+
+<LandingLayout title="Clump Variant - The Trusted List">
+    <section class="min-h-screen bg-[#D9F1F3] px-4 py-6 md:px-6 md:py-10">
+        <div class="relative mx-auto w-[727px] max-w-full aspect-[727/684] overflow-hidden">
+            <AutoClumpVectorField client:load activateOnVisible={true} pulseDelayMs={900} />
+        </div>
+    </section>
+</LandingLayout>

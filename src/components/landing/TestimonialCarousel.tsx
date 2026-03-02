@@ -87,7 +87,7 @@ export default function TestimonialCarousel() {
                         </div>
                     </div>
 
-                    <div className="relative h-[380px] md:h-[340px] lg:h-[320px] overflow-hidden">
+                    <div className="relative h-96 md:h-[340px] lg:h-80 overflow-hidden">
                         <AnimatePresence mode="wait" initial={false}>
                             <motion.div
                                 key={current.quote}
