@@ -107,6 +107,9 @@ export default function FloatingHeroBar() {
                         backgroundColor: isAtPageTop
                             ? "rgba(255, 255, 255, 0.1)"
                             : "rgba(255, 255, 255, 0.8)",
+                        borderColor: isAtPageTop
+                            ? "rgba(255, 255, 255, 0.5)"
+                            : "#e5e7eb",
                     }}
                     transition={
                         prefersReducedMotion
