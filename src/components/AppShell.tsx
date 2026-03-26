@@ -180,7 +180,7 @@ const AppShell = () => {
                 <InviteModule onInvite={() => setInviteDialogOpen(true)} />
               </div>
 
-              <main className="space-y-10">
+              <main className="space-y-10 mt-6">
                 {sectionOrder.map((key, idx) => (
                   <HelpSection
                     key={key}
