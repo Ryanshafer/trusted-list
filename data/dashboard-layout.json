@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "contact": {
+      "batches": [
+        [
+          "circle-jen",
+          "circle-marcus",
+          "circle-anika"
+        ],
+        [
+          "circle-devon"
+        ]
+      ],
+      "title": "Requests for your help"
+    },
+    "circle": {
+      "batches": [
+        [
+          "network-monica",
+          "network-leo",
+          "network-marisol"
+        ],
+        [
+          "network-delia",
+          "network-nico",
+          "network-chen",
+          "network-caleb"
+        ]
+      ],
+      "title": "Your circle needs help"
+    },
+    "community": {
+      "batches": [
+        [
+          "opportunity-avery",
+          "opportunity-noah",
+          "opportunity-simone"
+        ],
+        [
+          "opportunity-jordan",
+          "opportunity-maya",
+          "opportunity-darius",
+          "opportunity-lena"
+        ]
+      ],
+      "title": "Others who could use your help"
+    }
+  }
+}

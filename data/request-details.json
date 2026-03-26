@@ -1,0 +1,3437 @@
+{
+  "req-career-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Leadership"
+    ],
+    "author": {
+      "role": "Senior Software Engineer",
+      "company": "Meridian Systems",
+      "connectionDegree": "2nd",
+      "trustedFor": "Engineering Leadership, Mentorship"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Michael Chen",
+        "role": "CTO · Meridian Systems",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2018–2021 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Senior Engineer · Meridian",
+        "relationship": "Colleagues 2018–2021 · Meridian Systems"
+      }
+    ],
+    "about": {
+      "career": "5 years at Meridian Systems, leading platform infrastructure. Moved from IC to tech lead, now targeting EM.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Software Engineering, System Design, Team Leadership"
+    },
+    "stats": {
+      "peopleHelped": 12,
+      "requests": 3,
+      "trustRating": "Proven"
+    }
+  },
+  "req-career-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Interview Prep",
+      "System Design"
+    ],
+    "author": {
+      "role": "Staff Engineer",
+      "company": "Scale AI",
+      "connectionDegree": "2nd",
+      "trustedFor": "Distributed Systems, Technical Interviews"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sarah Kim",
+        "role": "Eng Manager · Scale AI",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Lattice"
+      },
+      {
+        "type": "requester",
+        "role": "Staff Engineer · Scale AI",
+        "relationship": "Colleagues 2021–2023 · Scale AI"
+      }
+    ],
+    "about": {
+      "career": "10 years in distributed systems. Led the infrastructure migration at Scale AI, now targeting Staff+ at a top-5 tech company.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Distributed Systems, Backend Architecture, Technical Interviews"
+    },
+    "stats": {
+      "peopleHelped": 8,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-career-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Promotion"
+    ],
+    "author": {
+      "role": "Program Manager",
+      "company": "Veritas Health",
+      "connectionDegree": "1st",
+      "trustedFor": "Program Management, Cross-functional Leadership"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Program Manager · Veritas Health",
+        "relationship": "Colleagues 2020–2022 · Blueprint Labs"
+      }
+    ],
+    "about": {
+      "career": "7 years in program management across healthcare and finance. Currently managing 3 cross-org initiatives at Veritas.",
+      "location": "Chicago, IL",
+      "trustedExpertise": "Program Management, Stakeholder Communication, Roadmaps"
+    },
+    "stats": {
+      "peopleHelped": 19,
+      "requests": 4,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-career-4": {
+    "audience": "Community",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Data Engineering",
+      "Career Advice"
+    ],
+    "author": {
+      "role": "Design Director",
+      "company": "New Corp",
+      "connectionDegree": "2nd",
+      "trustedFor": "UX Design, UX Strategy, Design Leadership"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Amanda Foster",
+        "role": "Engineering Manager · New Corp",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2022 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Design Director · New Corp",
+        "relationship": "Colleagues 2019–2022 · New Corp"
+      }
+    ],
+    "about": {
+      "career": "8 years in design, lead on payments at Acme Corp before Design Director at New Corp",
+      "location": "New York City, NY",
+      "trustedExpertise": "UX Design, UX Strategy, Design Leadership"
+    },
+    "stats": {
+      "peopleHelped": 25,
+      "requests": 8,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-career-5": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Customer Support",
+      "Leadership"
+    ],
+    "author": {
+      "role": "Support Lead",
+      "company": "Finova",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Customer Experience, Support Operations"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "David Park",
+        "role": "Head of CX · Finova",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Riviera Systems"
+      },
+      {
+        "type": "requester",
+        "role": "Support Lead · Finova",
+        "relationship": "Colleagues 2020–2022 · Finova"
+      }
+    ],
+    "about": {
+      "career": "6 years in customer support, built Finova's support team from 2 to 15. Looking to move into VP of CX.",
+      "location": "Austin, TX",
+      "trustedExpertise": "Customer Support, Team Building, Process Design"
+    },
+    "stats": {
+      "peopleHelped": 6,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "req-design-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Portfolio Review",
+    "topics": [
+      "Portfolio Review",
+      "Career Advice"
+    ],
+    "author": {
+      "role": "Product Designer",
+      "company": "Nexus SaaS",
+      "connectionDegree": "2nd",
+      "trustedFor": "Product Design, User Research"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Chris Tanner",
+        "role": "Design Lead · Nexus",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2022–2023 · Northbound Studio"
+      },
+      {
+        "type": "requester",
+        "role": "Product Designer · Nexus",
+        "relationship": "Colleagues 2022–2023 · Nexus"
+      }
+    ],
+    "about": {
+      "career": "4 years in product design at B2B SaaS companies. Strong in 0-to-1 product flows and design systems.",
+      "location": "Los Angeles, CA",
+      "trustedExpertise": "Product Design, Figma, Design Systems, User Testing"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-design-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Research Feedback",
+    "topics": [
+      "UX Research",
+      "Feedback"
+    ],
+    "author": {
+      "role": "UX Researcher",
+      "company": "Habitat Labs",
+      "connectionDegree": "2nd",
+      "trustedFor": "Qualitative Research, Usability Testing"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Wei Zhang",
+        "role": "Research Lead · Habitat",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Insight Labs"
+      },
+      {
+        "type": "requester",
+        "role": "UX Researcher · Habitat Labs",
+        "relationship": "Colleagues 2020–2022 · Habitat Labs"
+      }
+    ],
+    "about": {
+      "career": "3 years in UX research. Runs usability studies and has helped ship 4 major product features at Habitat.",
+      "location": "Seattle, WA",
+      "trustedExpertise": "Qualitative Research, Usability Testing, Survey Design"
+    },
+    "stats": {
+      "peopleHelped": 7,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-design-3": {
+    "audience": "Community",
+    "audienceCategory": "Portfolio Review",
+    "topics": [
+      "Brand Design",
+      "Portfolio Review"
+    ],
+    "author": {
+      "role": "Brand + Product Designer",
+      "company": "Freelance",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Brand Identity, Visual Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Marie Dubois",
+        "role": "Creative Director · Freelance",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Creativehaus"
+      },
+      {
+        "type": "requester",
+        "role": "Brand Designer · Freelance",
+        "relationship": "Colleagues 2020–2022 · Freelance"
+      }
+    ],
+    "about": {
+      "career": "6 years freelancing in brand identity and product design for Series A/B startups in Europe and North America.",
+      "location": "Paris, France",
+      "trustedExpertise": "Brand Identity, Visual Design, Motion"
+    },
+    "stats": {
+      "peopleHelped": 14,
+      "requests": 5,
+      "trustRating": "Proven"
+    }
+  },
+  "req-design-4": {
+    "audience": "Trusted List",
+    "audienceCategory": "Content Design",
+    "topics": [
+      "Content Design",
+      "UX Writing"
+    ],
+    "author": {
+      "role": "Content Designer",
+      "company": "Lumen Health",
+      "connectionDegree": "2nd",
+      "trustedFor": "UX Writing, Content Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Priya Nair",
+        "role": "Head of Content · Lumen",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Content Collective"
+      },
+      {
+        "type": "requester",
+        "role": "Content Designer · Lumen",
+        "relationship": "Colleagues 2021–2023 · Lumen"
+      }
+    ],
+    "about": {
+      "career": "4 years in UX writing and content design at health tech. Launched the Lumen content design practice.",
+      "location": "Denver, CO",
+      "trustedExpertise": "UX Writing, Content Strategy, Voice & Tone"
+    },
+    "stats": {
+      "peopleHelped": 10,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-design-5": {
+    "audience": "Community",
+    "audienceCategory": "Accessibility",
+    "topics": [
+      "Accessibility",
+      "Inclusive Design"
+    ],
+    "author": {
+      "role": "Accessibility Advocate",
+      "company": "Clearpath",
+      "connectionDegree": "2nd",
+      "trustedFor": "Accessibility, WCAG, Inclusive Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "James Owens",
+        "role": "Design Lead · Clearpath",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2022–2023 · AccessFirst"
+      },
+      {
+        "type": "requester",
+        "role": "Accessibility Advocate · Clearpath",
+        "relationship": "Colleagues 2022–2023 · Clearpath"
+      }
+    ],
+    "about": {
+      "career": "7 years focused on digital accessibility. Leads WCAG audits, trains design teams, and advises on inclusive product strategy.",
+      "location": "Atlanta, GA",
+      "trustedExpertise": "Accessibility, WCAG 2.1, Screen Reader Testing, Inclusive Design"
+    },
+    "stats": {
+      "peopleHelped": 31,
+      "requests": 6,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-product-1": {
+    "audience": "Community",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Product Strategy",
+      "Founding"
+    ],
+    "author": {
+      "role": "Founder",
+      "company": "Beacon (early-stage)",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Product Strategy, Early-stage Startups"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Rohan Mehta",
+        "role": "VC Associate · Sequoia",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Gradient Labs"
+      },
+      {
+        "type": "requester",
+        "role": "Founder · Beacon",
+        "relationship": "Colleagues 2020–2022 · Gradient Labs"
+      }
+    ],
+    "about": {
+      "career": "Ex-PM at Stripe. Building Beacon, an early-stage B2B SaaS for legal ops. Pre-seed, 3 paying customers.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Product Strategy, B2B SaaS, Early-stage Product"
+    },
+    "stats": {
+      "peopleHelped": 5,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "req-product-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Marketplace",
+      "Growth"
+    ],
+    "author": {
+      "role": "Product Manager",
+      "company": "TradeLoop",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Marketplace Products, Seller Experience"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Laura Kim",
+        "role": "Head of Product · TradeLoop",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Momentum Co"
+      },
+      {
+        "type": "requester",
+        "role": "PM · TradeLoop",
+        "relationship": "Colleagues 2021–2023 · TradeLoop"
+      }
+    ],
+    "about": {
+      "career": "5 years in marketplace product. Previously at eBay seller experience, now leading supply-side at TradeLoop.",
+      "location": "Los Angeles, CA",
+      "trustedExpertise": "Marketplace Products, Seller Experience, Trust & Safety"
+    },
+    "stats": {
+      "peopleHelped": 11,
+      "requests": 4,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-product-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Platform Product",
+    "topics": [
+      "Platform",
+      "APIs"
+    ],
+    "author": {
+      "role": "Platform PM",
+      "company": "Cloudspark",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Developer Products, Platform Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Daniel Torres",
+        "role": "VP Product · Cloudspark",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · DevSync"
+      },
+      {
+        "type": "requester",
+        "role": "Platform PM · Cloudspark",
+        "relationship": "Colleagues 2020–2022 · Cloudspark"
+      }
+    ],
+    "about": {
+      "career": "8 years building developer tools and platform products. Led API platform at Cloudspark from 0 to 500 integrations.",
+      "location": "San Jose, CA",
+      "trustedExpertise": "Developer Products, Platform Strategy, API Design"
+    },
+    "stats": {
+      "peopleHelped": 17,
+      "requests": 5,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-product-4": {
+    "audience": "Trusted List",
+    "audienceCategory": "Growth Product",
+    "topics": [
+      "Growth",
+      "Experimentation"
+    ],
+    "author": {
+      "role": "Growth PM",
+      "company": "PulseApp",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Growth Strategy, A/B Testing"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Chris Wu",
+        "role": "Growth Lead · PulseApp",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Growfast"
+      },
+      {
+        "type": "requester",
+        "role": "Growth PM · PulseApp",
+        "relationship": "Colleagues 2021–2023 · PulseApp"
+      }
+    ],
+    "about": {
+      "career": "4 years in growth product. Built PulseApp's experimentation framework and grew activation rate 40% in 12 months.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Growth Strategy, A/B Testing, Activation Funnels"
+    },
+    "stats": {
+      "peopleHelped": 8,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-product-5": {
+    "audience": "Community",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Marketplace",
+      "Founding",
+      "Product Strategy"
+    ],
+    "author": {
+      "role": "Founder",
+      "company": "Woven (marketplace)",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Marketplace Strategy, Founding"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Isabel Reyes",
+        "role": "VC Partner · Basis Ventures",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Apex Fund"
+      },
+      {
+        "type": "requester",
+        "role": "Founder · Woven",
+        "relationship": "Colleagues 2020–2022 · Apex Fund"
+      }
+    ],
+    "about": {
+      "career": "2nd-time founder. First company acquired 2021. Building Woven, a marketplace for skilled tradespeople.",
+      "location": "Miami, FL",
+      "trustedExpertise": "Marketplace Strategy, Founding, GTM"
+    },
+    "stats": {
+      "peopleHelped": 20,
+      "requests": 6,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-business-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Business Advice",
+    "topics": [
+      "Fundraising",
+      "Solo Founder"
+    ],
+    "author": {
+      "role": "Solo Founder",
+      "company": "Nomad Finance",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Fintech, Bootstrapped Startups"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Tom Li",
+        "role": "Angel Investor",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Apex Capital"
+      },
+      {
+        "type": "requester",
+        "role": "Founder · Nomad Finance",
+        "relationship": "Colleagues 2021–2023 · Apex Capital"
+      }
+    ],
+    "about": {
+      "career": "Ex-Robinhood PM. Building Nomad Finance, financial tools for remote workers. $45k ARR, bootstrapped.",
+      "location": "Austin, TX",
+      "trustedExpertise": "Fintech, Solo Founding, Financial Products"
+    },
+    "stats": {
+      "peopleHelped": 4,
+      "requests": 1,
+      "trustRating": "Reliable"
+    }
+  },
+  "req-business-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Operations",
+    "topics": [
+      "Non-profit",
+      "Operations"
+    ],
+    "author": {
+      "role": "COO",
+      "company": "Bridge Alliance",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Non-profit Operations, Team Scaling"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Fatima Youssef",
+        "role": "Executive Director · Bridge Alliance",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2022 · Civic Ventures"
+      },
+      {
+        "type": "requester",
+        "role": "COO · Bridge Alliance",
+        "relationship": "Colleagues 2019–2022 · Bridge Alliance"
+      }
+    ],
+    "about": {
+      "career": "15 years in operations across for-profit and non-profit sectors. Joined Bridge Alliance to build organizational infrastructure.",
+      "location": "Washington, D.C.",
+      "trustedExpertise": "Operations, Organizational Design, Non-profit Strategy"
+    },
+    "stats": {
+      "peopleHelped": 22,
+      "requests": 7,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-business-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Finance",
+    "topics": [
+      "Finance",
+      "FP&A"
+    ],
+    "author": {
+      "role": "VP Finance",
+      "company": "Solara Energy",
+      "connectionDegree": "1st",
+      "trustedFor": "Financial Modeling, FP&A"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "VP Finance · Solara Energy",
+        "relationship": "Colleagues 2022–2024 · Meridian Finance"
+      }
+    ],
+    "about": {
+      "career": "12 years in finance at energy and cleantech companies. Led Series B financial diligence at Solara.",
+      "location": "Houston, TX",
+      "trustedExpertise": "Financial Modeling, FP&A, Fundraising Due Diligence"
+    },
+    "stats": {
+      "peopleHelped": 18,
+      "requests": 5,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-business-4": {
+    "audience": "Trusted List",
+    "audienceCategory": "Operations",
+    "topics": [
+      "Operations",
+      "Process Design"
+    ],
+    "author": {
+      "role": "Operations Lead",
+      "company": "Grovelink",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Operations, Supply Chain"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Rosa Ferreira",
+        "role": "COO · Grovelink",
+        "avatarUrl": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Streamline Ops"
+      },
+      {
+        "type": "requester",
+        "role": "Operations Lead · Grovelink",
+        "relationship": "Colleagues 2020–2022 · Grovelink"
+      }
+    ],
+    "about": {
+      "career": "9 years in operations and supply chain. Built Grovelink's 3PL partnerships and scaled fulfillment ops 10x.",
+      "location": "Columbus, OH",
+      "trustedExpertise": "Operations, Supply Chain, Process Optimization"
+    },
+    "stats": {
+      "peopleHelped": 13,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "req-business-5": {
+    "audience": "Community",
+    "audienceCategory": "Marketing",
+    "topics": [
+      "Marketing",
+      "Brand Strategy"
+    ],
+    "author": {
+      "role": "Marketing Strategist",
+      "company": "Freelance",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Brand Strategy, Growth Marketing"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Nate Sims",
+        "role": "CMO · Pulse",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · BrandCraft"
+      },
+      {
+        "type": "requester",
+        "role": "Marketing Strategist · Freelance",
+        "relationship": "Colleagues 2021–2023 · BrandCraft"
+      }
+    ],
+    "about": {
+      "career": "10 years in brand and growth marketing for DTC and SaaS. Helped 12 companies reach their first $1M ARR.",
+      "location": "Nashville, TN",
+      "trustedExpertise": "Brand Strategy, Growth Marketing, Content"
+    },
+    "stats": {
+      "peopleHelped": 16,
+      "requests": 5,
+      "trustRating": "Proven"
+    }
+  },
+  "req-health-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Health Tech"
+    ],
+    "author": {
+      "role": "Design Ops",
+      "company": "Luminary Health",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Design Operations, HealthTech"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Paul Evans",
+        "role": "VP Design · Luminary",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Wellpath Design"
+      },
+      {
+        "type": "requester",
+        "role": "Design Ops · Luminary Health",
+        "relationship": "Colleagues 2020–2022 · Wellpath Design"
+      }
+    ],
+    "about": {
+      "career": "6 years in design ops and program management at healthcare tech companies. Passionate about HIPAA-compliant design workflows.",
+      "location": "Boston, MA",
+      "trustedExpertise": "Design Operations, HealthTech, HIPAA Compliance"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-health-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Wellness",
+    "topics": [
+      "Mental Health",
+      "Leadership"
+    ],
+    "author": {
+      "role": "Engineering Manager",
+      "company": "Mindbridge",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Engineering Leadership, Mental Health Advocacy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Anya Petrov",
+        "role": "CTO · Mindbridge",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · MindfulTech"
+      },
+      {
+        "type": "requester",
+        "role": "EM · Mindbridge",
+        "relationship": "Colleagues 2021–2023 · Mindbridge"
+      }
+    ],
+    "about": {
+      "career": "8 years in engineering, 3 as EM. Outspoken advocate for mental health in tech. Runs a newsletter on engineering culture.",
+      "location": "Portland, OR",
+      "trustedExpertise": "Engineering Leadership, Team Health, Mental Wellbeing"
+    },
+    "stats": {
+      "peopleHelped": 28,
+      "requests": 8,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-health-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Wellness",
+    "topics": [
+      "Burnout",
+      "Work-life Balance"
+    ],
+    "author": {
+      "role": "Design Manager",
+      "company": "WellPath",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Design Management, Team Wellbeing"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Renata Silva",
+        "role": "Head of Design · WellPath",
+        "avatarUrl": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2022 · Forma Health"
+      },
+      {
+        "type": "requester",
+        "role": "Design Manager · WellPath",
+        "relationship": "Colleagues 2019–2022 · WellPath"
+      }
+    ],
+    "about": {
+      "career": "5 years in design management at wellbeing apps. Expert in sustaining design team culture through hypergrowth.",
+      "location": "Miami, FL",
+      "trustedExpertise": "Design Management, Team Wellbeing, People Leadership"
+    },
+    "stats": {
+      "peopleHelped": 11,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-education-1": {
+    "audience": "Community",
+    "audienceCategory": "Mentorship",
+    "topics": [
+      "Mentorship",
+      "Bootcamp"
+    ],
+    "author": {
+      "role": "Bootcamp Mentor",
+      "company": "CodePath",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Technical Mentorship, Career Transitions"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Derek Nguyen",
+        "role": "Curriculum Lead · CodePath",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · LearnPath"
+      },
+      {
+        "type": "requester",
+        "role": "Mentor · CodePath",
+        "relationship": "Colleagues 2021–2023 · CodePath"
+      }
+    ],
+    "about": {
+      "career": "Bootcamp graduate turned lead mentor. Has helped 60+ students land their first tech role over the past 3 years.",
+      "location": "Phoenix, AZ",
+      "trustedExpertise": "Technical Mentorship, Career Transitions, React, Node.js"
+    },
+    "stats": {
+      "peopleHelped": 60,
+      "requests": 12,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-education-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Coaching",
+    "topics": [
+      "Career Coaching",
+      "Job Search"
+    ],
+    "author": {
+      "role": "Career Coach",
+      "company": "Thrive Coaching",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Career Coaching, Job Search Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sasha Monroe",
+        "role": "HR Director · Acme Corp",
+        "avatarUrl": "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2022 · EduBridge"
+      },
+      {
+        "type": "requester",
+        "role": "Career Coach · Thrive",
+        "relationship": "Colleagues 2019–2022 · EduBridge"
+      }
+    ],
+    "about": {
+      "career": "15 years in HR and talent, now running Thrive Coaching. Helped 200+ professionals navigate pivots, promotions, and job searches.",
+      "location": "Seattle, WA",
+      "trustedExpertise": "Career Coaching, Job Search, Interview Strategy, Salary Negotiation"
+    },
+    "stats": {
+      "peopleHelped": 200,
+      "requests": 30,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-education-3": {
+    "audience": "Community",
+    "audienceCategory": "Education",
+    "topics": [
+      "Academia",
+      "Curriculum Design"
+    ],
+    "author": {
+      "role": "Adjunct Professor",
+      "company": "State University",
+      "connectionDegree": "3rd+",
+      "trustedFor": "UX Education, Curriculum Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Prof. Lynn Garcia",
+        "role": "HCI Chair · State University",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2023 · University Research Lab"
+      },
+      {
+        "type": "requester",
+        "role": "Adjunct Prof · State University",
+        "relationship": "Colleagues 2020–2023 · State University"
+      }
+    ],
+    "about": {
+      "career": "Industry UX designer teaching part-time. Developing a new UX curriculum that bridges academia and industry practice.",
+      "location": "Boston, MA",
+      "trustedExpertise": "UX Education, Curriculum Design, HCI Research"
+    },
+    "stats": {
+      "peopleHelped": 7,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-tech-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Engineering",
+    "topics": [
+      "Engineering",
+      "Architecture"
+    ],
+    "author": {
+      "role": "Principal Engineer",
+      "company": "Streamline",
+      "connectionDegree": "3rd+",
+      "trustedFor": "System Architecture, Distributed Systems"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "James Cho",
+        "role": "VP Eng · Streamline",
+        "avatarUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · ByteCore"
+      },
+      {
+        "type": "requester",
+        "role": "Principal Engineer · Streamline",
+        "relationship": "Colleagues 2020–2022 · Streamline"
+      }
+    ],
+    "about": {
+      "career": "12 years building large-scale distributed systems. Led the re-architecture of Streamline's core data pipeline, reducing latency 60%.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Distributed Systems, System Architecture, Kafka, Kubernetes"
+    },
+    "stats": {
+      "peopleHelped": 23,
+      "requests": 7,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-tech-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Mobile Development",
+    "topics": [
+      "Mobile",
+      "iOS"
+    ],
+    "author": {
+      "role": "Mobile Lead",
+      "company": "Pixel Labs",
+      "connectionDegree": "3rd+",
+      "trustedFor": "iOS Development, Mobile Architecture"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Marco Rossi",
+        "role": "CTO · Pixel Labs",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · AppForge"
+      },
+      {
+        "type": "requester",
+        "role": "Mobile Lead · Pixel Labs",
+        "relationship": "Colleagues 2021–2023 · Pixel Labs"
+      }
+    ],
+    "about": {
+      "career": "7 years in iOS and cross-platform mobile development. Shipped 5 apps with 500K+ downloads at Pixel Labs.",
+      "location": "Milan, Italy",
+      "trustedExpertise": "iOS, Swift, React Native, Mobile Architecture"
+    },
+    "stats": {
+      "peopleHelped": 15,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "req-tech-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Security",
+    "topics": [
+      "Security",
+      "AppSec"
+    ],
+    "author": {
+      "role": "Security Engineer",
+      "company": "CipherEdge",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Application Security, Threat Modeling"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Priya Kapoor",
+        "role": "CISO · CipherEdge",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · ShieldStack"
+      },
+      {
+        "type": "requester",
+        "role": "Security Engineer · CipherEdge",
+        "relationship": "Colleagues 2020–2022 · CipherEdge"
+      }
+    ],
+    "about": {
+      "career": "9 years in application and cloud security. Performed 30+ threat model reviews and led SOC 2 Type II certification at CipherEdge.",
+      "location": "Toronto, Canada",
+      "trustedExpertise": "Application Security, Threat Modeling, OWASP, Cloud Security"
+    },
+    "stats": {
+      "peopleHelped": 19,
+      "requests": 5,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-tech-4": {
+    "audience": "Community",
+    "audienceCategory": "Development",
+    "topics": [
+      "Full-stack",
+      "Code Review"
+    ],
+    "author": {
+      "role": "Full-stack Developer",
+      "company": "OpenLoop",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Full-stack Development, React, TypeScript"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Hiroshi Tanaka",
+        "role": "Eng Lead · OpenLoop",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · CodeNova"
+      },
+      {
+        "type": "requester",
+        "role": "Full-stack Dev · OpenLoop",
+        "relationship": "Colleagues 2021–2023 · OpenLoop"
+      }
+    ],
+    "about": {
+      "career": "4 years in full-stack development. Strong in TypeScript and React. Open source contributor with 1.2k GitHub stars.",
+      "location": "Tokyo, Japan",
+      "trustedExpertise": "TypeScript, React, Node.js, PostgreSQL"
+    },
+    "stats": {
+      "peopleHelped": 6,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "req-network-1": {
+    "audience": "Community",
+    "audienceCategory": "Introduction",
+    "topics": [
+      "Networking",
+      "Product Marketing"
+    ],
+    "author": {
+      "role": "Product Marketer",
+      "company": "Drifter",
+      "connectionDegree": "none",
+      "trustedFor": "Product Marketing, GTM Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Brad Foster",
+        "role": "CMO · Drifter",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · TrustBridge"
+      },
+      {
+        "type": "requester",
+        "role": "PMM · Drifter",
+        "relationship": "Colleagues 2021–2023 · Drifter"
+      }
+    ],
+    "about": {
+      "career": "5 years in product marketing at PLG SaaS companies. Launched 8 products and managed GTM for two acquisitions.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Product Marketing, GTM Strategy, Competitive Positioning"
+    },
+    "stats": {
+      "peopleHelped": 14,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "req-network-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Introduction",
+    "topics": [
+      "Career Transition",
+      "Networking"
+    ],
+    "author": {
+      "role": "Career Switcher",
+      "company": "Freelance / Job Seeking",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Career Transitions, Software Engineering"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Ivan Petrov",
+        "role": "Recruiter · TalentBridge",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Nexus Talent"
+      },
+      {
+        "type": "requester",
+        "role": "Career Switcher → Engineering",
+        "relationship": "Colleagues 2020–2022 · Nexus Talent"
+      }
+    ],
+    "about": {
+      "career": "Former teacher transitioning into UX/product. Completed a 6-month bootcamp and looking for intro-level product roles.",
+      "location": "Chicago, IL",
+      "trustedExpertise": "Career Transitions, Teaching, Curriculum Design, Basic UX"
+    },
+    "stats": {
+      "peopleHelped": 3,
+      "requests": 1,
+      "trustRating": "Reliable"
+    }
+  },
+  "req-network-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Introduction",
+    "topics": [
+      "Business Development",
+      "Partnerships"
+    ],
+    "author": {
+      "role": "BD Manager",
+      "company": "Frontline AI",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Business Development, Enterprise Partnerships"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Peter Braun",
+        "role": "CRO · Frontline AI",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · PivotPartners"
+      },
+      {
+        "type": "requester",
+        "role": "BD Manager · Frontline AI",
+        "relationship": "Colleagues 2020–2022 · Frontline AI"
+      }
+    ],
+    "about": {
+      "career": "7 years in enterprise BD at AI and SaaS companies. Closed $40M+ in partnerships and channel deals.",
+      "location": "Berlin, Germany",
+      "trustedExpertise": "Business Development, Enterprise Partnerships, Channel Sales"
+    },
+    "stats": {
+      "peopleHelped": 16,
+      "requests": 5,
+      "trustRating": "Proven"
+    }
+  },
+  "req-network-4": {
+    "audience": "Trusted List",
+    "audienceCategory": "Introduction",
+    "topics": [
+      "People Ops",
+      "HR Tech"
+    ],
+    "author": {
+      "role": "People Ops",
+      "company": "Kinetico",
+      "connectionDegree": "3rd+",
+      "trustedFor": "People Operations, HRIS, Remote Culture"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Anita Shah",
+        "role": "CHRO · Kinetico",
+        "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · PeopleFirst"
+      },
+      {
+        "type": "requester",
+        "role": "People Ops · Kinetico",
+        "relationship": "Colleagues 2021–2023 · Kinetico"
+      }
+    ],
+    "about": {
+      "career": "6 years in people operations and HRIS. Built Kinetico's remote-first culture playbook and scaled from 40 to 200 employees.",
+      "location": "London, UK",
+      "trustedExpertise": "People Operations, HRIS, Remote Culture, L&D"
+    },
+    "stats": {
+      "peopleHelped": 12,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "req-other-1": {
+    "audience": "Community",
+    "audienceCategory": "General Support",
+    "topics": [
+      "Volunteering",
+      "Non-profit"
+    ],
+    "author": {
+      "role": "Volunteer Organizer",
+      "company": "Neighborly Foundation",
+      "connectionDegree": "none",
+      "trustedFor": "Community Organizing, Non-profit Management"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Arun Mehta",
+        "role": "Board Member · Neighborly",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · OpenHands"
+      },
+      {
+        "type": "requester",
+        "role": "Organizer · Neighborly",
+        "relationship": "Colleagues 2020–2022 · Neighborly"
+      }
+    ],
+    "about": {
+      "career": "12 years in community organizing. Leads citywide volunteer coordination for Neighborly and mentors new org leaders.",
+      "location": "Chicago, IL",
+      "trustedExpertise": "Community Organizing, Volunteer Management, Non-profit Ops"
+    },
+    "stats": {
+      "peopleHelped": 45,
+      "requests": 10,
+      "trustRating": "Stellar"
+    }
+  },
+  "req-other-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "General Support",
+    "topics": [
+      "Community Management",
+      "Engagement"
+    ],
+    "author": {
+      "role": "Community Manager",
+      "company": "Strata Platform",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Community Building, Discord, Slack Communities"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Jane Park",
+        "role": "Head of Community · Strata",
+        "avatarUrl": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · CommonGround"
+      },
+      {
+        "type": "requester",
+        "role": "Community Manager · Strata",
+        "relationship": "Colleagues 2021–2023 · Strata"
+      }
+    ],
+    "about": {
+      "career": "4 years building developer and creator communities. Grew Strata's community from 200 to 15,000 members.",
+      "location": "Austin, TX",
+      "trustedExpertise": "Community Building, Engagement Strategy, Discord, Slack"
+    },
+    "stats": {
+      "peopleHelped": 10,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-other-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "General Support",
+    "topics": [
+      "Operations",
+      "Process Improvement"
+    ],
+    "author": {
+      "role": "Operations",
+      "company": "Uplift Ventures",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Operations, Process Design, Remote Teams"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Chris Bell",
+        "role": "COO · Uplift Ventures",
+        "avatarUrl": "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Streamline Ops"
+      },
+      {
+        "type": "requester",
+        "role": "Operations · Uplift Ventures",
+        "relationship": "Colleagues 2020–2022 · Uplift Ventures"
+      }
+    ],
+    "about": {
+      "career": "8 years in operations and process improvement at venture-backed startups. Expert in Notion, Linear, and async-first workflows.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Operations, Process Design, Remote Teams, Notion, Linear"
+    },
+    "stats": {
+      "peopleHelped": 17,
+      "requests": 5,
+      "trustRating": "Stellar"
+    }
+  },
+  "now-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Leadership"
+    ],
+    "author": {
+      "role": "Senior Software Engineer",
+      "company": "Meridian Systems",
+      "connectionDegree": "2nd",
+      "trustedFor": "Engineering Leadership, Mentorship"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Michael Chen",
+        "role": "CTO · Meridian Systems",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2018–2021 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Senior Engineer · Meridian",
+        "relationship": "Colleagues 2018–2021 · Meridian Systems"
+      }
+    ],
+    "about": {
+      "career": "5 years at Meridian Systems, leading platform infrastructure. Moving from IC to EM.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Software Engineering, System Design, Team Leadership"
+    },
+    "stats": {
+      "peopleHelped": 12,
+      "requests": 3,
+      "trustRating": "Proven"
+    }
+  },
+  "now-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Interview Prep",
+    "topics": [
+      "Interview Prep",
+      "System Design"
+    ],
+    "author": {
+      "role": "Staff Engineer",
+      "company": "Scale AI",
+      "connectionDegree": "2nd",
+      "trustedFor": "Distributed Systems, Technical Interviews"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sarah Kim",
+        "role": "Eng Manager · Scale AI",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Lattice"
+      },
+      {
+        "type": "requester",
+        "role": "Staff Engineer · Scale AI",
+        "relationship": "Colleagues 2021–2023 · Scale AI"
+      }
+    ],
+    "about": {
+      "career": "10 years in distributed systems. Led infrastructure migration at Scale AI.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Distributed Systems, Backend Architecture, Technical Interviews"
+    },
+    "stats": {
+      "peopleHelped": 8,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "now-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Portfolio Review",
+    "topics": [
+      "Portfolio Review",
+      "Product Design"
+    ],
+    "author": {
+      "role": "Product Designer",
+      "company": "Nexus SaaS",
+      "connectionDegree": "2nd",
+      "trustedFor": "Product Design, User Research"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Chris Tanner",
+        "role": "Design Lead · Nexus",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2022–2023 · Northbound Studio"
+      },
+      {
+        "type": "requester",
+        "role": "Product Designer · Nexus",
+        "relationship": "Colleagues 2022–2023 · Nexus"
+      }
+    ],
+    "about": {
+      "career": "4 years in product design at B2B SaaS. Strong in 0-to-1 product flows.",
+      "location": "Los Angeles, CA",
+      "trustedExpertise": "Product Design, Figma, Design Systems"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "now-4": {
+    "audience": "Trusted List",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Marketplace",
+      "Growth"
+    ],
+    "author": {
+      "role": "Product Manager",
+      "company": "TradeLoop",
+      "connectionDegree": "2nd",
+      "trustedFor": "Marketplace Products, Seller Experience"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Laura Kim",
+        "role": "Head of Product · TradeLoop",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Momentum Co"
+      },
+      {
+        "type": "requester",
+        "role": "PM · TradeLoop",
+        "relationship": "Colleagues 2021–2023 · TradeLoop"
+      }
+    ],
+    "about": {
+      "career": "5 years in marketplace product. Previously at eBay seller experience, now leading supply-side at TradeLoop.",
+      "location": "Los Angeles, CA",
+      "trustedExpertise": "Marketplace Products, Seller Experience, Trust & Safety"
+    },
+    "stats": {
+      "peopleHelped": 11,
+      "requests": 4,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "now-5": {
+    "audience": "Trusted List",
+    "audienceCategory": "Business Advice",
+    "topics": [
+      "Fundraising",
+      "Founding"
+    ],
+    "author": {
+      "role": "Solo Founder",
+      "company": "Nomad Finance",
+      "connectionDegree": "2nd",
+      "trustedFor": "Fintech, Bootstrapped Startups"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Tom Li",
+        "role": "Angel Investor",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Apex Capital"
+      },
+      {
+        "type": "requester",
+        "role": "Founder · Nomad Finance",
+        "relationship": "Colleagues 2021–2023 · Apex Capital"
+      }
+    ],
+    "about": {
+      "career": "Ex-Robinhood PM. Building Nomad Finance, financial tools for remote workers.",
+      "location": "Austin, TX",
+      "trustedExpertise": "Fintech, Solo Founding, Financial Products"
+    },
+    "stats": {
+      "peopleHelped": 4,
+      "requests": 1,
+      "trustRating": "Reliable"
+    }
+  },
+  "like-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Research Feedback",
+    "topics": [
+      "UX Research",
+      "Feedback"
+    ],
+    "author": {
+      "role": "UX Researcher",
+      "company": "Habitat Labs",
+      "connectionDegree": "2nd",
+      "trustedFor": "Qualitative Research, Usability Testing"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Wei Zhang",
+        "role": "Research Lead · Habitat",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Insight Labs"
+      },
+      {
+        "type": "requester",
+        "role": "UX Researcher · Habitat Labs",
+        "relationship": "Colleagues 2020–2022 · Habitat Labs"
+      }
+    ],
+    "about": {
+      "career": "3 years in UX research. Runs usability studies at Habitat.",
+      "location": "Seattle, WA",
+      "trustedExpertise": "Qualitative Research, Usability Testing, Survey Design"
+    },
+    "stats": {
+      "peopleHelped": 7,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "like-2": {
+    "audience": "Community",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Product Strategy",
+      "Founding"
+    ],
+    "author": {
+      "role": "Founder",
+      "company": "Beacon",
+      "connectionDegree": "2nd",
+      "trustedFor": "Product Strategy, Early-stage Startups"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Rohan Mehta",
+        "role": "VC Associate · Sequoia",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Gradient Labs"
+      },
+      {
+        "type": "requester",
+        "role": "Founder · Beacon",
+        "relationship": "Colleagues 2020–2022 · Gradient Labs"
+      }
+    ],
+    "about": {
+      "career": "Ex-PM at Stripe. Building Beacon, an early-stage B2B SaaS for legal ops.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Product Strategy, B2B SaaS, Early-stage Product"
+    },
+    "stats": {
+      "peopleHelped": 5,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "like-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Engineering",
+    "topics": [
+      "Engineering",
+      "Architecture"
+    ],
+    "author": {
+      "role": "Principal Engineer",
+      "company": "Streamline",
+      "connectionDegree": "2nd",
+      "trustedFor": "System Architecture, Distributed Systems"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "James Cho",
+        "role": "VP Eng · Streamline",
+        "avatarUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · ByteCore"
+      },
+      {
+        "type": "requester",
+        "role": "Principal Engineer · Streamline",
+        "relationship": "Colleagues 2020–2022 · Streamline"
+      }
+    ],
+    "about": {
+      "career": "12 years building large-scale distributed systems at Streamline.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Distributed Systems, System Architecture, Kafka, Kubernetes"
+    },
+    "stats": {
+      "peopleHelped": 23,
+      "requests": 7,
+      "trustRating": "Stellar"
+    }
+  },
+  "like-4": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Health Tech"
+    ],
+    "author": {
+      "role": "Design Ops",
+      "company": "Luminary Health",
+      "connectionDegree": "2nd",
+      "trustedFor": "Design Operations, HealthTech"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Paul Evans",
+        "role": "VP Design · Luminary",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Wellpath Design"
+      },
+      {
+        "type": "requester",
+        "role": "Design Ops · Luminary Health",
+        "relationship": "Colleagues 2020–2022 · Wellpath Design"
+      }
+    ],
+    "about": {
+      "career": "6 years in design ops at healthcare tech companies.",
+      "location": "Boston, MA",
+      "trustedExpertise": "Design Operations, HealthTech, HIPAA Compliance"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "like-5": {
+    "audience": "Trusted List",
+    "audienceCategory": "Mobile Development",
+    "topics": [
+      "Mobile",
+      "iOS"
+    ],
+    "author": {
+      "role": "Mobile Lead",
+      "company": "Pixel Labs",
+      "connectionDegree": "2nd",
+      "trustedFor": "iOS Development, Mobile Architecture"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Marco Rossi",
+        "role": "CTO · Pixel Labs",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · AppForge"
+      },
+      {
+        "type": "requester",
+        "role": "Mobile Lead · Pixel Labs",
+        "relationship": "Colleagues 2021–2023 · Pixel Labs"
+      }
+    ],
+    "about": {
+      "career": "7 years in iOS and cross-platform mobile development. Shipped 5 apps with 500K+ downloads.",
+      "location": "Milan, Italy",
+      "trustedExpertise": "iOS, Swift, React Native, Mobile Architecture"
+    },
+    "stats": {
+      "peopleHelped": 15,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "circle-jen": {
+    "audience": "Your Circle",
+    "audienceCategory": "Resume Review",
+    "topics": [
+      "Resume Review",
+      "Career Advice"
+    ],
+    "author": {
+      "role": "Product Marketing Manager",
+      "company": "Strove",
+      "connectionDegree": "1st",
+      "trustedFor": "Product Marketing, Brand Messaging"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "PMM · Strove",
+        "relationship": "Colleagues 2021–2023 · Strove"
+      }
+    ],
+    "about": {
+      "career": "6 years in product marketing. Led positioning and launch for Strove's core product suite.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Product Marketing, Brand Messaging, Launch Strategy"
+    },
+    "stats": {
+      "peopleHelped": 14,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "circle-marcus": {
+    "audience": "Your Circle",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Leadership"
+    ],
+    "author": {
+      "role": "Product Lead",
+      "company": "Northwind",
+      "connectionDegree": "1st",
+      "trustedFor": "Product Leadership, Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Product Lead · Northwind",
+        "relationship": "Colleagues 2020–2022 · Northwind"
+      }
+    ],
+    "about": {
+      "career": "8 years in product management. Led product at Northwind from MVP to Series B.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Product Leadership, Roadmapping, Strategy"
+    },
+    "stats": {
+      "peopleHelped": 18,
+      "requests": 5,
+      "trustRating": "Stellar"
+    }
+  },
+  "circle-anika": {
+    "audience": "Your Circle",
+    "audienceCategory": "Mentorship",
+    "topics": [
+      "Mentorship",
+      "Design Leadership"
+    ],
+    "author": {
+      "role": "Design Lead",
+      "company": "Freelance",
+      "connectionDegree": "1st",
+      "trustedFor": "Design Leadership, Mentorship"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Design Lead · Freelance",
+        "relationship": "Colleagues 2022–2023 · DesignLead"
+      }
+    ],
+    "about": {
+      "career": "7 years in UX and design leadership. Runs a design mentorship program for early-career designers.",
+      "location": "Chicago, IL",
+      "trustedExpertise": "Design Leadership, UX, Mentorship, Career Growth"
+    },
+    "stats": {
+      "peopleHelped": 30,
+      "requests": 8,
+      "trustRating": "Stellar"
+    }
+  },
+  "circle-devon": {
+    "audience": "Your Circle",
+    "audienceCategory": "General Support",
+    "topics": [
+      "Community",
+      "General Support"
+    ],
+    "author": {
+      "role": "Volunteer Coordinator",
+      "company": "Local Community",
+      "connectionDegree": "1st",
+      "trustedFor": "Community Organizing, Volunteering"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Volunteer Coordinator",
+        "relationship": "Colleagues 2020–2022 · CommonGround Volunteers"
+      }
+    ],
+    "about": {
+      "career": "Active community organizer and volunteer leader for neighborhood events and local initiatives.",
+      "location": "Portland, OR",
+      "trustedExpertise": "Community Organizing, Volunteering, Event Planning"
+    },
+    "stats": {
+      "peopleHelped": 40,
+      "requests": 10,
+      "trustRating": "Stellar"
+    }
+  },
+  "network-monica": {
+    "audience": "Your Network",
+    "audienceCategory": "Portfolio Review",
+    "topics": [
+      "Portfolio Review",
+      "Design Narrative"
+    ],
+    "author": {
+      "role": "Senior Designer",
+      "company": "Unknown",
+      "connectionDegree": "2nd",
+      "trustedFor": "Design Narrative, Visual Storytelling"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Bryan Lewis",
+        "role": "Design Lead",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Bridgeport Agency"
+      },
+      {
+        "type": "requester",
+        "role": "Senior Designer",
+        "relationship": "Colleagues 2020–2022 · Bridgeport Agency"
+      }
+    ],
+    "about": {
+      "career": "5 years in visual and UX design. Specializes in design narrative and portfolio presentation.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Visual Design, Portfolio, Design Narrative"
+    },
+    "stats": {
+      "peopleHelped": 8,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "network-leo": {
+    "audience": "Your Network",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Job Search"
+    ],
+    "author": {
+      "role": "Software Engineer",
+      "company": "TechCo",
+      "connectionDegree": "2nd",
+      "trustedFor": "Software Engineering, React"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sam Brooks",
+        "role": "Eng Lead · TechCo",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Fintech Labs"
+      },
+      {
+        "type": "requester",
+        "role": "Software Engineer · TechCo",
+        "relationship": "Colleagues 2020–2022 · TechCo"
+      }
+    ],
+    "about": {
+      "career": "4 years in front-end development. Focused on React and TypeScript at TechCo.",
+      "location": "Austin, TX",
+      "trustedExpertise": "React, TypeScript, Front-end Development"
+    },
+    "stats": {
+      "peopleHelped": 6,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "network-marisol": {
+    "audience": "Your Network",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Pivot",
+      "UX Design"
+    ],
+    "author": {
+      "role": "UX Designer",
+      "company": "Designhaus",
+      "connectionDegree": "2nd",
+      "trustedFor": "UX Design, Career Transitions"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Clara Reyes",
+        "role": "Design Director · Designhaus",
+        "avatarUrl": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · DesignGuild Studio"
+      },
+      {
+        "type": "requester",
+        "role": "UX Designer · Designhaus",
+        "relationship": "Colleagues 2021–2023 · Designhaus"
+      }
+    ],
+    "about": {
+      "career": "3 years in UX design after a career pivot from marketing. Focused on fintech and e-commerce.",
+      "location": "Miami, FL",
+      "trustedExpertise": "UX Design, Figma, Interaction Design"
+    },
+    "stats": {
+      "peopleHelped": 5,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "network-delia": {
+    "audience": "Your Network",
+    "audienceCategory": "Business Advice",
+    "topics": [
+      "Operations",
+      "Remote Work"
+    ],
+    "author": {
+      "role": "Operations Manager",
+      "company": "Gridline",
+      "connectionDegree": "2nd",
+      "trustedFor": "Operations, Remote Team Management"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Phil Torres",
+        "role": "COO · Gridline",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Streamline Co"
+      },
+      {
+        "type": "requester",
+        "role": "Operations Manager · Gridline",
+        "relationship": "Colleagues 2020–2022 · Gridline"
+      }
+    ],
+    "about": {
+      "career": "6 years in operations at remote-first companies. Built Gridline's async work playbook.",
+      "location": "Denver, CO",
+      "trustedExpertise": "Operations, Remote Team Management, Process Design"
+    },
+    "stats": {
+      "peopleHelped": 11,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "network-nico": {
+    "audience": "Your Network",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Product Strategy",
+      "B2B SaaS"
+    ],
+    "author": {
+      "role": "Product Manager",
+      "company": "Latticework",
+      "connectionDegree": "2nd",
+      "trustedFor": "B2B SaaS, Product Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Nina Pham",
+        "role": "VP Product · Latticework",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Construct Labs"
+      },
+      {
+        "type": "requester",
+        "role": "PM · Latticework",
+        "relationship": "Colleagues 2021–2023 · Latticework"
+      }
+    ],
+    "about": {
+      "career": "5 years in product at B2B SaaS companies. Focused on enterprise workflows and integrations.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "B2B SaaS, Product Strategy, Enterprise Products"
+    },
+    "stats": {
+      "peopleHelped": 13,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "network-chen": {
+    "audience": "Your Network",
+    "audienceCategory": "Engineering",
+    "topics": [
+      "Backend Engineering",
+      "Mentorship"
+    ],
+    "author": {
+      "role": "Senior Backend Engineer",
+      "company": "Pulsar",
+      "connectionDegree": "2nd",
+      "trustedFor": "Backend Engineering, Go, Mentorship"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Wei Liu",
+        "role": "Principal Eng · Pulsar",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Clearnode"
+      },
+      {
+        "type": "requester",
+        "role": "Sr Backend Eng · Pulsar",
+        "relationship": "Colleagues 2020–2022 · Pulsar"
+      }
+    ],
+    "about": {
+      "career": "6 years in backend engineering. Specializes in high-throughput data systems and Go microservices.",
+      "location": "Seattle, WA",
+      "trustedExpertise": "Backend Engineering, Go, Distributed Systems"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "network-caleb": {
+    "audience": "Your Network",
+    "audienceCategory": "Marketing",
+    "topics": [
+      "Growth Marketing",
+      "Content"
+    ],
+    "author": {
+      "role": "Growth Marketer",
+      "company": "Launchpad",
+      "connectionDegree": "2nd",
+      "trustedFor": "Growth Marketing, SEO, Content"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Amy Foster",
+        "role": "CMO · Launchpad",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · TrustBridge"
+      },
+      {
+        "type": "requester",
+        "role": "Growth Marketer · Launchpad",
+        "relationship": "Colleagues 2021–2023 · Launchpad"
+      }
+    ],
+    "about": {
+      "career": "4 years in growth and content marketing at early-stage startups. Grew Launchpad organic traffic 300%.",
+      "location": "Nashville, TN",
+      "trustedExpertise": "Growth Marketing, SEO, Content Strategy"
+    },
+    "stats": {
+      "peopleHelped": 7,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "opportunity-avery": {
+    "audience": "Community",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Networking"
+    ],
+    "author": {
+      "role": "Product Manager",
+      "company": "Orbis",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Product Management, Career Growth"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Jordan Smith",
+        "role": "PM Director · Orbis",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · DesignCo"
+      },
+      {
+        "type": "requester",
+        "role": "PM · Orbis",
+        "relationship": "Colleagues 2021–2023 · Orbis"
+      }
+    ],
+    "about": {
+      "career": "3 years in product management at consumer apps. Transitioning to enterprise product.",
+      "location": "Boston, MA",
+      "trustedExpertise": "Product Management, Consumer Apps, Career Growth"
+    },
+    "stats": {
+      "peopleHelped": 6,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "opportunity-noah": {
+    "audience": "Community",
+    "audienceCategory": "Engineering",
+    "topics": [
+      "Engineering",
+      "Open Source"
+    ],
+    "author": {
+      "role": "Software Engineer",
+      "company": "OpenSource Co",
+      "connectionDegree": "2nd",
+      "trustedFor": "Open Source, TypeScript, React"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sarah Kim",
+        "role": "Design Lead · Fable Labs",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · DesignCo"
+      },
+      {
+        "type": "requester",
+        "role": "PM · Fable Labs",
+        "relationship": "Colleagues 2022–present · Fable Labs"
+      }
+    ],
+    "about": {
+      "career": "4 years in open source and full-stack development. Maintains several popular TypeScript libraries.",
+      "location": "Mexico City, Mexico",
+      "trustedExpertise": "TypeScript, React, Open Source, Node.js"
+    },
+    "stats": {
+      "peopleHelped": 10,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "opportunity-simone": {
+    "audience": "Community",
+    "audienceCategory": "Design",
+    "topics": [
+      "UX Design",
+      "Accessibility"
+    ],
+    "author": {
+      "role": "UX Designer",
+      "company": "Clarity Health",
+      "connectionDegree": "3rd+",
+      "trustedFor": "UX Design, Healthcare, Accessibility"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Mia Torres",
+        "role": "Design Lead · Clarity",
+        "avatarUrl": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Studio Forma"
+      },
+      {
+        "type": "requester",
+        "role": "UX Designer · Clarity Health",
+        "relationship": "Colleagues 2021–2023 · Studio Forma"
+      }
+    ],
+    "about": {
+      "career": "5 years in healthcare UX. Focused on patient-facing experiences and WCAG compliance.",
+      "location": "Toronto, Canada",
+      "trustedExpertise": "Healthcare UX, Accessibility, WCAG, Patient Experience"
+    },
+    "stats": {
+      "peopleHelped": 12,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "opportunity-jordan": {
+    "audience": "Community",
+    "audienceCategory": "Product Strategy",
+    "topics": [
+      "Product Strategy",
+      "GTM"
+    ],
+    "author": {
+      "role": "Product Lead",
+      "company": "Vantage",
+      "connectionDegree": "2nd",
+      "trustedFor": "Product Strategy, GTM, SaaS"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Tom Walsh",
+        "role": "CPO · Vantage",
+        "avatarUrl": "https://images.unsplash.com/photo-1463453091185-61582044d556?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2021 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Growth Marketer · Vantage",
+        "relationship": "Colleagues 2021–present · Vantage"
+      }
+    ],
+    "about": {
+      "career": "7 years in product and GTM strategy. Led Vantage's expansion into enterprise mid-market.",
+      "location": "London, UK",
+      "trustedExpertise": "Product Strategy, GTM, Enterprise SaaS"
+    },
+    "stats": {
+      "peopleHelped": 16,
+      "requests": 5,
+      "trustRating": "Proven"
+    }
+  },
+  "opportunity-maya": {
+    "audience": "Community",
+    "audienceCategory": "Mentorship",
+    "topics": [
+      "Mentorship",
+      "Design"
+    ],
+    "author": {
+      "role": "Bootcamp Mentor",
+      "company": "CodePath",
+      "connectionDegree": "2nd",
+      "trustedFor": "Technical Mentorship, Career Transitions"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Priya Nair",
+        "role": "Executive Coach · GoodWork Network",
+        "avatarUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2023 · The Trusted List"
+      },
+      {
+        "type": "requester",
+        "role": "Founder · Luminary Fund",
+        "relationship": "Mentorship 2022–present · GoodWork Network"
+      }
+    ],
+    "about": {
+      "career": "Bootcamp graduate turned lead mentor. Has helped 60+ students land their first tech role.",
+      "location": "Phoenix, AZ",
+      "trustedExpertise": "Technical Mentorship, Career Transitions, React, Node.js"
+    },
+    "stats": {
+      "peopleHelped": 60,
+      "requests": 12,
+      "trustRating": "Stellar"
+    }
+  },
+  "opportunity-darius": {
+    "audience": "Community",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Finance"
+    ],
+    "author": {
+      "role": "Financial Analyst",
+      "company": "Apex Capital",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Financial Analysis, Investment Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sandra Lee",
+        "role": "Managing Director · Apex",
+        "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Civic Analytics"
+      },
+      {
+        "type": "requester",
+        "role": "Financial Analyst · Apex Capital",
+        "relationship": "Colleagues 2020–2022 · Civic Analytics"
+      }
+    ],
+    "about": {
+      "career": "5 years in financial analysis and investment strategy at Apex Capital. CFA Level 3 candidate.",
+      "location": "New York City, NY",
+      "trustedExpertise": "Financial Analysis, Investment Strategy, Modeling"
+    },
+    "stats": {
+      "peopleHelped": 8,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "opportunity-lena": {
+    "audience": "Community",
+    "audienceCategory": "Marketing",
+    "topics": [
+      "Content Marketing",
+      "Brand"
+    ],
+    "author": {
+      "role": "Content Marketer",
+      "company": "Bright Media",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Content Marketing, Brand Voice, SEO"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Mike Lawson",
+        "role": "Content Director · Bright Media",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · ContentHouse"
+      },
+      {
+        "type": "requester",
+        "role": "Content Marketer · Bright Media",
+        "relationship": "Colleagues 2021–2023 · Bright Media"
+      }
+    ],
+    "about": {
+      "career": "4 years in content marketing and brand. Grew Bright Media's organic traffic 5x through editorial strategy.",
+      "location": "Austin, TX",
+      "trustedExpertise": "Content Marketing, Brand Voice, SEO, Editorial Strategy"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "req-1": {
+    "audience": "Community",
+    "audienceCategory": "Networking",
+    "topics": [
+      "Networking",
+      "Fintech",
+      "Introductions"
+    ],
+    "author": {
+      "role": "Design Director · Acme Corp",
+      "company": "Acme Corp",
+      "connectionDegree": "none",
+      "trustedFor": "Product Design, UX Research"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      }
+    ],
+    "about": {
+      "career": "This is your own request posted to your trusted network.",
+      "location": "—",
+      "trustedExpertise": "—"
+    },
+    "stats": {
+      "peopleHelped": 0,
+      "requests": 1,
+      "trustRating": "Emerging"
+    }
+  },
+  "req-2": {
+    "audience": "Trusted Circle",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Advice",
+      "Engineering Management",
+      "Leadership"
+    ],
+    "author": {
+      "role": "Design Director · Acme Corp",
+      "company": "Acme Corp",
+      "connectionDegree": "none",
+      "trustedFor": "Product Design, UX Research"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      }
+    ],
+    "about": {
+      "career": "This is your own request posted to your trusted network.",
+      "location": "—",
+      "trustedExpertise": "—"
+    },
+    "stats": {
+      "peopleHelped": 0,
+      "requests": 1,
+      "trustRating": "Emerging"
+    }
+  },
+  "req-3": {
+    "audience": "Trusted Circle",
+    "audienceCategory": "Hiring",
+    "topics": [
+      "Hiring",
+      "Engineering",
+      "Referrals"
+    ],
+    "author": {
+      "role": "Design Director · Acme Corp",
+      "company": "Acme Corp",
+      "connectionDegree": "none",
+      "trustedFor": "Product Design, UX Research"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      }
+    ],
+    "about": {
+      "career": "This is your own request posted to your trusted network.",
+      "location": "—",
+      "trustedExpertise": "—"
+    },
+    "stats": {
+      "peopleHelped": 0,
+      "requests": 1,
+      "trustRating": "Emerging"
+    }
+  },
+  "req-4": {
+    "audience": "Community",
+    "audienceCategory": "Hiring",
+    "topics": [
+      "Hiring",
+      "Design",
+      "Referrals"
+    ],
+    "author": {
+      "role": "Design Director · Acme Corp",
+      "company": "Acme Corp",
+      "connectionDegree": "none",
+      "trustedFor": "Product Design, UX Research"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      }
+    ],
+    "about": {
+      "career": "This is your own request posted to your trusted network.",
+      "location": "—",
+      "trustedExpertise": "—"
+    },
+    "stats": {
+      "peopleHelped": 0,
+      "requests": 1,
+      "trustRating": "Emerging"
+    }
+  },
+  "helped-1": {
+    "audience": "Circle",
+    "audienceCategory": "Design",
+    "topics": [
+      "Portfolio",
+      "UX Design",
+      "Visual Design"
+    ],
+    "author": {
+      "role": "UX Designer",
+      "company": "Freelance",
+      "connectionDegree": "1st",
+      "trustedFor": "UX Design, Visual Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "UX Designer · Freelance",
+        "relationship": "Colleagues 2021–2023 · Acme Corp"
+      }
+    ],
+    "about": {
+      "career": "Freelance UX designer with 4 years of experience across fintech and e-commerce products.",
+      "location": "New York, NY",
+      "trustedExpertise": "UX Design, Visual Design, Portfolio"
+    },
+    "stats": {
+      "peopleHelped": 5,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "helped-2": {
+    "audience": "Network",
+    "audienceCategory": "Networking",
+    "topics": [
+      "Introductions",
+      "Leadership",
+      "Startups"
+    ],
+    "author": {
+      "role": "Head of Engineering",
+      "company": "BuildStack",
+      "connectionDegree": "2nd",
+      "trustedFor": "Engineering Leadership, Startups"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Alex Johnson",
+        "role": "Founder · TechVentures",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2022 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Head of Engineering · BuildStack",
+        "relationship": "Colleagues 2019–2022 · TechVentures"
+      }
+    ],
+    "about": {
+      "career": "Engineering leader with 8 years building products at early-stage startups. Currently growing the platform team at BuildStack.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Engineering Leadership, Hiring, Startup Strategy"
+    },
+    "stats": {
+      "peopleHelped": 8,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "helped-3": {
+    "audience": "Circle",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "System Design",
+      "Interview Prep",
+      "Engineering"
+    ],
+    "author": {
+      "role": "Software Engineer",
+      "company": "DataCore",
+      "connectionDegree": "1st",
+      "trustedFor": "Software Engineering, System Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Software Engineer · DataCore",
+        "relationship": "Colleagues 2021–2023 · Acme Corp"
+      }
+    ],
+    "about": {
+      "career": "3 years in backend engineering, targeting senior roles at tier-1 companies. Specializes in distributed systems.",
+      "location": "Austin, TX",
+      "trustedExpertise": "System Design, Backend Engineering"
+    },
+    "stats": {
+      "peopleHelped": 3,
+      "requests": 1,
+      "trustRating": "Reliable"
+    }
+  },
+  "helped-4": {
+    "audience": "Network",
+    "audienceCategory": "Business",
+    "topics": [
+      "GTM Strategy",
+      "Pricing",
+      "Healthcare SaaS"
+    ],
+    "author": {
+      "role": "Founder & CEO",
+      "company": "CareFlow",
+      "connectionDegree": "2nd",
+      "trustedFor": "Healthcare SaaS, GTM Strategy"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Jordan Park",
+        "role": "Partner · HealthFirst Ventures",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Founder & CEO · CareFlow",
+        "relationship": "Colleagues 2022–2024 · HealthFirst Ventures"
+      }
+    ],
+    "about": {
+      "career": "Second-time founder building a healthcare SaaS platform. Former product leader at Epic Systems.",
+      "location": "Chicago, IL",
+      "trustedExpertise": "Healthcare Tech, GTM, Pricing Strategy"
+    },
+    "stats": {
+      "peopleHelped": 11,
+      "requests": 4,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "helped-5": {
+    "audience": "Circle",
+    "audienceCategory": "Business",
+    "topics": [
+      "Newsletter",
+      "Community Building",
+      "Growth"
+    ],
+    "author": {
+      "role": "Creator & Writer",
+      "company": "Independent",
+      "connectionDegree": "1st",
+      "trustedFor": "Content Strategy, Community"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Creator · Independent",
+        "relationship": "Colleagues 2019–2021 · Acme Corp"
+      }
+    ],
+    "about": {
+      "career": "Independent creator with a growing audience in the design and tech space. Launching a curated weekly newsletter.",
+      "location": "Los Angeles, CA",
+      "trustedExpertise": "Content Strategy, Newsletter Growth, Community"
+    },
+    "stats": {
+      "peopleHelped": 6,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "helped-6": {
+    "audience": "Skill Match",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "QA",
+      "Test Automation",
+      "Career Transition"
+    ],
+    "author": {
+      "role": "QA Engineer",
+      "company": "Retail Cloud",
+      "connectionDegree": "3rd",
+      "trustedFor": "QA Engineering, Automation"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "QA Engineer · Retail Cloud",
+        "relationship": "Not connected"
+      }
+    ],
+    "about": {
+      "career": "QA engineer with 5 years of experience looking to pivot into SDET and automation engineering.",
+      "location": "Miami, FL",
+      "trustedExpertise": "Manual Testing, QA Strategy"
+    },
+    "stats": {
+      "peopleHelped": 2,
+      "requests": 1,
+      "trustRating": "Emerging"
+    }
+  },
+  "helped-7": {
+    "audience": "Network",
+    "audienceCategory": "Business",
+    "topics": [
+      "Pitch Prep",
+      "Climate Tech",
+      "Fundraising"
+    ],
+    "author": {
+      "role": "Co-Founder",
+      "company": "Verdant Labs",
+      "connectionDegree": "2nd",
+      "trustedFor": "Climate Tech, Fundraising"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Dana Mills",
+        "role": "Founder · ClimateWorks",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Co-Founder · Verdant Labs",
+        "relationship": "Colleagues 2021–2023 · ClimateWorks"
+      }
+    ],
+    "about": {
+      "career": "Climate tech founder raising a seed round for a carbon accounting platform. Background in environmental consulting.",
+      "location": "Boulder, CO",
+      "trustedExpertise": "Climate Tech, B2B SaaS, Fundraising"
+    },
+    "stats": {
+      "peopleHelped": 7,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "helped-8": {
+    "audience": "Circle",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Promotion",
+      "Staff Engineer",
+      "Career Growth"
+    ],
+    "author": {
+      "role": "Senior Engineer",
+      "company": "Stripe",
+      "connectionDegree": "1st",
+      "trustedFor": "Engineering, Career Growth"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Senior Engineer · Stripe",
+        "relationship": "Colleagues 2022–2023 · Acme Corp"
+      }
+    ],
+    "about": {
+      "career": "Senior engineer at Stripe with 6 years of experience in payments infrastructure. Targeting Staff Engineer promotion.",
+      "location": "Seattle, WA",
+      "trustedExpertise": "Payments, Distributed Systems, Technical Writing"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "helped-9": {
+    "audience": "Skill Match",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Product Ops",
+      "Portfolio",
+      "Job Search"
+    ],
+    "author": {
+      "role": "Product Operations",
+      "company": "Consulting",
+      "connectionDegree": "3rd",
+      "trustedFor": "Product Ops, Process Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Product Operations · Consulting",
+        "relationship": "Not connected"
+      }
+    ],
+    "about": {
+      "career": "Product ops specialist with background in scaling operations at Series B companies. Currently targeting full-time roles.",
+      "location": "Denver, CO",
+      "trustedExpertise": "Product Operations, Process Design, Tooling"
+    },
+    "stats": {
+      "peopleHelped": 4,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "helped-10": {
+    "audience": "Network",
+    "audienceCategory": "Networking",
+    "topics": [
+      "Introductions",
+      "Design Leadership",
+      "Freelance"
+    ],
+    "author": {
+      "role": "Senior Product Designer",
+      "company": "Freelance",
+      "connectionDegree": "2nd",
+      "trustedFor": "Product Design, Freelance"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Claire West",
+        "role": "Design Director · Notion",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2021 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Senior Product Designer · Freelance",
+        "relationship": "Colleagues 2020–2022 · Notion"
+      }
+    ],
+    "about": {
+      "career": "Senior product designer with 7 years of experience across fintech and health tech. Building a freelance practice.",
+      "location": "London, UK",
+      "trustedExpertise": "Product Design, Design Systems, UX Research"
+    },
+    "stats": {
+      "peopleHelped": 14,
+      "requests": 3,
+      "trustRating": "Proven"
+    }
+  },
+  "helped-11": {
+    "audience": "Circle",
+    "audienceCategory": "Dev & Tools",
+    "topics": [
+      "System Design",
+      "Architecture",
+      "Engineering Review"
+    ],
+    "author": {
+      "role": "Principal Engineer",
+      "company": "Lumio",
+      "connectionDegree": "1st",
+      "trustedFor": "System Architecture, Multi-tenant SaaS"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Principal Engineer · Lumio",
+        "relationship": "Colleagues 2020–2022 · Acme Corp"
+      }
+    ],
+    "about": {
+      "career": "Principal engineer at Lumio building a multi-tenant analytics platform. 10+ years in backend and infrastructure roles.",
+      "location": "Toronto, Canada",
+      "trustedExpertise": "System Architecture, Multi-tenant SaaS, Data Engineering"
+    },
+    "stats": {
+      "peopleHelped": 17,
+      "requests": 5,
+      "trustRating": "Stellar"
+    }
+  },
+  "helped-12": {
+    "audience": "Skill Match",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Portfolio",
+      "Storytelling",
+      "Interview Prep"
+    ],
+    "author": {
+      "role": "Product Designer",
+      "company": "Job Seeking",
+      "connectionDegree": "3rd",
+      "trustedFor": "Product Design, Storytelling"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Product Designer · Job Seeking",
+        "relationship": "Not connected"
+      }
+    ],
+    "about": {
+      "career": "Product designer with 3 years of experience actively seeking a full-time role. Background in consumer apps.",
+      "location": "Barcelona, Spain",
+      "trustedExpertise": "Product Design, Visual Storytelling, Portfolio Craft"
+    },
+    "stats": {
+      "peopleHelped": 1,
+      "requests": 1,
+      "trustRating": "Emerging"
+    }
+  },
+  "progress-1": {
+    "audience": "Network",
+    "audienceCategory": "Business",
+    "topics": [
+      "Pitch Deck",
+      "Fundraising",
+      "Seed Round"
+    ],
+    "author": {
+      "role": "Founder & CEO",
+      "company": "NovaSpark",
+      "connectionDegree": "2nd",
+      "trustedFor": "Fundraising, B2B SaaS"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Sarah Lee",
+        "role": "Venture Partner · Apex Ventures",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "Founder & CEO · NovaSpark",
+        "relationship": "Colleagues 2020–2022 · Apex Ventures"
+      }
+    ],
+    "about": {
+      "career": "Serial entrepreneur raising a seed round for an AI-powered analytics tool. Previously sold a SaaS company in 2021.",
+      "location": "New York, NY",
+      "trustedExpertise": "Fundraising, B2B SaaS, Go-to-Market"
+    },
+    "stats": {
+      "peopleHelped": 13,
+      "requests": 4,
+      "trustRating": "Proven"
+    }
+  },
+  "progress-2": {
+    "audience": "Skill Match",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Transition",
+      "Product Design",
+      "Portfolio"
+    ],
+    "author": {
+      "role": "Product Manager",
+      "company": "Horizon Health",
+      "connectionDegree": "3rd",
+      "trustedFor": "Product Management, Design Thinking"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Product Manager · Horizon Health",
+        "relationship": "Not connected"
+      }
+    ],
+    "about": {
+      "career": "PM at Horizon Health transitioning into product design. 4 years of experience running discovery and working closely with design teams.",
+      "location": "Boston, MA",
+      "trustedExpertise": "Product Management, Design Thinking, User Research"
+    },
+    "stats": {
+      "peopleHelped": 6,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  }
+}

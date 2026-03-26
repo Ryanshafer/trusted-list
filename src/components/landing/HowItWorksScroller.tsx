@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import step0Image from "../../assets/images/step-0.png?url";
 import step1Image from "../../assets/images/step-1.png?url";
 import step2Image from "../../assets/images/step-2.png?url";
 import step3Image from "../../assets/images/step-3.png?url";
@@ -30,7 +31,7 @@ interface SectionMetrics {
 
 const MOBILE_BREAKPOINT = 768;
 const STEP_CARD_GAP = 140;
-const ACTIVE_CARD_TOP = 266;
+const ACTIVE_CARD_TOP = 230;
 const RIGHT_VISUAL_FADE_MS = 420;
 const SNAP_IDLE_MS = 140;
 const FINAL_STEP_PROGRESS = 4;
@@ -50,25 +51,25 @@ const MAX_PANE_HEIGHT = STEP_VISUAL_HEIGHT + RIGHT_PANE_FRAME_PADDING_Y;
 const STEP_ITEMS: StepItem[] = [
     {
         stepLabel: "Step One",
-        title: "Name your need",
+        title: "Get vetted",
         description:
-            "Explain what you’re trying to unlock — a job intro, advice, an opportunity or anything else you may need.",
+            "Every member is vouched for by someone whose reputation is already trusted.",
         height: 153,
+        visual: "image",
+        imageSrc: step0Image,
+    },
+    {
+        stepLabel: "Step Two",
+        title: "Name Your Need",
+        description: "Ask for advice, recommendations, or support discreetly or publicly.",
+        height: 132,
         visual: "image",
         imageSrc: step1Image,
     },
     {
-        stepLabel: "Step Two",
-        title: "Ask Your Circle",
-        description: "Reach out to a colleague privately, your trusted circle, or the broader community.",
-        height: 132,
-        visual: "image",
-        imageSrc: step2Image,
-    },
-    {
         stepLabel: "Step Three",
         title: "Make the Connection",
-        description: "Get thoughtful responses from real people who understand your work.",
+        description: "Get thoughtful responses from peers who understand your situation.",
         height: 153,
         visual: "image",
         imageSrc: step3Image,
@@ -84,7 +85,7 @@ const STEP_ITEMS: StepItem[] = [
     {
         stepLabel: "Step Five",
         title: "Build Trust",
-        description: "Trust grows through action and feedback — and expands what becomes possible next time.",
+        description: "Trust grows through action and feedback. Every time you show up, your reputation grows — and so does the community around you.",
         height: 153,
         visual: "clump",
     },
@@ -139,7 +140,7 @@ export const HowItWorksScroller = () => {
         const next = stepOffsets[nextIndex];
         return base + (next - base) * t;
     };
-    const activeCardTop = Math.round((metrics.paneHeight / MAX_PANE_HEIGHT) * ACTIVE_CARD_TOP);
+    const activeCardTop = Math.round(((metrics.paneHeight - 16) / MAX_PANE_HEIGHT) * ACTIVE_CARD_TOP);
     const headerCopy = useMemo(
         () => ({
             title: "How This Works — And Why It’s Different",
@@ -358,12 +359,12 @@ export const HowItWorksScroller = () => {
                     <div className="w-full" style={{ height: `${metrics.frameHeight}px` }}>
                         <div className="h-full bg-white">
                             <div className="grid h-full" style={{ gridTemplateRows: `${HEADER_HEIGHT}px ${metrics.splitHeight}px` }}>
-                                <header className="border border-dashed border-neutral-400 p-2">
-                                    <div className="flex h-60 flex-col items-center justify-center bg-stone-50 p-2.5 text-center">
-                                        <h2 className="font-serif text-6xl font-bold leading-none tracking-tight text-stone-700">
+                                <header className="border border-solid border-neutral-300 p-2">
+                                    <div className="flex h-60 flex-col items-center justify-center bg-stone-100 p-2.5 text-center">
+                                        <h2 className="font-serif text-6xl font-normal tracking-tighter text-stone-800">
                                             {headerCopy.title}
                                         </h2>
-                                        <p className="mt-5 max-w-3xl text-center font-serif text-2xl text-stone-700/60">
+                                        <p className="mt-5 max-w-3xl text-center font-sans text-2xl font-light text-stone-500">
                                             {headerCopy.subtitleLine1}
                                             <br />
                                             {headerCopy.subtitleLine2}
@@ -372,13 +373,13 @@ export const HowItWorksScroller = () => {
                                 </header>
 
                                 <div
-                                    className="relative border-x border-dashed border-neutral-400"
+                                    className="relative border-x border-b border-solid border-neutral-300"
                                     style={{ height: `${metrics.splitHeight}px` }}
                                 >
                                     <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-px -translate-x-1/2 bg-white" />
-                                    <div className="pointer-events-none absolute inset-y-0 left-1/2 z-20 w-px -translate-x-1/2 bg-[repeating-linear-gradient(to_bottom,_theme(colors.neutral.300)_0_4px,_transparent_4px_9px)]" />
+                                    <div className="pointer-events-none absolute inset-y-0 left-1/2 z-20 w-px -translate-x-1/2 bg-neutral-300" />
                                     <div className="grid h-full grid-cols-2">
-                                        <div className="relative overflow-hidden" style={{ height: `${metrics.paneHeight}px` }}>
+                                        <div className="relative overflow-hidden bg-stone-100 m-2" style={{ height: `${metrics.paneHeight - 16}px` }}>
                                             <div
                                                 className="absolute left-1/2 w-[292px] will-change-transform"
                                                 style={{
@@ -404,13 +405,13 @@ export const HowItWorksScroller = () => {
                                                                         : `${STEP_CARD_GAP}px`,
                                                             }}
                                                         >
-                                                            <p className="font-sans text-base leading-none text-stone-700">
+                                                            <p className="font-sans text-base leading-none text-stone-400">
                                                                 {step.stepLabel}
                                                             </p>
-                                                            <h3 className="mt-5 font-serif text-3xl font-bold leading-none tracking-tight text-stone-700">
+                                                            <h3 className="mt-5 font-serif text-3xl font-normal leading-none tracking-tighter text-stone-800">
                                                                 {step.title}
                                                             </h3>
-                                                            <p className="mt-3 font-sans text-base leading-snug text-stone-700/60">
+                                                            <p className="mt-3 font-sans text-base leading-snug text-stone-500">
                                                                 {step.description}
                                                             </p>
                                                         </article>
@@ -420,8 +421,8 @@ export const HowItWorksScroller = () => {
                                         </div>
 
                                         <div
-                                            className="relative overflow-hidden bg-white px-2 pt-2 pb-0"
-                                            style={{ height: `${metrics.paneHeight}px` }}
+                                            className="relative overflow-hidden bg-white px-2 my-2"
+                                            style={{ height: `${metrics.paneHeight - 16}px` }}
                                         >
                                             <div className="relative h-full w-full overflow-hidden bg-[#D9F1F3]">
                                                 {STEP_ITEMS.map((step, index) => {
@@ -472,12 +473,12 @@ export const HowItWorksScroller = () => {
             </section>
 
             <section className="md:hidden">
-                <div className="w-full border border-dashed border-neutral-400 bg-white">
-                    <header className="border-b border-dashed border-neutral-400 bg-stone-50 px-4 py-8 text-center">
+                <div className="w-full border border-solid border-neutral-300 bg-white">
+                    <header className="border-b border-solid border-neutral-300 bg-stone-50 px-4 py-8 text-center">
                         <h2 className="font-serif text-2xl font-bold tracking-tight text-stone-700">
                             {headerCopy.title}
                         </h2>
-                        <p className="mt-3 font-serif text-base text-stone-700/60">
+                        <p className="mt-3 font-serif text-base text-stone-700/50">
                             {headerCopy.subtitleLine1}
                             <br />
                             {headerCopy.subtitleLine2}
@@ -486,13 +487,13 @@ export const HowItWorksScroller = () => {
 
                     <div className="space-y-0">
                         {STEP_ITEMS.map((step, index) => (
-                            <article key={step.stepLabel} className="border-b border-dashed border-neutral-400 last:border-b-0">
+                            <article key={step.stepLabel} className="border-b border-solid border-neutral-300 last:border-b-0">
                                 <div className="px-4 py-6">
                                     <p className="font-sans text-sm text-stone-700">{step.stepLabel}</p>
                                     <h3 className="mt-2 font-serif text-3xl font-bold tracking-tight text-stone-700">
                                         {step.title}
                                     </h3>
-                                    <p className="mt-3 font-sans text-base leading-[1.4] text-stone-700/60">
+                                    <p className="mt-3 font-sans text-base leading-[1.4] text-stone-700/50">
                                         {step.description}
                                     </p>
                                 </div>

@@ -391,6 +391,21 @@ export const AutoClumpVectorField = ({
 
         const drawImageNode = (p: Particle, image: HTMLImageElement, baseScale = 1) => {
             const drawRadius = p.size * baseScale * (1 + p.boost);
+            const borderWidth = 3;
+
+            // Shadow + white border ring
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, drawRadius + borderWidth, 0, Math.PI * 2);
+            ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 3;
+            ctx.fillStyle = "white";
+            ctx.fill();
+            ctx.restore();
+
+            // Image clipped to circle
             ctx.save();
             ctx.beginPath();
             ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
@@ -718,13 +733,13 @@ export const AutoClumpVectorField = ({
 
             {shouldRenderControls && (
                 <div className="absolute right-3 top-3 z-40 pointer-events-auto md:right-5 md:top-5">
-                    <div className="w-[320px] max-h-[70vh] overflow-y-auto rounded-2xl border border-stone-300 bg-stone-50/95 p-4 shadow-xl backdrop-blur-md">
+                    <div className="w-[320px] max-h-[70vh] overflow-y-auto rounded-2xl border border-stone-300 bg-stone-50/75 p-4 shadow-xl backdrop-blur-md">
                         <div className="mb-3 flex items-center justify-between">
                             <h3 className="text-sm font-semibold text-slate-800">Vector Controls</h3>
                             <button
                                 type="button"
                                 onClick={resetConfig}
-                                className="text-xs font-medium text-[#00A3AD] hover:text-[#008A92]"
+                                className="text-xs font-medium text-primary-500 hover:text-[#008A92]"
                             >
                                 Reset defaults
                             </button>
@@ -748,7 +763,7 @@ export const AutoClumpVectorField = ({
                                         onChange={(event) =>
                                             updateConfig(control.key, Number(event.target.value), control.integer)
                                         }
-                                        className="w-full accent-[#00A3AD]"
+                                        className="w-full accent-primary-500"
                                     />
                                 </label>
                             ))}

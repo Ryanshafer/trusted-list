@@ -1,12 +1,10 @@
-import { ArrowUp, CheckCircle2, Sparkles, Star, X, Paperclip, Plus } from "lucide-react";
+import { ArrowRight, ArrowUp, CircleCheckBig, Sparkles, Plus } from "lucide-react";
 import * as React from "react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -19,18 +17,22 @@ export type ChatMessage = {
   sender: "contact" | "user" | "system";
   text: string;
   type?: "message" | "system" | "karma";
+  timestamp?: string;
 };
 
+export type Outcome = "worked_out" | "partially" | "not_quite";
+
 export type CompletionData = {
-  rating: number;
+  outcome: Outcome;
   note: string;
-  publicThanks: boolean;
 };
 
 type ChatDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  requestTitle?: string;
   contactName: string;
+  contactAvatarUrl?: string;
   messages: ChatMessage[];
   composer: string;
   onComposerChange: (value: string) => void;
@@ -44,7 +46,9 @@ type ChatDialogProps = {
 export const ChatDialog = ({
   open,
   onOpenChange,
+  requestTitle,
   contactName,
+  contactAvatarUrl,
   messages,
   composer,
   onComposerChange,
@@ -52,23 +56,17 @@ export const ChatDialog = ({
   isHelpRequest,
   isCompleted,
   onComplete,
-  onUndoComplete,
 }: ChatDialogProps) => {
-  const [showCompletionForm, setShowCompletionForm] = React.useState(false);
-  const [showUndoConfirm, setShowUndoConfirm] = React.useState(false);
+  const [showCloseForm, setShowCloseForm] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
-
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  // Reset form state when dialog closes or opens
   React.useEffect(() => {
-    if (!open) setShowCompletionForm(false);
+    if (!open) setShowCloseForm(false);
   }, [open]);
 
-  // Auto-scroll to bottom when messages change or dialog opens
   React.useEffect(() => {
     if (open) {
-      // Use setTimeout to ensure DOM has updated and dialog is fully mounted
       const timer = setTimeout(() => {
         if (scrollRef.current) {
           scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -97,213 +95,221 @@ export const ChatDialog = ({
   };
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <DialogTitle>Chat with {contactName}</DialogTitle>
-          </DialogHeader>
-          <div className="flex h-[80dvh] flex-col space-y-1">
-            <div className="relative flex-1 min-h-0">
-              <div
-                ref={scrollRef}
-                className="h-full space-y-3 overflow-y-auto py-4 pr-2"
-                style={{ scrollbarGutter: "stable" }}
-              >
-                {messages.map((message) => (
-                  <ChatBubble key={message.id} message={message} contactName={contactName} />
-                ))}
-              </div>
-              <div className="pointer-events-none absolute -top-px left-0 right-0 h-8 bg-gradient-to-b from-white dark:from-background to-transparent z-10" />
-              <div className="pointer-events-none absolute -bottom-px left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-background to-transparent z-10" />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <DialogTitle asChild>
+            <h2 className="text-lg leading-snug">
+              {requestTitle ? (
+                <>
+                  <span className="font-bold">{requestTitle}</span>
+                  <span className="font-normal"> with {contactName}</span>
+                </>
+              ) : (
+                <span className="font-bold">{contactName}</span>
+              )}
+            </h2>
+          </DialogTitle>
+        </DialogHeader>
+        <div className="flex h-[80dvh] flex-col gap-3">
+          <div className="relative flex-1 min-h-0">
+            <div
+              ref={scrollRef}
+              className="h-full space-y-4 overflow-y-auto py-4 pr-2"
+              style={{ scrollbarGutter: "stable" }}
+            >
+              {messages.map((message) => (
+                <ChatBubble
+                  key={message.id}
+                  message={message}
+                  contactName={contactName}
+                  contactAvatarUrl={contactAvatarUrl}
+                />
+              ))}
             </div>
+            <div className="pointer-events-none absolute -top-px left-0 right-0 h-8 bg-gradient-to-b from-background to-transparent z-10" />
+            <div className="pointer-events-none absolute -bottom-px left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent z-10" />
+          </div>
 
-            {showCompletionForm ? (
-              <CompletionForm
-                contactName={contactName}
-                onCancel={() => setShowCompletionForm(false)}
-                onSubmit={(data) => {
-                  onComplete?.(data);
-                  setShowCompletionForm(false);
-                }}
-              />
-            ) : (
-              <div className="flex flex-col gap-3">
-                <form onSubmit={handleSubmit}>
-                  <div className="rounded-3xl border border-border bg-muted/20 p-2 shadow-sm transition-all focus-within:border-primary/30 focus-within:bg-muted/30 focus-within:shadow-md">
-                    <Textarea
-                      value={composer}
-                      onChange={(event) => onComposerChange(event.target.value)}
-                      placeholder={
-                        isCompleted
-                          ? "This request is completed"
-                          : `Let ${contactName.split(" ")[0] ?? contactName} know how you can help`
-                      }
+          {showCloseForm ? (
+            <CloseTheLoopForm
+              contactName={contactName}
+              onCancel={() => setShowCloseForm(false)}
+              onSubmit={(data) => {
+                onComplete?.(data);
+                setShowCloseForm(false);
+              }}
+            />
+          ) : (
+            <div className="flex flex-col gap-3">
+              {isHelpRequest && !isCompleted && (
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full font-semibold leading-none text-primary hover:bg-primary-10 hover:text-primary"
+                  onClick={() => setShowCloseForm(true)}
+                >
+                  <CircleCheckBig className="mr-2 h-4 w-4" />
+                  Mark this as helped
+                </Button>
+              )}
+
+              <form onSubmit={handleSubmit}>
+                <div className="rounded-2xl border border-border bg-muted p-3 shadow-sm transition-all focus-within:border-primary-25 focus-within:shadow-md">
+                  <Textarea
+                    value={composer}
+                    onChange={(event) => onComposerChange(event.target.value)}
+                    placeholder={
+                      isCompleted
+                        ? "This request is completed"
+                        : `Let ${contactName.split(" ")[0] ?? contactName} know how you can help`
+                    }
+                    disabled={isCompleted}
+                    className="min-h-8 w-full resize-none border-none bg-transparent p-1 text-base font-normal leading-relaxed text-foreground placeholder:text-muted-foreground focus-visible:ring-0"
+                    rows={2}
+                  />
+                  <div className="mt-2 flex items-center justify-between">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleAttachClick}
                       disabled={isCompleted}
-                      className="min-h-8 w-full resize-none border-none bg-transparent p-2 text-md font-normal leading-relaxed text-foreground placeholder:text-muted-foreground/60 focus-visible:ring-0"
-                      rows={1}
-                    />
-                    <div className="mt-2 flex items-center justify-between px-1">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        onClick={handleAttachClick}
-                        disabled={isCompleted}
-                        className="h-8 w-8 rounded-xl border-border/60 text-muted-foreground hover:bg-muted/50 hover:text-foreground disabled:opacity-50"
-                        aria-label="Attach a file"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        className="hidden"
-                        onChange={handleFileChange}
-                        disabled={isCompleted}
-                      />
-
-                      <Button
-                        type="submit"
-                        size="icon"
-                        disabled={isCompleted || !composer.trim()}
-                        className="h-10 w-10 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 disabled:opacity-50 transition-all active:scale-95"
-                      >
-                        <ArrowUp className="h-5 w-5" />
-                      </Button>
-                    </div>
-                  </div>
-                </form>
-
-                {isHelpRequest && (
-                  <div className="flex items-center space-x-2 px-1">
-                    <Checkbox
-                      id="request-complete"
-                      checked={isCompleted}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setShowCompletionForm(true);
-                        } else {
-                          setShowUndoConfirm(true);
-                        }
-                      }}
-                    />
-                    <label
-                      htmlFor="request-complete"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      className="h-8 w-8 rounded-full text-muted-foreground hover:bg-muted-50 hover:text-foreground disabled:opacity-50"
+                      aria-label="Attach a file"
                     >
-                      Request complete
-                    </label>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+                      <Plus className="h-4 w-4" />
+                    </Button>
 
-      <Dialog open={showUndoConfirm} onOpenChange={setShowUndoConfirm}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Undo completion?</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-muted-foreground">
-              This will remove the public thank you and revoke the karma points awarded.
-            </p>
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setShowUndoConfirm(false)}>Cancel</Button>
-            <Button onClick={() => {
-              onUndoComplete?.();
-              setShowUndoConfirm(false);
-            }}>Confirm Undo</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
+                      disabled={isCompleted}
+                    />
+
+                    <Button
+                      type="submit"
+                      size="icon"
+                      disabled={isCompleted || !composer.trim()}
+                      className="h-10 w-10 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary-75 disabled:opacity-50 transition-all active:scale-95"
+                    >
+                      <ArrowUp className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-const CompletionForm = ({
+const OUTCOMES: { value: Outcome; label: string }[] = [
+  { value: "worked_out", label: "It worked out" },
+  { value: "partially", label: "Partially there" },
+  { value: "not_quite", label: "Not quite there" },
+];
+
+const CloseTheLoopForm = ({
   contactName,
   onCancel,
-  onSubmit
+  onSubmit,
 }: {
   contactName: string;
   onCancel: () => void;
   onSubmit: (data: CompletionData) => void;
 }) => {
-  const [rating, setRating] = React.useState(5);
+  const [outcome, setOutcome] = React.useState<Outcome>("worked_out");
   const [note, setNote] = React.useState("");
-  const [publicThanks, setPublicThanks] = React.useState(true);
+  const firstName = contactName.split(" ")[0] ?? contactName;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2">
-      <div className="mb-4 flex items-center justify-between">
-        <h4 className="font-semibold">Complete Request</h4>
-        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onCancel}>
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
+    <div className="rounded-2xl border border-primary bg-primary/10 p-6 animate-in fade-in slide-in-from-bottom-2">
+      <div className="space-y-5">
+        <div className="space-y-0.5">
+          <h4 className="text-xl font-bold leading-none">Close the loop</h4>
+          <p className="text-sm text-muted-foreground">Share how it went and complete this request.</p>
+        </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label>Rate help quality</Label>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={() => setRating(star)}
-                className={`rounded-md p-1 transition-colors ${rating >= star ? "text-amber-400" : "text-muted-foreground/30"
+        <div className="space-y-3">
+          <Label className="text-base font-semibold">How did it go with {firstName}?</Label>
+          <div className="flex gap-3">
+            {OUTCOMES.map(({ value, label }) => {
+              const selected = outcome === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setOutcome(value)}
+                  className={`flex flex-1 items-center gap-2 rounded-lg border px-3 py-3 text-left transition-colors ${
+                    selected
+                      ? "border-primary bg-primary-25 text-accent-foreground"
+                      : "border-border bg-background text-foreground hover:bg-muted/50"
                   }`}
-              >
-                <Star className="h-6 w-6 fill-current" />
-              </button>
-            ))}
+                >
+                  <div
+                    className={`h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
+                      selected ? "border-primary bg-primary" : "border-muted-foreground"
+                    }`}
+                  >
+                    {selected && (
+                      <div className="m-auto mt-[2px] h-1.5 w-1.5 rounded-full bg-primary-foreground" />
+                    )}
+                  </div>
+                  <span className="text-sm font-semibold leading-tight">{label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label>Add a note (optional)</Label>
+          <Label className="text-base font-semibold">What would you like {firstName} to know?</Label>
           <Textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder={`Thank ${contactName} for their help...`}
-            className="resize-none"
-            rows={2}
+            placeholder="Share some details…"
+            className="resize-none bg-background"
+            rows={3}
           />
         </div>
 
-        <div className="flex items-center justify-between space-x-2">
-          <Label htmlFor="public-thanks" className="flex flex-col gap-1">
-            <span>Publicly thank {contactName}</span>
-            <span className="font-normal text-xs text-muted-foreground">They will receive karma points</span>
-          </Label>
-          <Switch
-            id="public-thanks"
-            checked={publicThanks}
-            onCheckedChange={setPublicThanks}
-          />
+        <div className="flex items-center justify-end gap-3">
+          <Button
+            variant="ghost"
+            className="rounded-full font-semibold leading-none"
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="rounded-full font-semibold leading-none"
+            onClick={() => onSubmit({ outcome, note: note.trim() })}
+          >
+            Share & Close the Loop
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
-
-        <Button
-          className="w-full"
-          onClick={() => onSubmit({ rating, note, publicThanks })}
-        >
-          Complete & Send Feedback
-        </Button>
       </div>
     </div>
   );
 };
 
-const ChatBubble = ({ message, contactName }: { message: ChatMessage; contactName: string }) => {
+const ChatBubble = ({
+  message,
+  contactName,
+  contactAvatarUrl,
+}: {
+  message: ChatMessage;
+  contactName: string;
+  contactAvatarUrl?: string;
+}) => {
   if (message.type === "system") {
     return (
-      <div className="flex items-center justify-center gap-4 py-4">
+      <div className="flex items-center justify-center gap-4 py-2">
         <div className="h-px flex-1 bg-border" />
         <span className="text-xs font-medium text-muted-foreground">{message.text}</span>
         <div className="h-px flex-1 bg-border" />
@@ -319,17 +325,13 @@ const ChatBubble = ({ message, contactName }: { message: ChatMessage; contactNam
 
     return (
       <div className="flex justify-center py-2">
-        <div className="flex max-w-[85%] flex-col items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-center dark:border-amber-900/50 dark:bg-amber-900/20">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400">
+        <div className="flex max-w-[85%] flex-col items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-center dark:border-amber-900/50 dark:bg-amber-900/25">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400">
             <Sparkles className="h-4 w-4" />
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-medium text-amber-900 dark:text-amber-100">
-              {title}
-            </p>
-            <p className="text-xs text-amber-700 dark:text-amber-300">
-              {message.text}
-            </p>
+            <p className="text-sm font-medium text-amber-900 dark:text-amber-100">{title}</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300">{message.text}</p>
           </div>
         </div>
       </div>
@@ -337,15 +339,38 @@ const ChatBubble = ({ message, contactName }: { message: ChatMessage; contactNam
   }
 
   const isUser = message.sender === "user";
-  const label = isUser ? "You" : contactName;
+
+  if (isUser) {
+    return (
+      <div className="flex w-full pl-14">
+        <div className="flex flex-1 flex-col gap-1 rounded-lg bg-primary-25 p-4 text-foreground">
+          <p className="text-base leading-relaxed">{message.text}</p>
+          {message.timestamp && (
+            <p className="text-right text-xs text-muted-foreground">{message.timestamp}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const initials = contactName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
-          }`}
-      >
-        <p className="text-xs font-semibold">{label}</p>
-        <p className="mt-1 leading-relaxed">{message.text}</p>
+    <div className="flex gap-4">
+      <Avatar className="h-10 w-10 shrink-0">
+        <AvatarImage src={contactAvatarUrl} alt={contactName} />
+        <AvatarFallback className="text-xs font-semibold">{initials}</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-1 flex-col gap-1 pt-1">
+        <p className="text-base leading-relaxed text-foreground">{message.text}</p>
+        {message.timestamp && (
+          <p className="text-right text-xs text-muted-foreground">{message.timestamp}</p>
+        )}
       </div>
     </div>
   );

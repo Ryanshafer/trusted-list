@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import type { LucideIcon } from "lucide-react"
 import {
   SidebarGroup,
   SidebarMenu,
@@ -14,8 +15,8 @@ export function NavMain({
   items: {
     title: string
     url: string
+    icon?: LucideIcon
     isActive?: boolean
-    children?: { title: string; url: string }[]
   }[]
 }) {
   const [currentPath, setCurrentPath] = React.useState("")
@@ -30,36 +31,21 @@ export function NavMain({
   }
 
   return (
-    <SidebarGroup className="gap-4">
-      <SidebarMenu className="gap-4">
+    <SidebarGroup>
+      <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
               tooltip={item.title}
-              isActive={item.isActive}
+              isActive={isActiveLink(item.url)}
               asChild
-              className="text-base font-semibold"
+              className="h-8 text-base font-normal data-[active=true]:font-semibold"
             >
               <a href={item.url}>
+                {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
                 <span>{item.title}</span>
               </a>
             </SidebarMenuButton>
-            {item.children && item.children.length > 0 ? (
-              <div className="ml-4 mt-2 flex flex-col gap-1 border-l border-border/60 pl-3">
-                {item.children.map((child) => {
-                  const active = isActiveLink(child.url)
-                  return (
-                    <a
-                      key={child.title}
-                      href={child.url}
-                      className={`text-sm ${active ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
-                    >
-                      {child.title}
-                    </a>
-                  )
-                })}
-              </div>
-            ) : null}
           </SidebarMenuItem>
         ))}
       </SidebarMenu>

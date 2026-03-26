@@ -27,7 +27,7 @@ import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
             class="absolute top-0 left-1/2 -px-translate-x-1/2 w-full h-full max-w-7xl pointer-events-none opacity-50 z-10"
         >
             <div
-                class="absolute top-20 left-0 w-96 h-96 bg-[#00A3AD]/14 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"
+                class="absolute top-20 left-0 w-96 h-96 bg-primary-500/14 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"
             >
             </div>
             <div
@@ -38,23 +38,22 @@ import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
 
         <div class="container mx-auto mt-0 w-full px-4 md:mt-0 md:px-6 relative z-20">
             <div
-                class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center"
+                class="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4 items-center"
             >
                 <!-- Hero Copy -->
-                <div class="max-w-2xl lg:translate-x-[10%]">
+                <div class="max-w-3xl lg:translate-x-[10%]">
                     <h1
-                        class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-5 leading-none sm:leading-none md:leading-tight"
+                        class="font-serif font-medium tracking-tighter text-5xl sm:text-6xl md:text-6xl/15 text-slate-900 mb-5"
                     >
-                        A network that shows up<span class="text-[#00A3AD]">
+                        A network that shows up<span class="text-primary-500"><br/>
                             when it matters most.</span
                         >
                     </h1>
 
                     <p
-                        class="font-sans text-lg md:text-xl text-slate-600 mb-8 leading-normal md:leading-normal"
+                        class="font-sans text-lg md:text-xl text-slate-600 mb-8"
                     >
-                        A more purposeful community of proven
-                        professionals, built to solve problems and share opportunities — not self-promotion.
+                        An invite-only network where experienced professionals get reliable advice, real recommendations, and discreet support — without self-promotion.
                     </p>
 
                     <MemberCount client:load />
@@ -70,14 +69,14 @@ import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
         <!-- Scroll Indicator -->
         <button
             onclick="window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })"
-            class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-slate-600 hover:text-slate-800 transition-all duration-200 hover:-translate-y-1 z-30 group"
+            class="hidden lg:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-slate-600 hover:text-slate-800 transition-all duration-200 hover:-translate-y-1 z-30 group"
         >
             <span class="relative inline-flex items-center justify-center px-2">
                 <span
                     aria-hidden="true"
                     class="absolute inset-0 -z-10 rounded-full bg-[#F4F2EC]/80 blur-sm"
                 ></span>
-                <span class="text-xs font-medium uppercase tracking-wider"
+                <span class="text-sm font-medium uppercase tracking-wider"
                     >Learn more</span
                 >
             </span>
@@ -88,12 +87,10 @@ import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
     <section class="relative [--rail-x:0rem] sm:[--rail-x:2.75rem] md:[--rail-x:4rem] xl:[--rail-x:5rem]">
         <div aria-hidden="true" class="pointer-events-none absolute inset-0">
             <div
-                class="hidden sm:block absolute left-[var(--rail-x)] top-0 bottom-0 w-px"
-                style="background-image: repeating-linear-gradient(to bottom, #a3a3a3 0 4px, transparent 4px 9px);"
+                class="hidden sm:block absolute left-[var(--rail-x)] top-0 bottom-0 w-px bg-neutral-300"
             ></div>
             <div
-                class="hidden sm:block absolute right-[var(--rail-x)] top-0 bottom-0 w-px"
-                style="background-image: repeating-linear-gradient(to bottom, #a3a3a3 0 4px, transparent 4px 9px);"
+                class="hidden sm:block absolute right-[var(--rail-x)] top-0 bottom-0 w-px bg-neutral-300"
             ></div>
         </div>
         <div class="relative z-10">

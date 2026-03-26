@@ -12,11 +12,11 @@ const ReferrerBadge = ({ name }: { name: string }) => (
     <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="inline-flex items-center gap-2 rounded-full bg-[#00A3AD]/10 px-4 py-2 text-sm font-bold text-[#00A3AD] mb-6"
+        className="inline-flex items-center gap-2 rounded-full bg-primary-500/10 px-4 py-2 text-sm font-bold text-primary-500 mb-6"
     >
         <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A3AD] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00A3AD]"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-500 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
         </span>
         {name} invited you to join The Trusted List
     </motion.div>
@@ -131,13 +131,13 @@ export const JoinForm = () => {
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col items-center justify-center p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 text-center min-h-[400px]"
+                className="flex flex-col items-center justify-center p-8 bg-white/75 backdrop-blur-sm rounded-3xl shadow-xl border border-white/25 text-center min-h-[400px]"
             >
-                <div className="h-16 w-16 bg-[#00A3AD]/10 rounded-full flex items-center justify-center mb-6">
-                    <Check className="h-8 w-8 text-[#00A3AD]" />
+                <div className="h-16 w-16 bg-primary-500/10 rounded-full flex items-center justify-center mb-6">
+                    <Check className="h-8 w-8 text-primary-500" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-600 mb-2">Request Received</h3>
-                <p className="text-slate-600 max-w-xs mx-auto">
+                <h3 className="text-xl font-semibold text-neutral-600 mb-2">Request Received</h3>
+                <p className="text-neutral-600 max-w-xs mx-auto">
                     We’ll review your details and get back to you within a few days.
                 </p>
             </motion.div>
@@ -146,7 +146,7 @@ export const JoinForm = () => {
 
     return (
         <div
-            className={cn("relative", !isExpanded && "lg:mt-10")}
+            className={cn("relative", !isExpanded && "lg:mt-8")}
             id="join-waitlist"
         >
             <motion.div
@@ -158,7 +158,7 @@ export const JoinForm = () => {
                         duration: 0.6
                     }
                 }}
-                className="bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl shadow-[#00A3AD]/10 border border-white/50 p-8 md:p-10 overflow-hidden"
+                className="bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl shadow-primary-500/10 border border-white/50 p-8 md:p-10 overflow-hidden"
             >
                 <AnimatePresence mode="popLayout" initial={false}>
                     {!isExpanded ? (
@@ -173,10 +173,10 @@ export const JoinForm = () => {
                         >
                             {referrer && <ReferrerBadge name={`${referrer.firstName} ${referrer.lastName}`.trim()} />}
                             <div className="mb-8">
-                                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                                <h2 className="text-3xl font-serif font-normal text-neutral-900 mb-2">
                                     {referrer ? `${referrer.firstName} vouched for you.` : "Don’t have an invite?"}
                                 </h2>
-                                <p className="text-slate-600">
+                                <p className="text-neutral-600">
                                     {referrer
                                         ? "Your invitation is waiting — we just need to confirm `a few details."
                                         : (
@@ -194,9 +194,9 @@ export const JoinForm = () => {
                             <Button
                                 type="button"
                                 onClick={() => setIsExpanded(true)}
-                                className="w-full h-12 text-base font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl"
+                                className="w-full h-12 text-base font-bold bg-neutral-600 hover:bg-neutral-800 text-white rounded-full leading-none"
                             >
-                                {referrer ? "Join the list" : <>Join the waitlist <ArrowRight className="ml-2 h-4 w-4" /></>}
+                                {referrer ? "Join the list" : <>Join the waitlist<ArrowRight className="ml-2 h-4 w-4" /></>}
                             </Button>
                         </motion.div>
                     ) : (
@@ -211,7 +211,7 @@ export const JoinForm = () => {
                         >
                             {referrer && <ReferrerBadge name={`${referrer.firstName} ${referrer.lastName}`.trim()} />}
                             <div className="mb-6">
-                                <h2 className="text-2xl font-bold text-slate-600 mb-2">
+                                <h2 className="text-3xl font-serif font-normal text-neutral-600 mb-2">
                                     {referrer ? `${referrer.firstName} vouched for you.` : "Join the waitlist"}
                                 </h2>
                                 <p>
@@ -272,7 +272,7 @@ export const JoinForm = () => {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full h-12 text-base font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-lg shadow-slate-900/20 mt-2"
+                                    className="w-full h-12 text-base font-bold bg-neutral-900 hover:bg-neutral-800 text-white rounded-full shadow-lg shadow-neutral-900/25 mt-2 leading-none"
                                 >
                                     {isSubmitting ? (
                                         <>

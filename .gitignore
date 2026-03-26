@@ -9,6 +9,9 @@ node_modules/
 # AI related files
 .interface-design/
 skills/
+docs/
+tokens/
+figma-plugin/
 
 # logs
 npm-debug.log*
@@ -26,3 +29,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+#Claude related files
+.claude/
+.claude/*
+CLAUDE.md
+

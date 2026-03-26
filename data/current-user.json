@@ -1,0 +1,18 @@
+{
+  "id": "user-ryan-shafer",
+  "name": "Ryan Shafer",
+  "firstName": "Ryan",
+  "lastName": "Shafer",
+  "email": "ryan.shafer@email.com",
+  "avatarUrl": "src/assets/images/ryan-shafer.jpg",
+  "title": "Head of Design",
+  "company": "The Trusted List",
+  "bio": "Building tools that make professional trust legible. Passionate about design systems, community, and finding the right people.",
+  "location": "Ostuni, Italy",
+  "linkedInUrl": "https://www.linkedin.com/in/ryanshafer",
+  "trustScore": 950,
+  "peopleHelped": 141,
+  "totalRequests": 76,
+  "verifiedSkills": ["Product Design", "UX Strategy", "Leadership"],
+  "unvouchedSkills": ["Systems Thinking", "Facilitation", "Hiring & Recruiting", "Public Speaking", "Stakeholder Management"]
+}

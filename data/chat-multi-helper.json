@@ -1,0 +1,68 @@
+{
+  "contacts": [
+    {
+      "id": "1",
+      "name": "David Kim",
+      "role": "Engineering Director",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+      "isCompleted": false,
+      "trustedFor": "Observability, System Architecture, Engineering"
+    },
+    {
+      "id": "2",
+      "name": "Amanda Foster",
+      "role": "Engineering Manager",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop",
+      "isCompleted": false,
+      "trustedFor": "Engineering Management, Hiring, Technical Strategy"
+    },
+    {
+      "id": "3",
+      "name": "Robert Chan",
+      "role": "Engineering Manager",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+      "isCompleted": false,
+      "trustedFor": "Engineering Management, Technical Leadership, Mentorship"
+    },
+    {
+      "id": "4",
+      "name": "Ethan Wright",
+      "role": "Engineering Director",
+      "avatarUrl": null,
+      "isCompleted": true,
+      "trustedFor": "Engineering Leadership, System Design, Scaling Teams"
+    }
+  ],
+  "messages": [
+    {
+      "id": "1",
+      "sender": "outgoing",
+      "text": "We're scaling our team and looking for senior frontend engineers. Any referrals would be greatly appreciated!",
+      "timestamp": "6:56 pm \u2013 Tue Feb 24"
+    },
+    {
+      "id": "2",
+      "sender": "incoming",
+      "text": "I can help find some people for you. Send me the JD and I'll get to work.",
+      "timestamp": "12:28 pm \u2013 Wed Feb 25"
+    },
+    {
+      "id": "3",
+      "sender": "outgoing",
+      "text": "Thanks Amanda! Just shared the JD. Appreciate any help you can provide. Let me know if you have any questions or need further details.",
+      "timestamp": "6:56 pm \u2013 Wed Feb 25"
+    },
+    {
+      "id": "4",
+      "sender": "outgoing",
+      "text": null,
+      "timestamp": "2:44 pm \u2013 Wed Feb 25",
+      "attachment": {
+        "name": "Senior-engineer-job-posting.pdf",
+        "size": "123kb",
+        "fileType": "PDF",
+        "pages": 1
+      }
+    }
+  ]
+}

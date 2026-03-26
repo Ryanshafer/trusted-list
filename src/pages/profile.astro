@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import currentUser from "../../data/current-user.json";
+
+const initials = currentUser.name
+  .split(" ")
+  .map((n: string) => n[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<BaseLayout
+  title={`${currentUser.name} — The Trusted List`}
+  description={`Profile for ${currentUser.name}`}
+  bodyClass="bg-background"
+>
+  <div class="mx-auto max-w-2xl px-6 py-16" slot="main">
+    <button
+      type="button"
+      class="mb-8 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+      onclick="window.history.back()"
+    >
+      <span aria-hidden="true">←</span>
+      Back
+    </button>
+    <div class="flex items-center gap-4">
+      <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-md">
+        {currentUser.avatarUrl
+          ? <img src={currentUser.avatarUrl} alt={currentUser.name} class="h-full w-full object-cover" />
+          : <div class="flex h-full w-full items-center justify-center bg-muted text-lg font-semibold text-muted-foreground">{initials}</div>
+        }
+      </div>
+      <div>
+        <h1 class="text-2xl font-semibold text-foreground">{currentUser.name}</h1>
+        <p class="text-sm text-muted-foreground">{currentUser.title} · {currentUser.company}</p>
+        {currentUser.location && (
+          <p class="mt-0.5 text-sm text-muted-foreground">{currentUser.location}</p>
+        )}
+        {currentUser.verifiedSkills?.length > 0 && (
+          <p class="mt-1 text-sm text-muted-foreground">
+            Trusted for {currentUser.verifiedSkills.join(", ")}
+          </p>
+        )}
+      </div>
+    </div>
+    <p class="mt-12 text-sm text-muted-foreground">Full profile coming soon.</p>
+  </div>
+</BaseLayout>

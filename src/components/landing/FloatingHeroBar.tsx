@@ -102,7 +102,7 @@ export default function FloatingHeroBar() {
         <div className="pointer-events-none fixed inset-x-0 top-4 z-50 sm:top-6">
             <div className="container mx-auto px-4 md:px-6">
                 <motion.div
-                    className="pointer-events-auto mx-auto flex sm:ml-8 sm:mr-8 items-center justify-between rounded-full border border-white/50 px-4 backdrop-blur-md shadow-2xl shadow-[#00A3AD]/10 sm:h-16 sm:px-6"
+                    className="pointer-events-auto mx-auto flex sm:ml-8 sm:mr-8 items-center justify-between rounded-full border border-white/50 px-4 backdrop-blur-md shadow-2xl shadow-primary-500/10 sm:h-16 sm:px-6"
                     animate={{
                         backgroundColor: isAtPageTop
                             ? "rgba(255, 255, 255, 0.1)"
@@ -153,7 +153,7 @@ export default function FloatingHeroBar() {
                                           delay: showJoinAction ? signInSlideDuration : 0,
                                       }
                             }
-                            className="absolute right-0 inline-flex h-10 items-center justify-center rounded-full bg-slate-900 px-5 text-sm font-bold text-white shadow-md shadow-slate-900/15 transition-transform transition-colors hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F4F2EC] sm:h-11 sm:px-7 sm:text-base"
+                            className="absolute right-0 inline-flex h-10 items-center justify-center rounded-full bg-slate-900 px-5 text-sm font-bold text-white shadow-md shadow-slate-900/10 transition-transform transition-colors hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F4F2EC] sm:h-11 sm:px-7 sm:text-base"
                             style={{ pointerEvents: showJoinAction ? "auto" : "none" }}
                         >
                             {joinLabel}

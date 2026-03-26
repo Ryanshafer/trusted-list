@@ -84,13 +84,13 @@ export function FlagRequestDialog({
         </DialogHeader>
 
         <div className="space-y-5">
-          <div className="rounded-xl border border-border bg-muted/30 p-4">
+          <div className="rounded-xl border border-border bg-muted-25 p-4">
             <div className="space-y-2">
               {requestorName ? (
                 <div className="flex items-center gap-2">
                   <Avatar className="h-7 w-7">
                     <AvatarImage src={requestorAvatarUrl ?? undefined} alt={requestorName} />
-                    <AvatarFallback className="text-xs font-semibold text-foreground/80">
+                    <AvatarFallback className="text-xs font-semibold text-foreground-75">
                       {requestorInitials}
                     </AvatarFallback>
                   </Avatar>
@@ -143,10 +143,11 @@ export function FlagRequestDialog({
         </div>
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+          <Button variant="ghost" className="rounded-full font-semibold leading-none" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button
+            className="rounded-full font-semibold leading-none"
             disabled={!canSubmit}
             onClick={() => {
               onSubmit?.({ reason, details: details.trim() });

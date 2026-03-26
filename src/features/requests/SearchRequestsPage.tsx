@@ -1,11 +1,13 @@
 import React from "react";
 import requestsData from "../../../data/requests.json";
 import { AppSidebar } from "@/components/app-sidebar";
-import { HelpRequestCard } from "@/features/dashboard/components/HelpRequestCards";
+import { IncomingRequestCard } from "@/features/dashboard/components/HelpRequestCards";
 import type { CardData } from "@/features/dashboard/types";
 import { Button } from "@/components/ui/button";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { LayoutGrid, List, HandHelping, MoreHorizontal, BellPlus, Flag, MessageCircle, Filter } from "lucide-react";
+import { HandHelping, MoreHorizontal, BellPlus, Flag, MessageCircle, Filter, Search } from "lucide-react";
+import { LayoutToggle } from "@/components/LayoutToggle";
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -119,20 +121,20 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
     );
 
     return (
-      <div className={`hidden lg:block ${isLast ? "" : "border-b border-border/60"} bg-muted/10`}>
+      <div className={`hidden lg:block ${isLast ? "" : "border-b border-border-50"} bg-muted-10`}>
         <div className={`grid grid-cols-12 gap-4 px-5 py-4 text-sm ${expanded ? "items-start" : "items-center"}`}>
-          <div className="col-span-3 flex items-center gap-3 min-w-0">
-            <Avatar className="h-10 w-10 border">
+          <a href={`/trusted-list/members/${card.name.toLowerCase().replace(/\s+/g, "-")}`} className="col-span-3 flex items-center gap-3 min-w-0 group/member">
+            <Avatar className="h-10 w-10 border transition-colors group-hover/member:border-primary">
               {card.avatarUrl ? <AvatarImage src={card.avatarUrl} alt={card.name} /> : null}
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0">
-              <span className="font-semibold leading-tight truncate">{card.name}</span>
+              <span className="font-semibold leading-tight truncate transition-colors group-hover/member:text-primary">{card.name}</span>
               <span className="text-xs text-muted-foreground leading-tight truncate">
                 {card.subtitle || card.relationshipTag}
               </span>
             </div>
-          </div>
+          </a>
 
           <div className="col-span-5 min-w-0">
             <div className="font-semibold leading-tight mb-1 truncate">
@@ -178,7 +180,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
           <div className="col-span-2 flex items-center justify-end gap-2">
             <Button
               variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              className="rounded-full font-semibold border-primary text-primary hover:bg-primary hover:text-primary-foreground leading-none"
               onClick={onPrimary}
             >
               <MessageCircle className="mr-2 h-4 w-4" />
@@ -186,7 +188,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -233,7 +235,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
                 <p className="text-muted-foreground text-base">Results for “{query || "All"}”.</p>
               </header>
 
-              <section className="flex flex-col gap-4 rounded-xl border border-border/50 bg-muted/30 p-4 shadow-sm">
+              <section className="flex flex-col gap-4 rounded-xl border border-border-50 bg-muted-25 p-4 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-3">
                     <Select value={ageFilter} onValueChange={setAgeFilter}>
@@ -250,24 +252,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center gap-2 rounded-full bg-muted/40 px-2 py-1.5">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={`h-9 w-9 ${layout === "grid" ? "bg-background shadow-sm" : ""}`}
-                      onClick={() => setLayout("grid")}
-                    >
-                      <LayoutGrid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={`h-9 w-9 ${layout === "list" ? "bg-background shadow-sm" : ""}`}
-                      onClick={() => setLayout("list")}
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <LayoutToggle layout={layout} onChange={setLayout} />
                 </div>
               </section>
 
@@ -277,7 +262,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
                     const firstName = card.name.split(" ")[0] ?? card.name;
                     return (
                       <div key={card.id} className="p-1">
-                        <HelpRequestCard
+                        <IncomingRequestCard
                           {...card}
                           primaryCTA={`Help ${firstName}`}
                           onClear={() => handleClear(card.id)}
@@ -311,9 +296,12 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
                   </div>
                 )}
                 {filtered.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-6 text-center text-sm text-muted-foreground">
-                    No requests match this search yet.
-                  </div>
+                  <Empty className="w-full border min-h-[320px]">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon"><Search /></EmptyMedia>
+                      <EmptyTitle>No requests match this search yet.</EmptyTitle>
+                    </EmptyHeader>
+                  </Empty>
                 )}
               </div>
             </div>

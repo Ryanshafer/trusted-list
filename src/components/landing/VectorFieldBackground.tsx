@@ -464,20 +464,20 @@ export const VectorFieldBackground = ({ showControls = false }: VectorFieldBackg
                         <button
                             type="button"
                             onClick={() => setIsControlsOpen((prev) => !prev)}
-                            className="rounded-full bg-stone-50/90 border border-stone-300 text-slate-700 px-4 h-10 text-xs font-semibold tracking-wide uppercase shadow-md backdrop-blur-sm hover:bg-stone-100/95 transition-colors"
+                            className="rounded-full bg-stone-50/75 border border-stone-300 text-slate-700 px-4 h-10 text-xs font-semibold tracking-wide uppercase shadow-md backdrop-blur-sm hover:bg-stone-100/75 transition-colors"
                         >
                             {isControlsOpen ? "Hide controls" : "Tune vector field"}
                         </button>
                     )}
 
                     {isControlsOpen && (
-                        <div className="mt-2 w-[320px] max-h-[70vh] overflow-y-auto rounded-2xl bg-stone-50/95 border border-stone-300 shadow-xl backdrop-blur-md p-4">
+                        <div className="mt-2 w-[320px] max-h-[70vh] overflow-y-auto rounded-2xl bg-stone-50/75 border border-stone-300 shadow-xl backdrop-blur-md p-4">
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="text-sm font-semibold text-slate-800">Vector Controls</h3>
                                 <button
                                     type="button"
                                     onClick={resetConfig}
-                                    className="text-xs font-medium text-[#00A3AD] hover:text-[#008A92]"
+                                    className="text-xs font-medium text-primary-500 hover:text-[#008A92]"
                                 >
                                     Reset defaults
                                 </button>
@@ -501,7 +501,7 @@ export const VectorFieldBackground = ({ showControls = false }: VectorFieldBackg
                                             onChange={(event) =>
                                                 updateConfig(control.key, Number(event.target.value), control.integer)
                                             }
-                                            className="w-full accent-[#00A3AD]"
+                                            className="w-full accent-primary-500"
                                         />
                                     </label>
                                 ))}

@@ -108,7 +108,7 @@ export default function WaitlistCTA() {
                             ? { duration: 0 }
                             : { duration: 0.6, ease: "easeOut", delay: isVisible ? 0.15 : 0 }
                     }
-                    className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl bg-stone-50/20 backdrop-blur-sm border border-stone-200/70 shadow-2xl shadow-teal-900/5 px-8 py-12 md:px-12 md:py-16"
+                    className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl bg-stone-50/25 backdrop-blur-sm border border-stone-200/75 shadow-2xl shadow-teal-900/10 px-8 py-12 md:px-12 md:py-16"
                 >
                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-amber-50/40 via-stone-50/20 to-stone-100/10" />
                     <div className="relative z-10 flex flex-col items-center text-center">
@@ -135,7 +135,7 @@ export default function WaitlistCTA() {
                             <button
                                 onClick={handleClick}
                                 data-bottom-cta-button
-                                className="inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-10 md:px-12 h-14 text-lg font-semibold shadow-md shadow-slate-900/15 transition transform hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-900 focus-visible:ring-offset-stone-100/70"
+                                className="inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-10 md:px-12 h-14 text-lg font-semibold shadow-md shadow-slate-900/10 transition transform hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-900 focus-visible:ring-offset-stone-100/75"
                                 type="button"
                             >
                                 Join {isInvited ? "the list" : "the waitlist"}

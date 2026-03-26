@@ -83,11 +83,11 @@ export type HelpRequestCardProps = {
 function getRelationshipColor(type: RelationshipType): string {
     switch (type) {
         case "direct":
-            return "bg-blue-100 text-blue-700 hover:bg-blue-100/80 dark:bg-blue-900/30 dark:text-blue-300";
+            return "bg-blue-100 text-blue-700 hover:bg-blue-100/75 dark:bg-blue-900/25 dark:text-blue-300";
         case "through-contact":
-            return "bg-purple-100 text-purple-700 hover:bg-purple-100/80 dark:bg-purple-900/30 dark:text-purple-300";
+            return "bg-purple-100 text-purple-700 hover:bg-purple-100/75 dark:bg-purple-900/25 dark:text-purple-300";
         case "skills-match":
-            return "bg-green-100 text-green-700 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-300";
+            return "bg-green-100 text-green-700 hover:bg-green-100/75 dark:bg-green-900/25 dark:text-green-300";
         default:
             return "bg-secondary text-secondary-foreground";
     }
@@ -134,7 +134,7 @@ export function HelpRequestCard({
     const RelationshipBadge = (
         <Badge
             variant="secondary"
-            className={`px-2 py-0.5 text-xs font-medium shadow-sm transition-colors ${getRelationshipColor(
+            className={`px-2 py-0.5 text-xs font-medium shadow-sm transition-colors leading-none ${getRelationshipColor(
                 relationshipType
             )}`}
         >
@@ -154,7 +154,7 @@ export function HelpRequestCard({
     const MenuAction = (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
@@ -174,7 +174,7 @@ export function HelpRequestCard({
         <Button
             variant="ghost"
             size="sm"
-            className="h-auto py-1 px-3 text-xs text-primary/80 hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+            className="h-auto py-1 px-3 text-xs font-semibold text-primary-75 hover:text-primary hover:bg-primary-10 rounded-full transition-colors"
             onClick={() => setIsDialogOpen(true)}
         >
             View details
@@ -198,20 +198,20 @@ export function HelpRequestCard({
                         </div>
                     </div>
                     <DialogDescription className="text-base pt-2">
-                        <span className="font-semibold text-foreground/80 block mb-2">{shortSummary}</span>
+                        <span className="font-semibold text-foreground-75 block mb-2">{shortSummary}</span>
                         <span className="opacity-90 leading-relaxed">{longDescription}</span>
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex gap-2 justify-end mt-4">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Close</Button>
-                    <Button onClick={() => { onHelp?.(); setIsDialogOpen(false); }}>Help {name.split(" ")[0]}</Button>
+                    <Button variant="outline" className="rounded-full font-semibold leading-none" onClick={() => setIsDialogOpen(false)}>Close</Button>
+                    <Button className="rounded-full font-semibold leading-none" onClick={() => { onHelp?.(); setIsDialogOpen(false); }}>Help {name.split(" ")[0]}</Button>
                 </div>
             </DialogContent>
         </Dialog>
     );
 
     const ReminderState = reminderLabel ? (
-        <div className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 px-2 py-1 rounded-sm">
+        <div className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-50 dark:bg-amber-900/25 dark:text-amber-400 px-2 py-1 rounded-sm">
             <Clock className="h-3 w-3" />
             {reminderLabel}
         </div>
@@ -224,7 +224,7 @@ export function HelpRequestCard({
         return (
             <>
                 {FullDetailsDialog}
-                <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-md border-border/80">
+                <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-md border-border-75">
                     <CardHeader className="flex flex-row items-center gap-3 pb-2 pt-5">
                         {AvatarComponent}
                         <div className="flex flex-col gap-0.5 flex-1 min-w-0">
@@ -236,17 +236,17 @@ export function HelpRequestCard({
 
                     <CardContent className="flex-1 pb-2">
                         <p className="text-sm leading-relaxed text-muted-foreground">
-                            {shortSummary} <span className="inline-block mx-1 text-muted-foreground/40">•</span> {DialogTriggerButton}
+                            {shortSummary} <span className="inline-block mx-1 text-muted-foreground-50">•</span> {DialogTriggerButton}
                         </p>
                     </CardContent>
 
                     <CardFooter className="flex flex-col gap-3 pt-2 pb-5">
                         {reminderLabel && <div className="w-full">{ReminderState}</div>}
                         <div className="flex w-full gap-2">
-                            <Button onClick={onHelp} className="flex-1 font-semibold" size="sm">
+                            <Button onClick={onHelp} className="flex-1 rounded-full font-semibold text-xs" size="sm">
                                 Help {name.split(" ")[0]}
                             </Button>
-                            <Button onClick={onOpenReminder} variant="secondary" size="sm" className="px-3">
+                            <Button onClick={onOpenReminder} variant="secondary" size="sm" className="rounded-full px-3 text-xs">
                                 Remind me
                             </Button>
                         </div>
@@ -263,7 +263,7 @@ export function HelpRequestCard({
         return (
             <>
                 {FullDetailsDialog}
-                <Card className="flex flex-col h-full border-border/60 hover:border-primary/20 transition-all hover:bg-accent/5">
+                <Card className="flex flex-col h-full border-border-50 hover:border-primary-25 transition-all hover:bg-accent/10">
                     <div className="p-4 flex flex-col gap-4 h-full">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ export function HelpRequestCard({
                         </div>
 
                         <div className="flex-1">
-                            <h4 className="text-md font-medium leading-snug text-foreground/90 mb-1">
+                            <h4 className="text-md font-medium leading-snug text-foreground-75 mb-1">
                                 {shortSummary}
                             </h4>
                             {DialogTriggerButton}
@@ -286,10 +286,10 @@ export function HelpRequestCard({
                         <div className="mt-auto space-y-3">
                             {ReminderState}
                             <div className="grid grid-cols-[1fr_auto] gap-2">
-                                <Button onClick={onHelp} className="w-full">
+                                <Button onClick={onHelp} className="w-full rounded-full font-semibold leading-none">
                                     Help {name.split(" ")[0]}
                                 </Button>
-                                <Button onClick={onOpenReminder} variant="outline" size="icon" title="Remind me later" className="shrink-0">
+                                <Button onClick={onOpenReminder} variant="outline" size="icon" title="Remind me later" className="rounded-full shrink-0">
                                     <Clock className="w-4 h-4" />
                                 </Button>
                             </div>
@@ -321,7 +321,7 @@ export function HelpRequestCard({
                         </div>
                     </CardHeader>
                     <CardContent className="pb-2 flex-1">
-                        <div className="bg-muted/30 p-3 rounded-md text-sm text-foreground/80">
+                        <div className="bg-muted-25 p-3 rounded-md text-sm text-foreground-75">
                             "{shortSummary}"
                             <div className="mt-1 text-right">
                                 {DialogTriggerButton}
@@ -331,8 +331,8 @@ export function HelpRequestCard({
                     <CardFooter className="pt-2 flex justify-between items-center">
                         {ReminderState ? ReminderState : <div className="text-xs text-muted-foreground">Ends in 2 days</div>}
                         <div className="flex gap-2">
-                            <Button variant="ghost" size="sm" onClick={onOpenReminder} className="text-muted-foreground hover:text-foreground">Later</Button>
-                            <Button size="sm" onClick={onHelp} className="px-5 shadow-sm">Help</Button>
+                            <Button variant="ghost" size="sm" onClick={onOpenReminder} className="rounded-full text-xs text-muted-foreground hover:text-foreground">Later</Button>
+                            <Button size="sm" onClick={onHelp} className="rounded-full font-semibold px-5 shadow-sm text-xs">Help</Button>
                         </div>
                     </CardFooter>
                 </Card>
@@ -369,8 +369,8 @@ export function HelpRequestCard({
                     <div className="p-4 mt-auto">
                         {ReminderState && <div className="mb-2">{ReminderState}</div>}
                         <div className="flex flex-col gap-2">
-                            <Button size="sm" className="w-full" onClick={onHelp}>Help {name}</Button>
-                            <Button size="sm" variant="ghost" className="w-full h-7 text-muted-foreground" onClick={onOpenReminder}>Remind me later</Button>
+                            <Button size="sm" className="w-full rounded-full font-semibold text-xs" onClick={onHelp}>Help {name}</Button>
+                            <Button size="sm" variant="ghost" className="w-full h-7 rounded-full text-xs text-muted-foreground" onClick={onOpenReminder}>Remind me later</Button>
                         </div>
                     </div>
                 </Card>
@@ -385,7 +385,7 @@ export function HelpRequestCard({
         return (
             <>
                 {FullDetailsDialog}
-                <Card className="flex flex-col h-full border-none shadow-sm bg-muted/20">
+                <Card className="flex flex-col h-full border-none shadow-sm bg-muted-25">
                     <CardHeader className="flex-row items-center gap-3 pb-3 space-y-0">
                         {AvatarComponent}
                         <div className="flex flex-col flex-1">
@@ -404,10 +404,10 @@ export function HelpRequestCard({
                         </div>
                     </CardContent>
                     <CardFooter className="pt-0 flex items-center justify-between">
-                        <Button variant="outline" size="sm" onClick={onOpenReminder} className="h-8 border-dashed text-muted-foreground">
+                        <Button variant="outline" size="sm" onClick={onOpenReminder} className="h-8 rounded-full border-dashed text-xs text-muted-foreground">
                             Later
                         </Button>
-                        <Button size="sm" onClick={onHelp} className="h-8">
+                        <Button size="sm" onClick={onHelp} className="h-8 rounded-full font-semibold text-xs">
                             Okay, sure
                         </Button>
                     </CardFooter>
@@ -423,13 +423,13 @@ export function HelpRequestCard({
         return (
             <>
                 {FullDetailsDialog}
-                <Card className="flex flex-col h-full border-border/60 shadow-sm relative group">
+                <Card className="flex flex-col h-full border-border-50 shadow-sm relative group">
                     {/* Dismiss Button Upfront */}
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={onDismiss}
-                        className="absolute top-2 right-2 h-7 w-7 text-muted-foreground/60 hover:text-foreground hover:bg-muted z-10"
+                        className="absolute top-2 right-2 h-7 w-7 rounded-full text-muted-foreground-50 hover:text-foreground hover:bg-muted z-10"
                         title="Can’t help with this"
                     >
                         <X className="h-4 w-4" />
@@ -447,7 +447,7 @@ export function HelpRequestCard({
                     </CardHeader>
 
                     <CardContent className="pb-2 flex-1">
-                        <p className="text-sm text-foreground/80 pr-6"> {/* pr-6 to avoid overlap if close button was inline, though here it's absolute */}
+                        <p className="text-sm text-foreground-75 pr-6"> {/* pr-6 to avoid overlap if close button was inline, though here it's absolute */}
                             {shortSummary}
                         </p>
                         <div className="mt-2">
@@ -458,10 +458,10 @@ export function HelpRequestCard({
                     <CardFooter className="pt-2 flex flex-col items-start gap-4">
                         {reminderLabel && <div className="w-full text-xs">{ReminderState}</div>}
                         <div className="flex w-full gap-3">
-                            <Button onClick={onHelp} className="flex-1" size="sm">
+                            <Button onClick={onHelp} className="flex-1 rounded-full font-semibold text-xs" size="sm">
                                 Help {name.split(" ")[0]}
                             </Button>
-                            <Button onClick={onOpenReminder} variant="secondary" size="sm" className="px-4">
+                            <Button onClick={onOpenReminder} variant="secondary" size="sm" className="rounded-full px-4 text-xs">
                                 Remind me
                             </Button>
                         </div>
@@ -489,7 +489,7 @@ export function HelpRequestCard({
         return (
             <>
                 {FullDetailsDialog}
-                <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-md border-border/80">
+                <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-md border-border-75">
                     <CardHeader className="flex flex-row items-center gap-3 pb-2 pt-5">
                         {AvatarComponent}
                         <div className="flex flex-col gap-0.5 flex-1 min-w-0">
@@ -501,13 +501,13 @@ export function HelpRequestCard({
 
                     <CardContent className="flex-1 pb-2">
                         <div
-                            className="bg-muted/30 p-4 rounded-md font-medium text-foreground cursor-pointer hover:bg-muted/50 transition-colors group/bubble relative"
+                            className="bg-muted-25 p-4 rounded-md font-medium text-foreground cursor-pointer hover:bg-muted-50 transition-colors group/bubble relative"
                             onClick={() => setIsDialogOpen(true)}
                         >
                             {shortSummary}
 
                             {/* Overlay for View Details */}
-                            <div className="absolute inset-0 flex items-center justify-center rounded-md bg-background/60 backdrop-blur-[1px] opacity-0 transition-opacity duration-200 group-hover/bubble:opacity-100">
+                            <div className="absolute inset-0 flex items-center justify-center rounded-md bg-background-50 backdrop-blur-[1px] opacity-0 transition-opacity duration-200 group-hover/bubble:opacity-100">
                                 <div className="inline-flex h-8 items-center justify-center rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground shadow-sm">
                                     View details
                                 </div>
@@ -522,7 +522,7 @@ export function HelpRequestCard({
                                     onClick={onOpenReminder}
                                     variant="outline"
                                     size="sm"
-                                    className="shrink-0 transition-all border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800 hover:border-amber-300 group/remind"
+                                    className="shrink-0 rounded-full text-xs transition-all border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800 hover:border-amber-300 group/remind"
                                     title="Cancel reminder"
                                 >
                                     <BellRing className="w-3.5 h-3.5 mr-2 group-hover/remind:hidden" />
@@ -534,13 +534,13 @@ export function HelpRequestCard({
                                     onClick={onOpenReminder}
                                     variant="outline"
                                     size="sm"
-                                    className="shrink-0 w-9 p-0 transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-primary"
+                                    className="shrink-0 w-9 p-0 rounded-full transition-colors hover:border-primary-50 hover:bg-primary-10 hover:text-primary"
                                     title="Remind me later"
                                 >
                                     <BellPlus className="w-4 h-4" />
                                 </Button>
                             )}
-                            <Button onClick={onHelp} className="font-semibold shadow-sm px-8" size="sm">
+                            <Button onClick={onHelp} className="rounded-full font-semibold shadow-sm px-8 text-xs" size="sm">
                                 Help {name.split(" ")[0]}
                             </Button>
                         </div>
@@ -676,7 +676,7 @@ export default function HelpRequestLayoutsPage() {
                         Exploration of layout options for the single-card display.
                         Detailed content opens in a Dialog to preserve carousel height stability.
                     </p>
-                    <div className="mt-4 p-4 bg-muted/50 rounded-lg text-sm border border-border/50">
+                    <div className="mt-4 p-4 bg-muted-50 rounded-lg text-sm border border-border-50">
                         <span className="font-semibold text-foreground">Interactive Demo:</span> Click "Remind me" on any card to toggle the reminder state across all cards.
                     </div>
                 </header>
@@ -701,9 +701,9 @@ export default function HelpRequestLayoutsPage() {
                                     ))}
                                 </ul>
                                 <div className="pt-4 flex gap-2">
-                                    <Badge variant="outline" className="text-xs text-muted-foreground">Mobile ready</Badge>
-                                    <Badge variant="outline" className="text-xs text-muted-foreground">Stable height</Badge>
-                                    <Badge variant="outline" className="text-xs text-muted-foreground">Dialog detail</Badge>
+                                    <Badge variant="outline" className="text-xs text-muted-foreground leading-4">Mobile ready</Badge>
+                                    <Badge variant="outline" className="text-xs text-muted-foreground leading-4">Stable height</Badge>
+                                    <Badge variant="outline" className="text-xs text-muted-foreground leading-4">Dialog detail</Badge>
                                 </div>
                             </div>
 

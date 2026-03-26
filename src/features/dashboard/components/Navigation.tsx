@@ -20,7 +20,7 @@ export type NavigationProps = {
 };
 
 export const AppSidebar = ({ navLinks, userProfile }: NavigationProps) => (
-  <aside className="fixed inset-y-0 left-0 hidden h-screen w-72 flex-col border-r bg-background/90 p-6 backdrop-blur lg:flex">
+  <aside className="fixed inset-y-0 left-0 hidden h-screen w-72 flex-col border-r bg-background-75 p-6 backdrop-blur lg:flex">
     <NavigationContent navLinks={navLinks} userProfile={userProfile} />
   </aside>
 );
@@ -32,12 +32,12 @@ export const MobileNavBar = ({ navLinks, userProfile }: NavigationProps) => {
     <div className="flex items-center justify-between border-b bg-background px-4 py-3 sm:px-6 lg:hidden">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="border border-border">
+          <Button variant="ghost" size="icon" className="rounded-full border border-border">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Open navigation</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-72 border-r bg-background/95 p-0">
+        <SheetContent side="left" className="w-72 border-r bg-background-75 p-0">
           <NavigationContent navLinks={navLinks} userProfile={userProfile} onNavigate={() => setOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -63,14 +63,14 @@ const NavigationContent = ({ navLinks, userProfile, onNavigate }: NavigationCont
           <Button
             key={link.label}
             variant={link.active ? "secondary" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-full font-semibold leading-none"
             onClick={onNavigate}
           >
             {link.label}
           </Button>
         ))}
       </nav>
-      <Button onClick={onNavigate}>Invite a trusted person</Button>
+      <Button className="rounded-full font-semibold leading-none" onClick={onNavigate}>Invite a trusted person</Button>
       <div className="mt-auto pt-6">
         <UserMenu userProfile={userProfile} />
       </div>
@@ -89,7 +89,7 @@ const UserMenu = ({ userProfile, compact = false }: UserMenuProps) => (
       <button
         type="button"
         className={`flex items-center gap-3 rounded-2xl border border-transparent px-3 py-2 transition hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-          compact ? "border border-border bg-card/60 px-2 py-1" : "bg-card/50"
+          compact ? "border border-border bg-card/50 px-2 py-1" : "bg-card/50"
         } ${compact ? "" : "w-full"}`}
       >
         <div className="relative">

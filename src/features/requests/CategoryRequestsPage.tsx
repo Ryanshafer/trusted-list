@@ -1,14 +1,17 @@
 import React from "react";
 import requestsData from "../../../data/requests.json";
 import { AppSidebar } from "@/components/app-sidebar";
-import { HelpRequestCard } from "@/features/dashboard/components/HelpRequestCards";
+import { IncomingRequestCard } from "@/features/dashboard/components/HelpRequestCards";
 import type { CardData } from "@/features/dashboard/types";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { LayoutGrid, List, HandHelping, MoreHorizontal, BellPlus, Flag, MessageCircle, Search, Filter } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AudienceBadge, cardVariantToAudienceKey } from "@/components/AudienceBadge";
+import { MoreHorizontal, BellPlus, Bell, Flag, Search, SlidersHorizontal, X, ArrowUp, ArrowDown, ArrowUpDown, EyeOff, MessagesSquare, ListFilter } from "lucide-react";
+import { FilterSidebar } from "@/components/FilterSidebar";
+import { LayoutToggle } from "@/components/LayoutToggle";
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from "@/components/ui/empty";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -53,12 +56,84 @@ const slugAlias: Record<string, string> = {
 
 const buildCategoryRequests = (slug: string): RequestCard[] => {
   const target = slugAlias[slug] ?? slug;
-  return allRequests.filter((card) => card.category === target);
+  return allRequests.filter((card) => card.category?.toLowerCase() === target);
 };
+
+type CategoryFilters = {
+  dateFrom: string;
+  dateTo: string;
+  audiences: string[];
+};
+
+const defaultFilters: CategoryFilters = { dateFrom: "", dateTo: "", audiences: [] };
+
+const variantToAudienceKey = (variant: string) => {
+  if (variant === "contact") return "contact";
+  if (variant === "community") return "community";
+  return "circle";
+};
+
+type CategorySortKey = "name" | "request" | "endDate" | "audience" | "topic";
+
+const sortCards = (cards: RequestCard[], key: CategorySortKey | null, dir: "asc" | "desc") => {
+  if (!key) return cards;
+  const d = dir === "asc" ? 1 : -1;
+  return [...cards].sort((a, b) => {
+    switch (key) {
+      case "name": return d * (a.name ?? "").localeCompare(b.name ?? "");
+      case "request": return d * (a.requestSummary ?? "").localeCompare(b.requestSummary ?? "");
+      case "endDate": {
+        if (!a.endDate && !b.endDate) return 0;
+        if (!a.endDate) return d;
+        if (!b.endDate) return -d;
+        return d * (new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+      }
+      case "audience": return d * variantToAudienceKey(a.variant).localeCompare(variantToAudienceKey(b.variant));
+      case "topic": return d * (a.category ?? "").localeCompare(b.category ?? "");
+      default: return 0;
+    }
+  });
+};
+
+type ColumnDef = { key: string; label: string; className?: string };
+
+const SortableTableHeader = ({
+  columns,
+  sortKey,
+  sortDir,
+  onSort,
+  actionsClassName = "pr-4 text-right",
+}: {
+  columns: ColumnDef[];
+  sortKey: string | null;
+  sortDir: "asc" | "desc";
+  onSort: (key: string) => void;
+  actionsClassName?: string;
+}) => (
+  <TableHeader className="[&_th]:uppercase [&_th]:tracking-wider [&_th]:text-xs [&_th_button]:uppercase [&_th_button]:tracking-wider [&_th_button]:text-xs [&_tr]:border-foreground">
+    <TableRow>
+      {columns.map(({ key, label, className }) => {
+        const active = sortKey === key;
+        const Icon = active ? (sortDir === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
+        return (
+          <TableHead key={key} className={className ?? ""}>
+            <button onClick={() => onSort(key)} className="group/th flex items-center gap-1 hover:text-foreground transition-colors">
+              {label}
+              <Icon className={`h-3 w-3 shrink-0 transition-opacity ${active ? "opacity-100 text-foreground" : "opacity-0 group-hover/th:opacity-40"}`} />
+            </button>
+          </TableHead>
+        );
+      })}
+      <TableHead className={actionsClassName}>Actions</TableHead>
+    </TableRow>
+  </TableHeader>
+);
+
 
 export default function CategoryRequestsPage({ slug }: { slug: string }) {
   const categoryLabel = categoryOptions.find((opt) => opt.value === slug)?.label || "Requests";
-  const [ageFilter, setAgeFilter] = React.useState<string>("all");
+  const [filters, setFilters] = React.useState<CategoryFilters>(defaultFilters);
+  const [filterOpen, setFilterOpen] = React.useState(false);
   const [layout, setLayout] = React.useState<"grid" | "list">("grid");
   const [search, setSearch] = React.useState("");
   const [hiddenIds, setHiddenIds] = React.useState<Set<string>>(new Set());
@@ -70,31 +145,50 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
   const [remindOpen, setRemindOpen] = React.useState(false);
   const [remindOption, setRemindOption] = React.useState("3 days");
   const [reminderActive, setReminderActive] = React.useState(false);
+  const [cardReminders, setCardReminders] = React.useState<Record<string, string>>({});
 
-  const withAge = React.useMemo(() =>
-    buildCategoryRequests(slug).map((card, index) => {
-      const ageDays = 3 + (index % 60);
-      return { card, ageDays };
-    }),
-  [slug]);
+  const baseRequests = React.useMemo(() => buildCategoryRequests(slug), [slug]);
+
+  const availableAudiences = React.useMemo(() => {
+    let contact = false, circle = false, community = false;
+    for (const card of baseRequests) {
+      const key = variantToAudienceKey(card.variant);
+      if (key === "contact") contact = true;
+      if (key === "circle") circle = true;
+      if (key === "community") community = true;
+    }
+    return { contact, circle, community };
+  }, [baseRequests]);
+
+  const activeFilterCount =
+    filters.audiences.length + (filters.dateFrom ? 1 : 0) + (filters.dateTo ? 1 : 0);
 
   const filtered = React.useMemo(() => {
     const term = search.toLowerCase().trim();
-    return withAge
-      .filter(({ ageDays }) => {
-        if (ageFilter === "days") return ageDays <= 7;
-        if (ageFilter === "weeks") return ageDays <= 28;
-        if (ageFilter === "months") return ageDays <= 120;
-        return true;
-      })
-      .map(({ card }) => card)
+    const fromTime = filters.dateFrom ? new Date(filters.dateFrom).getTime() : null;
+    const toTime = filters.dateTo ? new Date(filters.dateTo).getTime() : null;
+    return baseRequests
       .filter((card) => !hiddenIds.has(card.id))
       .filter((card) => {
-        if (!term) return true;
-        const haystack = `${card.name} ${card.subtitle ?? ""} ${card.requestSummary ?? ""} ${card.request}`.toLowerCase();
-        return haystack.includes(term);
+        if (filters.audiences.length > 0 && !filters.audiences.includes(variantToAudienceKey(card.variant))) return false;
+        if (fromTime && card.endDate && new Date(card.endDate).getTime() < fromTime) return false;
+        if (toTime && card.endDate && new Date(card.endDate).getTime() > toTime) return false;
+        if (term) {
+          const haystack = `${card.name} ${card.subtitle ?? ""} ${card.requestSummary ?? ""} ${card.request}`.toLowerCase();
+          if (!haystack.includes(term)) return false;
+        }
+        return true;
       });
-  }, [withAge, ageFilter, hiddenIds, search]);
+  }, [baseRequests, filters, hiddenIds, search]);
+
+  const [sortKey, setSortKey] = React.useState<CategorySortKey | null>("endDate");
+  const [sortDir, setSortDir] = React.useState<"asc" | "desc">("asc");
+  const handleSort = (key: string) => {
+    const k = key as CategorySortKey;
+    if (sortKey === k) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setSortKey(k); setSortDir("asc"); }
+  };
+  const sortedFiltered = React.useMemo(() => sortCards(filtered, sortKey, sortDir), [filtered, sortKey, sortDir]);
 
   const handleClear = (id: string) => {
     setHiddenIds((prev) => new Set([...prev, id]));
@@ -129,245 +223,231 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
     return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   };
 
-  const ListRow = ({
+  const CategoryListRow = ({
     card,
-    primaryLabel,
     onPrimary,
     onRemind,
     onCantHelp,
     onFlag,
-    isLast,
+    reminderLabel,
+    onCancelReminder,
   }: {
-    card: CardData;
-    primaryLabel: string;
+    card: RequestCard;
     onPrimary: () => void;
     onRemind: () => void;
     onCantHelp: () => void;
     onFlag: () => void;
-    isLast?: boolean;
+    reminderLabel?: string;
+    onCancelReminder: () => void;
   }) => {
-    const [expanded, setExpanded] = React.useState(false);
-    const initials = React.useMemo(
-      () =>
-        (card.name || "")
-          .split(" ")
-          .map((p) => p[0])
-          .join("")
-          .slice(0, 2)
-          .toUpperCase(),
-      [card.name],
-    );
-
+    const rawFirstName = card.name.split(" ")[0] ?? card.name;
+    const firstName = rawFirstName.length > 12 ? rawFirstName.slice(0, 12) + "…" : rawFirstName;
+    const initials = (card.name || "").split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
     return (
-      <div className={`hidden lg:block ${isLast ? "" : "border-b border-border/60"} bg-muted/10`}>
-        <div className={`grid grid-cols-12 gap-4 px-5 py-4 text-sm ${expanded ? "items-start" : "items-center"}`}>
-          <div className="col-span-3 flex items-center gap-3 min-w-0">
-            <Avatar className="h-10 w-10 border">
-              {card.avatarUrl ? <AvatarImage src={card.avatarUrl} alt={card.name} /> : null}
+      <TableRow className="hover:bg-transparent">
+        <TableCell className="py-5 pl-4">
+          <a href={`/trusted-list/members/${card.name.toLowerCase().replace(/\s+/g, "-")}`} className="flex items-center gap-3 min-w-0 group/member">
+            <Avatar className="h-10 w-10 shrink-0 border-2 border-background shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition-colors group-hover/member:border-primary">
+              {card.avatarUrl ? <AvatarImage src={card.avatarUrl} className="object-cover" /> : null}
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col min-w-0">
-              <span className="font-semibold leading-tight truncate">{card.name}</span>
-              <span className="text-xs text-muted-foreground leading-tight truncate">
-                {card.subtitle || card.relationshipTag}
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-5 min-w-0">
-            <div className="font-semibold leading-tight mb-1 truncate">
+            <span className="text-base font-medium truncate leading-tight transition-colors group-hover/member:text-primary">{card.name}</span>
+          </a>
+        </TableCell>
+        <TableCell className="py-5">
+          <a href={`/trusted-list/requests/view/${card.id}`} className="group/link flex flex-col min-w-0 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <p className="text-base font-medium leading-tight text-card-foreground truncate transition-colors group-hover/link:text-primary">
               {card.requestSummary || card.request}
-            </div>
-            <div className="text-sm text-muted-foreground leading-snug">
-              {expanded ? (
-                <>
-                  {card.request}
-                  <button
-                    className="ml-1 text-primary hover:underline font-medium"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setExpanded(false);
-                    }}
-                  >
-                    less
-                  </button>
-                </>
-              ) : (
-                <div className="flex">
-                  <span className="truncate">{card.request}</span>
-                  {card.request.length > 80 && (
-                    <button
-                      className="ml-1 whitespace-nowrap text-primary hover:underline font-medium"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setExpanded(true);
-                      }}
-                    >
-                      more
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="col-span-2 text-xs text-muted-foreground">
-            <div className="truncate">{formatEndDate(card.endDate)}</div>
-          </div>
-
-          <div className="col-span-2 flex items-center justify-end gap-2">
+            </p>
+          </a>
+        </TableCell>
+        <TableCell className="py-5 text-base text-card-foreground whitespace-nowrap">
+          {formatEndDate(card.endDate)}
+        </TableCell>
+        <TableCell className="py-5 whitespace-nowrap">
+          <AudienceBadge audience={cardVariantToAudienceKey(card.variant)} />
+        </TableCell>
+        <TableCell className="py-5">
+          {card.category ? (
+            <Badge variant="outline" className="rounded-full capitalize leading-4">{card.category}</Badge>
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          )}
+        </TableCell>
+        <TableCell className="py-5 pr-4">
+          <div className="flex justify-end items-center gap-1">
             <Button
               variant="outline"
-              className="border hover:bg-accent hover:text-accent-foreground"
+              size="sm"
+              className="max-w-[9rem] px-3 h-8 text-xs font-semibold rounded-full gap-1.5 border shadow-sm hover:bg-accent hover:text-accent-foreground overflow-hidden"
               onClick={onPrimary}
             >
-              {primaryLabel}
+              <MessagesSquare className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">Help {firstName}</span>
             </Button>
+            {reminderLabel && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onCancelReminder}
+                className="group/reminder h-9 w-9 rounded-full border border-lime-200 bg-lime-50 text-lime-600 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600"
+              >
+                <Bell className="h-4 w-4 group-hover/reminder:hidden" />
+                <X className="h-4 w-4 hidden group-hover/reminder:block" />
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground" onClick={(e) => e.stopPropagation()}>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={onRemind}>
-                  <BellPlus className="mr-2 h-4 w-4" />
-                  Remind me
+                  <BellPlus className="mr-2 h-4 w-4" /> Remind me
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onCantHelp}>
-                  I can't help with this request
+                  <EyeOff className="mr-2 h-4 w-4" /> I can't help with this
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-destructive focus:text-destructive"
-                  onClick={onFlag}
-                >
-                  <Flag className="mr-2 h-4 w-4" />
-                  Flag as inappropriate
+                <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onFlag}>
+                  <Flag className="mr-2 h-4 w-4" /> Flag as inappropriate
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </div>
-      </div>
+        </TableCell>
+      </TableRow>
     );
   };
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-background">
+      <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <SidebarInset className="flex min-h-screen w-full flex-1 flex-col overflow-x-hidden">
           <div className="flex items-center gap-3 border-b bg-background px-4 py-3 lg:hidden">
             <SidebarTrigger className="border border-border" />
           </div>
           <div className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-              <header className="space-y-1">
-                <div className="flex items-center gap-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-                  <a href="/trusted-list/requests" className="hover:underline">All Requests</a>
-                  <span className="text-muted-foreground">/</span>
-                  <span>{categoryLabel}</span>
-                </div>
-                <p className="text-muted-foreground text-base">Browse requests tagged for this category.</p>
+            <div className="mx-auto flex w-full flex-col gap-6">
+              <header className="flex flex-col gap-1">
+                <a href="/trusted-list/requests" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  All Requests
+                </a>
+                <h1 className="font-serif text-5xl font-normal leading-none">{categoryLabel}</h1>
+                <p className="text-lg text-muted-foreground">Browse requests tagged for this category.</p>
               </header>
 
-              <section className="flex flex-col gap-4 rounded-xl border border-border/50 bg-muted/30 p-4 shadow-sm">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-3 rounded-full border border-border bg-background px-3 py-1.5 shadow-sm">
-                      <Search className="h-4 w-4 text-muted-foreground" />
-                      <Input
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search requests"
-                        className="h-8 w-56 border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Select value={ageFilter} onValueChange={setAgeFilter}>
-                      <SelectTrigger className="h-10 rounded-full border border-border bg-background px-4 shadow-sm flex items-center gap-2">
-                        <Filter className="h-4 w-4" />
-                        <span className="text-sm">Filter</span>
-                        <SelectValue placeholder="Filter" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="days">Days old</SelectItem>
-                        <SelectItem value="weeks">Weeks old</SelectItem>
-                        <SelectItem value="months">Months old</SelectItem>
-                        <SelectItem value="all">All time</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="flex items-center gap-2 rounded-full bg-muted/40 px-2 py-1.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={`h-9 w-9 ${layout === "grid" ? "bg-background shadow-sm" : ""}`}
-                        onClick={() => setLayout("grid")}
-                      >
-                        <LayoutGrid className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={`h-9 w-9 ${layout === "list" ? "bg-background shadow-sm" : ""}`}
-                        onClick={() => setLayout("list")}
-                      >
-                        <List className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+              <section className="flex items-center justify-between rounded-2xl border bg-card px-4 py-3 shadow-sm">
+                <div className="flex items-center gap-2 h-9 w-80 px-3 rounded-full border bg-background">
+                  <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search requests"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground outline-none"
+                  />
+                  {search && (
+                    <button
+                      type="button"
+                      onClick={() => setSearch("")}
+                      className="shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    className={`h-9 rounded-full font-semibold gap-2 bg-background ${activeFilterCount > 0 ? "border-primary text-primary" : ""}`}
+                    onClick={() => setFilterOpen(true)}
+                  >
+                    <SlidersHorizontal size={16} />
+                    Filter requests
+                    {activeFilterCount > 0 && (
+                      <span className="flex h-4 min-w-4 items-center justify-center rounded-full text-[10px] font-bold px-0.5 bg-primary/10 text-primary">
+                        {activeFilterCount}
+                      </span>
+                    )}
+                  </Button>
+                  <LayoutToggle layout={layout} onChange={setLayout} className="border bg-background px-1.5" />
                 </div>
               </section>
 
-              <div className={layout === "grid" ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-3" : "space-y-3"}>
-                {layout === "grid" ? (
-                  filtered.map((card) => {
+              {filtered.length === 0 ? (
+                <Empty className="w-full">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon"><ListFilter /></EmptyMedia>
+                    <EmptyTitle>No requests match your filters</EmptyTitle>
+                    <EmptyDescription>Try adjusting or resetting your filters to see results.</EmptyDescription>
+                  </EmptyHeader>
+                  <EmptyContent>
+                    <Button variant="outline" className="rounded-full font-semibold" onClick={() => { setFilters(defaultFilters); setSearch(""); }}>Reset filters</Button>
+                  </EmptyContent>
+                </Empty>
+              ) : layout === "grid" ? (
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {filtered.map((card) => {
                     const firstName = card.name.split(" ")[0] ?? card.name;
                     return (
                       <div key={card.id} className="p-1">
-                        <HelpRequestCard
+                        <IncomingRequestCard
                           {...card}
                           primaryCTA={`Help ${firstName}`}
                           onClear={() => handleClear(card.id)}
+                          reminderLabel={cardReminders[card.id]}
+                          onReminderSet={(label) => setCardReminders((prev) => ({ ...prev, [card.id]: label }))}
+                          onReminderClear={() => setCardReminders((prev) => { const next = { ...prev }; delete next[card.id]; return next; })}
                         />
                       </div>
                     );
-                  })
-                ) : (
-                  <>
-                    <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      <div className="col-span-3">Requestor</div>
-                      <div className="col-span-5">Request</div>
-                      <div className="col-span-2">End Date</div>
-                      <div className="col-span-2 text-right pr-2">Action</div>
-                    </div>
-                    <div className="hidden lg:block rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-                      {filtered.map((card, index) => {
-                        const firstName = card.name.split(" ")[0] ?? card.name;
-                        return (
-                          <ListRow
-                            key={card.id}
-                            card={card}
-                            primaryLabel={`Help ${firstName}`}
-                            onPrimary={() => handleHelp(card)}
-                            onRemind={() => handleRemind(card)}
-                            onCantHelp={() => handleClear(card.id)}
-                            onFlag={() => handleFlag(card)}
-                            isLast={index === filtered.length - 1}
-                          />
-                        );
-                      })}
-                    </div>
-                  </>
-                )}
-                {filtered.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-6 text-center text-sm text-muted-foreground">
-                    No requests match this filter yet.
-                  </div>
-                )}
-              </div>
+                  })}
+                </div>
+              ) : (
+                <div className="hidden lg:block rounded-xl overflow-x-auto">
+                  <Table className="table-fixed min-w-[67rem]">
+                    <SortableTableHeader
+                      columns={[
+                        { key: "name", label: "Requestor", className: "pl-4 w-[15%]" },
+                        { key: "request", label: "Request", className: "w-[30%]" },
+                        { key: "endDate", label: "End Date" },
+                        { key: "audience", label: "Audience", className: "w-[10rem]" },
+                        { key: "topic", label: "Topic" },
+                      ]}
+                      sortKey={sortKey}
+                      sortDir={sortDir}
+                      onSort={handleSort}
+                      actionsClassName="pr-4 w-[18rem] text-right"
+                    />
+                    <TableBody className="[&_tr]:bg-card">
+                      {sortedFiltered.map((card) => (
+                        <CategoryListRow
+                          key={card.id}
+                          card={card}
+                          onPrimary={() => handleHelp(card)}
+                          onRemind={() => handleRemind(card)}
+                          onCantHelp={() => handleClear(card.id)}
+                          onFlag={() => handleFlag(card)}
+                          reminderLabel={cardReminders[card.id]}
+                          onCancelReminder={() => {
+                            setCardReminders((prev) => {
+                              const next = { ...prev };
+                              delete next[card.id];
+                              return next;
+                            });
+                            setReminderActive(false);
+                            setRemindOption("3 days");
+                          }}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </div>
           </div>
         </SidebarInset>
@@ -393,12 +473,23 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
         reminderActive={reminderActive}
         onSet={() => {
           setReminderActive(true);
+          if (currentCard) {
+            setCardReminders((prev) => ({ ...prev, [currentCard.id]: `In ${remindOption}` }));
+          }
           setRemindOpen(false);
         }}
         onCancelReminder={() => {
           setReminderActive(false);
           setRemindOpen(false);
         }}
+      />
+      <FilterSidebar
+        open={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        onApply={setFilters}
+        appliedFilters={filters}
+        defaultFilters={defaultFilters}
+        audienceOptions={availableAudiences}
       />
       <FlagRequestDialog
         open={flagOpen}

@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import RequestDetailPage from "../../../features/requests/RequestDetailPage";
+import requestsData from "../../../../data/requests.json";
+import interactionsData from "../../../../data/interactions.json";
+
+export function getStaticPaths() {
+  const reqIds = requestsData.map((r) => r.id);
+  const myHelpRequestIds = (interactionsData as any).myHelpRequests.map((r: any) => r.id);
+  const helpedIds = (interactionsData as any).helped.map((r: any) => r.id);
+  const inProgressIds = (interactionsData as any).inProgress.map((r: any) => r.id);
+
+  const allIds = [...new Set([...reqIds, ...myHelpRequestIds, ...helpedIds, ...inProgressIds])];
+
+  return allIds.map((id) => ({ params: { id } }));
+}
+
+const { id } = Astro.params;
+---
+
+<BaseLayout
+  title={`Request Detail`}
+  description="View a help request on The Trusted List."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <RequestDetailPage id={id ?? ""} client:load slot="main" />
+</BaseLayout>

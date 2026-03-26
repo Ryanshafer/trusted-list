@@ -86,7 +86,7 @@ const MemberCount = () => {
                     </AnimatePresence>
                 </div>
             </div>
-            <div className="h-10 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/50 shadow-2xl shadow-[#00A3AD]/10 flex items-center border-2 border-white">
+            <div className="h-10 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/50 shadow-2xl shadow-primary-500/10 flex items-center border-2 border-white">
                 <p className="leading-none whitespace-nowrap font-bold !font-sans text-slate-600 text-center sm:text-left">
                     Joined by top talent from tech, design, and media.
                 </p>

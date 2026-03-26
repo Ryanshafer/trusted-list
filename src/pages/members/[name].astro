@@ -1,0 +1,97 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import requestsData from "../../../data/requests.json";
+import requestDetailsData from "../../../data/request-details.json";
+
+type PersonStub = {
+  name: string;
+  avatarUrl?: string | null;
+  subtitle?: string | null;
+  trustedFor?: string | null;
+};
+
+export function getStaticPaths() {
+  const people = new Map<string, PersonStub>();
+
+  // Primary source: requests.json
+  for (const r of requestsData) {
+    if (!people.has(r.name)) {
+      people.set(r.name, {
+        name: r.name,
+        avatarUrl: r.avatarUrl ?? null,
+        subtitle: (r as any).subtitle ?? null,
+        trustedFor: (r as any).trustedFor ?? null,
+      });
+    }
+  }
+
+  // Secondary source: request-details.json authors and connection path nodes
+  for (const detail of Object.values(requestDetailsData as Record<string, any>)) {
+    const author = detail.author;
+    if (author?.name && author.name !== "You" && !people.has(author.name)) {
+      people.set(author.name, {
+        name: author.name,
+        avatarUrl: author.avatarUrl ?? null,
+        subtitle: author.role ?? null,
+        trustedFor: author.trustedFor ?? null,
+      });
+    }
+    for (const node of detail.connectionPath ?? []) {
+      if (node.name && node.type !== "you" && !people.has(node.name)) {
+        people.set(node.name, {
+          name: node.name,
+          avatarUrl: node.avatarUrl ?? null,
+          subtitle: node.role ?? null,
+          trustedFor: null,
+        });
+      }
+    }
+  }
+
+  return [...people.values()].map((person) => ({
+    params: { name: person.name.toLowerCase().replace(/\s+/g, "-") },
+    props: { person },
+  }));
+}
+
+const { person } = Astro.props;
+const initials = person.name
+  .split(" ")
+  .map((n: string) => n[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<BaseLayout
+  title={`${person.name} — The Trusted List`}
+  description={`Profile for ${person.name}`}
+  bodyClass="bg-background"
+>
+  <div class="mx-auto max-w-2xl px-6 py-16" slot="main">
+    <button
+      type="button"
+      class="mb-8 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+      onclick="window.history.back()"
+    >
+      <span aria-hidden="true">←</span>
+      Back
+    </button>
+    <div class="flex items-center gap-4">
+      <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-md">
+        {person.avatarUrl
+          ? <img src={person.avatarUrl} alt={person.name} class="h-full w-full object-cover" />
+          : <div class="flex h-full w-full items-center justify-center bg-muted text-lg font-semibold text-muted-foreground">{initials}</div>
+        }
+      </div>
+      <div>
+        <h1 class="text-2xl font-semibold text-foreground">{person.name}</h1>
+        {person.subtitle && <p class="text-sm text-muted-foreground">{person.subtitle}</p>}
+        {person.trustedFor && (
+          <p class="mt-1 text-sm text-muted-foreground">Trusted for {person.trustedFor}</p>
+        )}
+      </div>
+    </div>
+    <p class="mt-12 text-sm text-muted-foreground">Full profile coming soon.</p>
+  </div>
+</BaseLayout>
