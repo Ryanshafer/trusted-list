@@ -112,7 +112,7 @@ export function EditRecommendationsDialog({
             <h2 className="font-serif text-2xl font-normal leading-8 text-popover-foreground">
               Manage your recommendations
             </h2>
-            <p class="text-base text-muted-foreground">Edit the numbers to put these in the order you want.</p>
+            <p className="text-base text-muted-foreground">Edit the numbers to put these in the order you want.</p>
           </div>
           <DialogClose asChild>
             <Button
