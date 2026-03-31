@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { ArrowUpDown, Flag, MoreHorizontal, Search, UserRoundX } from "lucide-react";
+import { HelpRequestDialog, REQUEST_CONNECTION_CATEGORY, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -60,14 +61,18 @@ interface MemberRowProps {
   isSponsor?: boolean;
   isOwner?: boolean;
   basePath?: string;
+  onRequestConnect?: (member: CircleMember) => void;
 }
 
-function MemberRow({ member, isSponsor, isOwner, basePath = "/trusted-list" }: MemberRowProps) {
+function MemberRow({ member, isSponsor, isOwner, basePath = "/trusted-list", onRequestConnect }: MemberRowProps) {
   const [sent, setSent] = useState(false);
+  const isHigherDegree = !member.awaiting && member.connectionDegree && member.connectionDegree !== "1st" && member.connectionDegree !== "You";
 
   const profileHref = member.awaiting
     ? undefined
-    : `${basePath}/members/${member.name.toLowerCase().replace(/\s+/g, "-")}`;
+    : member.connectionDegree === "You"
+      ? `${basePath}/profile`
+      : `${basePath}/members/${member.name.toLowerCase().replace(/\s+/g, "-")}`;
   const skills = member.verifiedSkills?.length
     ? `Trusted for ${member.verifiedSkills.join(", ")}`
     : null;
@@ -150,7 +155,17 @@ function MemberRow({ member, isSponsor, isOwner, basePath = "/trusted-list" }: M
             </Button>
           )
         )}
-        {!member.awaiting && <DropdownMenu>
+        {isHigherDegree && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full font-semibold h-8 px-3 text-xs"
+            onClick={() => onRequestConnect?.(member)}
+          >
+            Request to connect
+          </Button>
+        )}
+        {!member.awaiting && member.connectionDegree !== "You" && <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -184,9 +199,10 @@ interface MemberListProps {
   viewerUserId?: string;
   isOwner?: boolean;
   basePath?: string;
+  onRequestConnect?: (member: CircleMember) => void;
 }
 
-function MemberList({ members, viewerUserId, isOwner, basePath }: MemberListProps) {
+function MemberList({ members, viewerUserId, isOwner, basePath, onRequestConnect }: MemberListProps) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortOrder>("recent");
 
@@ -233,6 +249,7 @@ function MemberList({ members, viewerUserId, isOwner, basePath }: MemberListProp
               isSponsor={!!viewerUserId && member.invitedBy === viewerUserId}
               isOwner={isOwner}
               basePath={basePath}
+              onRequestConnect={onRequestConnect}
             />
           ))
         )}
@@ -265,53 +282,85 @@ export function CircleModal({
   const contacts = useMemo(() => members.filter((m) => !m.awaiting), [members]);
   const nominations = useMemo(() => members.filter((m) => m.invitedByMe), [members]);
 
+  const [connectTarget, setConnectTarget] = useState<AskContact | null>(null);
+
+  const handleRequestConnect = (member: CircleMember) => {
+    onOpenChange(false);
+    setConnectTarget({
+      id: member.userId,
+      name: member.name,
+      role: member.verifiedSkills?.length ? `Trusted for ${member.verifiedSkills[0]}` : "Trust Network Member",
+      avatarUrl: member.avatarUrl ?? undefined,
+    });
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[672px] max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden rounded-2xl [&>button]:bg-card [&>button]:border [&>button]:border-border [&>button]:rounded-full [&>button]:shadow-sm [&>button]:h-9 [&>button]:w-9 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button]:opacity-100 [&>button]:hover:opacity-80 [&>button]:hover:bg-accent [&>button]:right-4 [&>button]:top-4">
-        <DialogHeader className="px-6 py-4 shrink-0">
-          <DialogTitle className="font-serif text-2xl font-normal">
-            {firstName}&apos;s Circle
-          </DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-[672px] max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden rounded-2xl [&>button]:bg-card [&>button]:border [&>button]:border-border [&>button]:rounded-full [&>button]:shadow-sm [&>button]:h-9 [&>button]:w-9 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button]:opacity-100 [&>button]:hover:opacity-80 [&>button]:hover:bg-accent [&>button]:right-4 [&>button]:top-4">
+          <DialogHeader className="px-6 py-4 shrink-0">
+            <DialogTitle className="font-serif text-2xl font-normal">
+              {firstName}&apos;s Circle
+            </DialogTitle>
+          </DialogHeader>
 
-        <Tabs defaultValue="contacts" className="flex flex-col flex-1 min-h-0">
-          {/* Tab switcher — centered */}
-          <div className="flex justify-center px-6 shrink-0">
-            <TabsList className="bg-accent rounded-[10px] p-[3px] h-auto gap-0">
-              <TabsTrigger
-                value="contacts"
-                className="rounded-[8px] px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
-              >
-                Contacts
-              </TabsTrigger>
-              <TabsTrigger
-                value="nominations"
-                className="rounded-[8px] px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
-              >
-                Nominations
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          <Tabs defaultValue="contacts" className="flex flex-col flex-1 min-h-0">
+            {/* Tab switcher — centered */}
+            <div className="flex justify-center px-6 shrink-0">
+              <TabsList className="bg-accent rounded-[10px] p-[3px] h-auto gap-0">
+                <TabsTrigger
+                  value="contacts"
+                  className="rounded-[8px] px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
+                >
+                  Contacts
+                </TabsTrigger>
+                <TabsTrigger
+                  value="nominations"
+                  className="rounded-[8px] px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
+                >
+                  Nominations
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-          <TabsContent value="contacts" className="flex flex-col flex-1 min-h-0 mt-0">
-            <MemberList
-              members={contacts}
-              viewerUserId={viewerUserId}
-              isOwner={isOwner}
-              basePath={basePath}
-            />
-          </TabsContent>
+            <TabsContent value="contacts" className="flex flex-col flex-1 min-h-0 mt-0">
+              <MemberList
+                members={contacts}
+                viewerUserId={viewerUserId}
+                isOwner={isOwner}
+                basePath={basePath}
+                onRequestConnect={handleRequestConnect}
+              />
+            </TabsContent>
 
-          <TabsContent value="nominations" className="flex flex-col flex-1 min-h-0 mt-0">
-            <MemberList
-              members={nominations}
-              viewerUserId={viewerUserId}
-              isOwner={isOwner}
-              basePath={basePath}
-            />
-          </TabsContent>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+            <TabsContent value="nominations" className="flex flex-col flex-1 min-h-0 mt-0">
+              <MemberList
+                members={nominations}
+                viewerUserId={viewerUserId}
+                isOwner={isOwner}
+                basePath={basePath}
+                onRequestConnect={handleRequestConnect}
+              />
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {connectTarget && (
+        <HelpRequestDialog
+          mode="create"
+          open={!!connectTarget}
+          onOpenChange={(o) => { if (!o) setConnectTarget(null); }}
+          categories={[REQUEST_CONNECTION_CATEGORY]}
+          contacts={[connectTarget]}
+          initialSelectedContacts={[connectTarget]}
+          initialCategories={[REQUEST_CONNECTION_CATEGORY.value]}
+          onSubmit={(payload) => {
+            console.log("Connection request submitted:", payload);
+            setConnectTarget(null);
+          }}
+        />
+      )}
+    </>
   );
 }

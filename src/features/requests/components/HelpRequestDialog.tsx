@@ -52,6 +52,15 @@ export type EditPayload = {
 
 // ── Category data ─────────────────────────────────────────────────────────────
 
+/**
+ * Special category only available when requesting a connection from CircleModal.
+ * Not included in HELP_CATEGORIES so it never appears in the normal creation flow.
+ */
+export const REQUEST_CONNECTION_CATEGORY: HelpCategory = {
+  value: "request-connection",
+  label: "Request Connection",
+};
+
 /** Used by the create flow (AskForHelpDialog / AppShell) */
 export const HELP_CATEGORIES: HelpCategory[] = [
   { value: "feedback", label: "Feedback" },
