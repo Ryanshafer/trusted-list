@@ -4,7 +4,6 @@ import { ProfilePage } from "../features/profile/components/ProfilePage";
 import currentUser from "../../data/current-user.json";
 import type { ProfileData, ViewerData } from "../features/profile/types";
 
-// Cast the JSON import to our ProfileData type
 const profile = currentUser as unknown as ProfileData;
 
 const viewerData: ViewerData = {

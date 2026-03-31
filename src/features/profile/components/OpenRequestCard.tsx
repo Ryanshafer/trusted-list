@@ -49,7 +49,7 @@ export function OpenRequestCard({
             variant="outline"
             className="w-full rounded-full font-medium h-8 px-3 text-sm border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground shadow-sm"
           >
-            <a href={`${basePath}/requests/${request.requestId}`}>Read the full request</a>
+            <a href={`${basePath}/requests/view/${request.requestId}`}>Read the full request</a>
           </Button>
         ) : (
           <Button

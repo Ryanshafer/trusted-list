@@ -27,9 +27,15 @@ export function ProfileSidebar({
 }: ProfileSidebarProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeRequest, setActiveRequest] = useState<OpenRequest | null>(null);
+  const visibleOpenRequests = profile.openRequests.filter((request) => {
+    const isOpen = (request.status ?? "Open") === "Open";
+    const isPromotable = ["circle", "community"].includes(request.type ?? "circle");
+    const isActive = !isPromotable || request.promoted !== false;
+    return isOpen && isActive;
+  });
 
   function handleOfferToHelp(requestId: string) {
-    const req = profile.openRequests.find((r) => r.requestId === requestId);
+    const req = visibleOpenRequests.find((r) => r.requestId === requestId);
     if (req) {
       setActiveRequest(req);
       setModalOpen(true);
@@ -112,7 +118,7 @@ export function ProfileSidebar({
       )}
 
       {/* Open requests */}
-      {profile.openRequests.length > 0 && (
+      {visibleOpenRequests.length > 0 && (
         <>
           <div className="h-px w-full shrink-0 bg-border" />
           <section id="open-requests" className="flex w-full flex-col gap-3.5 py-5 rounded-2xl">
@@ -120,21 +126,21 @@ export function ProfileSidebar({
               <span className="text-sm text-muted-foreground uppercase">
                 OPEN REQUESTS FOR HELP
               </span>
-              {profile.openRequests.length > 2 && (
+              {visibleOpenRequests.length > 2 && (
                 <Button
                   variant="ghost"
                   asChild
                   className="h-6 gap-1.5 px-2 text-xs font-medium text-foreground hover:bg-muted"
                 >
                   <a href="#open-requests">
-                    View all {profile.openRequests.length} requests
+                    View all {visibleOpenRequests.length} requests
                     <ChevronRight className="h-3 w-3" />
                   </a>
                 </Button>
               )}
             </div>
             <div className="flex w-full flex-col gap-3">
-              {profile.openRequests.slice(0, 2).map((req) => (
+              {visibleOpenRequests.slice(0, 2).map((req) => (
                 <OpenRequestCard
                   key={req.requestId}
                   request={req}

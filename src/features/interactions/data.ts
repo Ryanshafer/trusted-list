@@ -1,6 +1,7 @@
 import type { CardData } from "@/features/dashboard/types";
 import data from "../../../data/interactions.json";
 import chats from "../../../data/interactions-chats.json";
+import currentUser from "../../../data/current-user.json";
 
 export type RawMessage = {
   id: number;
@@ -41,24 +42,50 @@ export type MyHelpRequest = {
 type InteractionsData = {
   helped: InteractionCard[];
   inProgress: InteractionCard[];
-  myRequests: Array<
-    InteractionCard & {
-      responses: HelperResponse[];
-      type: "contact" | "circle" | "community";
-      createdAt: string;
-    }
-  >;
-  myHelpRequests: MyHelpRequest[];
 };
 
 const parsed = data as InteractionsData;
 const chatHistory = chats as Record<string, RawMessage[]>;
 
+const categorySlugMap: Record<string, string> = {
+  "career advice": "career",
+  "career development": "career",
+  design: "design",
+  product: "product",
+  business: "business",
+  wellness: "health",
+  health: "health",
+  education: "education",
+  networking: "network",
+  network: "network",
+  "dev & tools": "tech",
+  tech: "tech",
+  other: "other",
+};
+
+const normalizeRequestCategory = (category?: string | null) => {
+  if (!category) return undefined;
+  return categorySlugMap[category.trim().toLowerCase()] ?? "other";
+};
+
+const currentUserRequests = ((currentUser as any).openRequests ?? []).map((request: any) => ({
+  id: request.requestId,
+  requestSummary: request.title,
+  request: request.description,
+  responses: request.responses ?? [],
+  status: request.status ?? ("Open" as const),
+  type: request.type ?? ("circle" as const),
+  category: normalizeRequestCategory(request.category),
+  createdAt: request.createdAt ?? request.endDate ?? "",
+  promoted: request.promoted ?? true,
+  endDate: request.endDate ?? undefined,
+}));
+
 export const interactions = {
   helped: parsed.helped.map((card) => ({ ...card, karma: card.karma ?? 50 })),
   inProgress: parsed.inProgress,
-  myRequests: parsed.myRequests,
+  myRequests: currentUserRequests,
 };
 
-export const myHelpRequests = parsed.myHelpRequests;
+export const myHelpRequests = currentUserRequests;
 export const interactionChats = chatHistory;

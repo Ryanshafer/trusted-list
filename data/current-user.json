@@ -148,14 +148,86 @@
       "title": "Looking for freelance design opportunities",
       "category": "Career Advice",
       "description": "I'm exploring contract and advisory work alongside my current role. Looking for teams that need a senior design partner for 0→1 work or design system maturation.",
-      "endDate": "2026-05-15T00:00:00.000Z"
+      "endDate": "2026-05-15T00:00:00.000Z",
+      "responses": [],
+      "status": "Open",
+      "type": "circle",
+      "createdAt": "2 days ago",
+      "promoted": true
     },
     {
       "requestId": "req-ryan-2",
       "title": "Design portfolio feedback needed",
       "category": "Career Advice",
       "description": "My portfolio firm disputed after three different roles in product marketing. Could you do a thorough pass, suggest edits, and flag anything that would hold me back?",
-      "endDate": "2026-05-24T00:00:00.000Z"
+      "endDate": "2026-05-24T00:00:00.000Z",
+      "responses": [
+        {
+          "id": "resp-ryan-1",
+          "name": "Jen Wu",
+          "role": "Design Director",
+          "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces",
+          "status": "In Progress",
+          "chatId": "req-ryan-2-jen",
+          "trustedFor": "Product Design, UX Research, Design Leadership"
+        }
+      ],
+      "status": "Open",
+      "type": "contact",
+      "createdAt": "1 week ago",
+      "promoted": true
+    },
+    {
+      "requestId": "req-ryan-3",
+      "title": "Hiring a senior product designer for an early-stage team",
+      "category": "Business",
+      "description": "We're hiring our first senior product designer and I want thoughtful referrals from people who've built teams carefully. Looking for strong systems thinking, startup comfort, and craft.",
+      "endDate": "2026-05-30T00:00:00.000Z",
+      "responses": [
+        {
+          "id": "resp-ryan-2",
+          "name": "Marcus Bell",
+          "role": "VP Product",
+          "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
+          "status": "Completed",
+          "chatId": "req-ryan-3-marcus",
+          "trustedFor": "Leadership, Product Strategy, Team Building"
+        },
+        {
+          "id": "resp-ryan-3",
+          "name": "Priya Nair",
+          "role": "Principal Product Designer",
+          "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=150&h=150&fit=crop&crop=faces",
+          "status": "In Progress",
+          "chatId": "req-ryan-3-priya",
+          "trustedFor": "UX Strategy, Systems Thinking, Research"
+        },
+        {
+          "id": "resp-ryan-4",
+          "name": "Devon Cross",
+          "role": "Engineering Leader",
+          "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
+          "status": "In Progress",
+          "chatId": "req-ryan-3-devon",
+          "trustedFor": "Engineering Leadership, Backend Systems, Distributed Architecture"
+        }
+      ],
+      "status": "Closed",
+      "type": "circle",
+      "createdAt": "3 days ago",
+      "promoted": false
+    },
+    {
+      "requestId": "req-ryan-4",
+      "title": "Visibility for a Head of Design opening",
+      "category": "Business",
+      "description": "We have an open Head of Design role and want to tap the broader Trusted List when the timing is right. The request is drafted, but sharing is paused for now.",
+      "endDate": "2026-06-06T00:00:00.000Z",
+      "responses": [],
+      "status": "Open",
+      "type": "community",
+      "createdAt": "Today",
+      "promoted": false
     }
   ],
   "contributions": {

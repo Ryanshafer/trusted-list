@@ -331,7 +331,7 @@
         "userId": "user-devon-cross",
         "name": "Devon Cross",
         "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
-        "connectionDegree": "2nd",
+        "connectionDegree": "1st",
         "verifiedSkills": [
           "Engineering Leadership",
           "Backend Systems",
@@ -702,6 +702,461 @@
           "graduationYear": "2014",
           "institution": "University of Ghana",
           "location": "Accra, Ghana",
+          "degree": "Bachelor of Science",
+          "field": "Computer Science"
+        }
+      ]
+    }
+  }
+  ,
+  {
+    "id": "user-priya-nair",
+    "name": "Priya Nair",
+    "firstName": "Priya",
+    "lastName": "Nair",
+    "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=400&h=400&fit=crop",
+    "title": "Principal Product Designer",
+    "company": "Northwind Systems",
+    "trustScore": 720,
+    "trustTier": "Proven",
+    "jobStatus": "open_to_right_role",
+    "verifiedSkills": [
+      "UX Strategy",
+      "Systems Thinking",
+      "Research",
+      "Portfolio Storytelling"
+    ],
+    "connectionDegree": "1st",
+    "about": {
+      "bio": "I help B2B teams translate messy problems into empathetic products, pairing research rigor with storytelling to move stakeholders from confusion to clarity.",
+      "location": "Austin, TX",
+      "websiteUrl": "https://priyanairstudio.com",
+      "linkedInUrl": "https://www.linkedin.com/in/priya-nair",
+      "githubUrl": null
+    },
+    "circle": [
+      {
+        "userId": "user-ryan-shafer",
+        "name": "Ryan Shafer",
+        "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "connectionDegree": "You",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Strategy",
+          "Design Systems"
+        ]
+      },
+      {
+        "userId": "user-jen-wu",
+        "name": "Jen Wu",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Research",
+          "Design Leadership"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-marcus-bell",
+        "name": "Marcus Bell",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Leadership",
+          "Product Strategy",
+          "Team Building"
+        ]
+      },
+      {
+        "userId": "user-anika-osei",
+        "name": "Anika Osei",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Service Design"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-devon-cross",
+        "name": "Devon Cross",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Engineering Leadership",
+          "Backend Systems",
+          "Distributed Architecture"
+        ]
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "name": "Priya Nair",
+        "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "role": "Principal Product Designer · Northwind Systems",
+        "relationship": "Colleagues 2022–present · Northwind"
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "priya-req-1",
+        "title": "Portfolio story before senior interviews",
+        "category": "Career Advice",
+        "description": "Sharpening the narrative arc for my senior product designer interviews. Looking for actionable feedback on how to connect systems thinking to tangible delivery.",
+        "endDate": "2026-05-15T00:00:00.000Z"
+      },
+      {
+        "requestId": "priya-req-2",
+        "title": "Research strategy for a platform initiative",
+        "category": "Research",
+        "description": "Need to validate our thesis about systemic inefficiencies in onboarding. Could use help selecting the right mix of qualitative and quantitative signals.",
+        "endDate": "2026-05-28T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "Portfolio Strategy",
+        "Systems Thinking",
+        "UX Research"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-priya-1",
+          "requesterName": "Marcus Bell",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Leadership",
+            "Product Strategy"
+          ],
+          "requestTitle": "How do I keep my product team aligned on mission?",
+          "feedbackSubject": "Marcus thinks this request worked out!",
+          "feedbackBody": "Priya paired systems thinking with practical rituals so we could see where decisions hit ambiguity. Her process made alignment feel tangible for the whole team."
+        },
+        {
+          "requestId": "contrib-priya-2",
+          "requesterName": "Jen Wu",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Product Design",
+            "UX Research"
+          ],
+          "requestTitle": "Portfolio review before senior interviews",
+          "feedbackSubject": "Jen thinks this request worked out!",
+          "feedbackBody": "Priya's notes were incisive and generous — she caught the signal in my work and helped me tell the story instead of just listing the bullet points."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Ryan Shafer",
+        "recommenderAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "recommenderConnectionDegree": "You",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Strategy"
+        ],
+        "body": "Priya holds the tension between craft and clarity better than anyone I know. She spots the soft problem behind the ask and helps the entire team move forward with trust."
+      },
+      {
+        "recommenderName": "Anika Osei",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "UX Strategy",
+          "Systems Thinking"
+        ],
+        "body": "When you need someone to map a thorny experience into a narrative that actually lands with skeptical stakeholders, Priya is the first call."
+      },
+      {
+        "recommenderName": "Jen Wu",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "Design Leadership"
+        ],
+        "body": "Priya is generous, curious, and relentlessly practical. She made my portfolio feel like a compelling story instead of a laundry list."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "They come to me when the product feels like a tangled knot—too many opinions but no shared language. I help untangle it by surfacing the story and the system that hold it together."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "Anything that sits at the intersection of research insight and product clarity. I love turning complex user problems into a few lines that make sense to engineering, design, and leadership all at once."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "Morning research synthesis with the team, lunch walking through a messy service blueprint, and an afternoon demo that leaves people nodding because the story finally lined up."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "02-2022",
+          "endDate": "present",
+          "location": "Austin, TX",
+          "title": "Principal Product Designer",
+          "company": "Northwind Systems",
+          "description": "Lead the design strategy for a fintech platform serving 2M+ customers — pairing research, service design, and product storytelling to keep complex B2B workflows legible."
+        },
+        {
+          "startDate": "05-2019",
+          "endDate": "01-2022",
+          "location": "Denver, CO",
+          "title": "Senior Product Designer",
+          "company": "Lumen",
+          "description": "Shaped the product research practice, mentored designers, and rebuilt onboarding flows that improved activation by 23%."
+        },
+        {
+          "startDate": "06-2016",
+          "endDate": "04-2019",
+          "location": "Seattle, WA",
+          "title": "Product Designer",
+          "company": "Clearpath Labs",
+          "description": "Designed analytics and operational tools for manufacturing partners, pairing field research with rapid prototyping."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2016",
+          "institution": "University of Michigan",
+          "location": "Ann Arbor, MI",
+          "degree": "Bachelor of Science",
+          "field": "Industrial & Operations Engineering"
+        }
+      ]
+    }
+  },
+  {
+    "id": "user-devon-cross",
+    "name": "Devon Cross",
+    "firstName": "Devon",
+    "lastName": "Cross",
+    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+    "title": "Director of Infrastructure",
+    "company": "PulseGrid",
+    "trustScore": 700,
+    "trustTier": "Proven",
+    "jobStatus": "open_to_right_role",
+    "verifiedSkills": [
+      "Engineering Leadership",
+      "Backend Systems",
+      "Distributed Architecture",
+      "Reliability"
+    ],
+    "connectionDegree": "1st",
+    "about": {
+      "bio": "I build reliable infrastructure teams and help product leaders understand what it takes to ship resilient distributed systems.",
+      "location": "Portland, OR",
+      "websiteUrl": "https://devoncross.dev",
+      "linkedInUrl": "https://www.linkedin.com/in/devoncross",
+      "githubUrl": "https://github.com/devoncross"
+    },
+    "circle": [
+      {
+        "userId": "user-ryan-shafer",
+        "name": "Ryan Shafer",
+        "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "connectionDegree": "You",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Strategy",
+          "Design Systems"
+        ]
+      },
+      {
+        "userId": "user-marcus-bell",
+        "name": "Marcus Bell",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Leadership",
+          "Product Strategy",
+          "Team Building"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-jen-wu",
+        "name": "Jen Wu",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "connectionDegree": "2nd",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Research",
+          "Design Leadership"
+        ]
+      },
+      {
+        "userId": "user-priya-nair",
+        "name": "Priya Nair",
+        "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Research"
+        ]
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "name": "Devon Cross",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "role": "Director of Infrastructure · PulseGrid",
+        "relationship": "Colleagues 2021–present · PulseGrid"
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "devon-req-1",
+        "title": "Architect feedback for a distributed data mesh",
+        "category": "Engineering",
+        "description": "Need an extra brain to ensure our data mesh design can scale to eight global clusters without blowing up the support team.",
+        "endDate": "2026-05-20T00:00:00.000Z"
+      },
+      {
+        "requestId": "devon-req-2",
+        "title": "System health dashboards for blockchain workloads",
+        "category": "Reliability",
+        "description": "Putting together a runbook and observability strategy for blockchain ingestion pipelines. Looking for a sounding board before we roll it out.",
+        "endDate": "2026-06-02T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "Engineering Leadership",
+        "Distributed Systems",
+        "Reliability"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-devon-1",
+          "requesterName": "Avery Chen",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "2nd",
+          "requesterTrustedFor": [
+            "Platform Engineering",
+            "Data Pipelines"
+          ],
+          "requestTitle": "Design review for multi-region observability",
+          "feedbackSubject": "Avery thinks this request worked out!",
+          "feedbackBody": "Devon helped us choose the right signals to watch and how to express them to product. His questions made our telemetry plan far more actionable."
+        },
+        {
+          "requestId": "contrib-devon-2",
+          "requesterName": "Marcus Bell",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Leadership",
+            "Product Strategy"
+          ],
+          "requestTitle": "How we lean into platform engineering without slowing product",
+          "feedbackSubject": "Marcus thinks this request worked out!",
+          "feedbackBody": "Devon kept our discussion focused on outcomes and pointed to the few variables that matter when you're trying to scale both reliability and speed."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Ryan Shafer",
+        "recommenderAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "recommenderConnectionDegree": "You",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Strategy"
+        ],
+        "body": "Devon is the engineer you want in the room when the architecture looks like a bowl of spaghetti. He explains the trade-offs without jargon and then helps you choose the one that keeps the user experience intact."
+      },
+      {
+        "recommenderName": "Marcus Bell",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "Leadership",
+          "Product Strategy"
+        ],
+        "body": "Devon keeps product and engineering honest. His ability to separate signal from noise is why his teams have such reliable launches."
+      },
+      {
+        "recommenderName": "Priya Nair",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "UX Strategy",
+          "Systems Thinking"
+        ],
+        "body": "I learn something every time I ask Devon to coach me through a technical problem. He makes it easy for non-engineers to understand the constraints without flattening the nuance."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "They come to me when they need to ship resilient distributed systems without turning every decision into a battle in the org chart. I help translate product goals into clear technical bets."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "Latency spikes, unreliable builds, and teams that grow faster than their visibility. I love making work predictable, even when the system underneath is complex."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "Code reviews that actually teach, a whiteboard session that ends with a clear rollout plan, and a late afternoon chat where we celebrate a small win."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "03-2024",
+          "endDate": "present",
+          "location": "Remote (Portland, OR)",
+          "title": "Director of Infrastructure",
+          "company": "PulseGrid",
+          "description": "Scale platform and developer experience for a blockchain analytics startup. Owned platform observability, capacity planning, and incident response culture."
+        },
+        {
+          "startDate": "01-2020",
+          "endDate": "02-2024",
+          "location": "Portland, OR",
+          "title": "Head of Platform Engineering",
+          "company": "Lightwell",
+          "description": "Built a platform org that launched four key services and supported eight product teams without outages. Coached engineering leaders and set the reliability guardrails."
+        },
+        {
+          "startDate": "07-2016",
+          "endDate": "12-2019",
+          "location": "Seattle, WA",
+          "title": "Staff Software Engineer",
+          "company": "Redwood Labs",
+          "description": "Owned distributed data services, drove incident retrospectives, and mentored junior engineers across backend and data squads."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2012",
+          "institution": "Georgia Institute of Technology",
+          "location": "Atlanta, GA",
           "degree": "Bachelor of Science",
           "field": "Computer Science"
         }

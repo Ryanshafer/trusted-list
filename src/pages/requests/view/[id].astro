@@ -3,14 +3,25 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import RequestDetailPage from "../../../features/requests/RequestDetailPage";
 import requestsData from "../../../../data/requests.json";
 import interactionsData from "../../../../data/interactions.json";
+import profilesData from "../../../../data/profiles.json";
+import currentUser from "../../../../data/current-user.json";
 
 export function getStaticPaths() {
   const reqIds = requestsData.map((r) => r.id);
-  const myHelpRequestIds = (interactionsData as any).myHelpRequests.map((r: any) => r.id);
   const helpedIds = (interactionsData as any).helped.map((r: any) => r.id);
   const inProgressIds = (interactionsData as any).inProgress.map((r: any) => r.id);
+  const profileOpenRequestIds = [currentUser as any, ...(profilesData as any[])].flatMap(
+    (profile: any) => (profile.openRequests ?? []).map((request: any) => request.requestId)
+  );
 
-  const allIds = [...new Set([...reqIds, ...myHelpRequestIds, ...helpedIds, ...inProgressIds])];
+  const allIds = [
+    ...new Set([
+      ...reqIds,
+      ...helpedIds,
+      ...inProgressIds,
+      ...profileOpenRequestIds,
+    ]),
+  ];
 
   return allIds.map((id) => ({ params: { id } }));
 }

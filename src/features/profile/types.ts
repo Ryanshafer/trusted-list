@@ -15,6 +15,19 @@ export interface OpenRequest {
   category: string;
   description: string;
   endDate: string | null;
+  responses?: Array<{
+    id: string;
+    name: string;
+    role?: string;
+    avatarUrl?: string;
+    status: "In Progress" | "Completed";
+    chatId: string;
+    trustedFor?: string;
+  }>;
+  status?: "Open" | "Closed";
+  type?: "contact" | "circle" | "community";
+  createdAt?: string;
+  promoted?: boolean;
 }
 
 export interface CircleMember {

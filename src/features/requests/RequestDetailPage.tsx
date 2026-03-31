@@ -3,6 +3,7 @@ import requestsData from "../../../data/requests.json";
 import requestDetailsData from "../../../data/request-details.json";
 import interactionsData from "../../../data/interactions.json";
 import dashboardData from "../../../data/dashboard-content.json";
+import profilesData from "../../../data/profiles.json";
 import type { CardData } from "@/features/dashboard/types";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -88,21 +89,34 @@ type RequestDetail = {
   };
 };
 
+function trustScoreToTier(score: number) {
+  if (score < 150) return "Emerging";
+  if (score < 650) return "Reliable";
+  if (score < 900) return "Trustworthy";
+  if (score < 990) return "Proven";
+  return "Stellar";
+}
+
+const profileOwners = [currentUser as any, ...(profilesData as any[])];
+
+const profileOpenRequests: RequestCard[] = profileOwners.flatMap((profile: any) =>
+  (profile.openRequests ?? []).map((request: any) => ({
+    id: request.requestId,
+    variant: "circle",
+    name: profile.name,
+    requestSummary: request.title,
+    request: request.description,
+    relationshipTag: profile.id === currentUser.id ? "Your Request" : (profile.connectionDegree ?? "Connection"),
+    primaryCTA: "View Details",
+    avatarUrl: profile.avatarUrl ?? null,
+    endDate: request.endDate ?? null,
+    category: request.category ?? null,
+  }))
+);
+
 // Flatten all card sources into one lookup
 const allRequests: RequestCard[] = [
   ...(requestsData as RequestCard[]),
-  ...(interactionsData as any).myHelpRequests.map((r: any) => ({
-    id: r.id,
-    variant: r.type === "community" ? "community" : r.type === "contact" ? "contact" : "circle",
-    name: currentUser.firstName,
-    requestSummary: r.requestSummary,
-    request: r.request,
-    relationshipTag: "Your Request",
-    primaryCTA: "View Details",
-    avatarUrl: null,
-    endDate: r.endDate ?? null,
-    category: r.category ?? null,
-  })),
   ...[...(interactionsData as any).helped, ...(interactionsData as any).inProgress].map((r: any) => ({
     id: r.id,
     variant: r.variant ?? "circle",
@@ -115,9 +129,45 @@ const allRequests: RequestCard[] = [
     endDate: r.endDate ?? null,
     category: r.category ?? null,
   })),
-];
+  ...profileOpenRequests,
+].filter(
+  (request, index, requests) => requests.findIndex((candidate) => candidate.id === request.id) === index
+);
 
-const allDetails = requestDetailsData as Record<string, RequestDetail>;
+const synthesizedProfileDetails = Object.fromEntries(
+  profileOwners.flatMap((profile: any) =>
+    (profile.openRequests ?? []).map((request: any) => [
+      request.requestId,
+      {
+        audience: profile.id === currentUser.id ? "My Circle" : "Circle",
+        audienceCategory: request.category ?? "Other",
+        topics: request.category ? [request.category] : [],
+        author: {
+          role: profile.title,
+          company: profile.company,
+          connectionDegree: profile.id === currentUser.id ? "You" : (profile.connectionDegree ?? "1st"),
+          trustedFor: (profile.verifiedSkills ?? []).slice(0, 3).join(", "),
+        },
+        connectionPath: profile.connectionPath ?? [],
+        about: {
+          career: profile.about?.bio ?? "",
+          location: profile.about?.location ?? "",
+          trustedExpertise: (profile.verifiedSkills ?? []).join(", "),
+        },
+        stats: {
+          peopleHelped: profile.peopleHelped ?? 0,
+          requests: profile.totalRequests ?? (profile.openRequests?.length ?? 0),
+          trustRating: profile.trustTier ?? trustScoreToTier(profile.trustScore ?? 0),
+        },
+      } satisfies RequestDetail,
+    ])
+  )
+);
+
+const allDetails = {
+  ...synthesizedProfileDetails,
+  ...(requestDetailsData as Record<string, RequestDetail>),
+};
 const askContacts = (dashboardData as any).askForHelpCard?.contacts ?? [];
 
 const categoryDisplayNames: Record<string, string> = {
@@ -176,22 +226,15 @@ export default function RequestDetailPage({ id }: { id: string }) {
     return { ...node, name: node.name ?? "", avatarUrl: node.avatarUrl ?? null };
   };
 
-  const isOwnRequest = myHelpRequests.some((r) => r.id === id);
+  const currentUserOpenRequest = (currentUser as any).openRequests?.find((r: any) => r.requestId === id) ?? null;
+  const myHelpReq = myHelpRequests.find((r) => r.id === id) ?? null;
+  const isOwnRequest = !!myHelpReq || !!currentUserOpenRequest;
   const resolvedAuthor = isOwnRequest
     ? { ...detail.author, name: currentUser.name, avatarUrl: currentUser.avatarUrl, role: `${currentUser.title} · ${currentUser.company}` }
     : { ...detail.author, name: request.name, avatarUrl: request.avatarUrl ?? null };
   const resolvedAbout = isOwnRequest
     ? { ...detail.about, career: currentUser.bio, location: currentUser.location }
     : detail.about;
-  // Percentile bands: 0–14 → Emerging, 15–64 → Reliable, 65–89 → Trustworthy, 90–98 → Proven, 99 → Stellar
-  // Mapped to a 0–1000 score scale
-  const trustScoreToTier = (score: number) => {
-    if (score < 150) return "Emerging";
-    if (score < 650) return "Reliable";
-    if (score < 900) return "Trustworthy";
-    if (score < 990) return "Proven";
-    return "Stellar";
-  };
   const resolvedStats = isOwnRequest
     ? {
         trustRating: trustScoreToTier(currentUser.trustScore),
@@ -223,8 +266,8 @@ export default function RequestDetailPage({ id }: { id: string }) {
   const [isDeleted, setIsDeleted] = React.useState(false);
   const [requestStatus, setRequestStatus] = React.useState<RequestStatus>(() => {
     if (!isOwnRequest) return "active";
-    const req = myHelpRequests.find((r) => r.id === id);
-    if (!req) return "active";
+    if (!myHelpReq) return "active";
+    const req = myHelpReq;
     const isComplete = req.status === "Closed" || (req.type === "contact" && req.responses.some((r) => r.status === "Completed"));
     if (isComplete) return "complete";
     const isPromotable = ["circle", "community"].includes(req.type);
@@ -243,23 +286,17 @@ export default function RequestDetailPage({ id }: { id: string }) {
   };
 
   // Chat data for own requests
-  const myHelpReq = React.useMemo(
-    () => (isOwnRequest ? myHelpRequests.find((r) => r.id === id) : null),
-    [id, isOwnRequest]
-  );
   const [localAudience, setLocalAudience] = React.useState<string>(
     askModeToAudienceLabel[myHelpReq?.type ?? "circle"] ?? detail.audience
   );
   const hasChats = !!(myHelpReq && myHelpReq.responses.length > 0);
   const rawResponses = React.useMemo(() => {
-    const raw = (interactionsData as any).myHelpRequests ?? [];
-    const req = raw.find((r: any) => r.id === id);
     const map: Record<string, string> = {};
-    for (const resp of req?.responses ?? []) {
+    for (const resp of myHelpReq?.responses ?? []) {
       if (resp.trustedFor) map[resp.id] = resp.trustedFor;
     }
     return map;
-  }, [id]);
+  }, [myHelpReq]);
 
   const multiContacts = React.useMemo(
     () =>
