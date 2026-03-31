@@ -72,7 +72,7 @@ export function CarouselWithCount({
           </Button>
         ) : filterLabel && filterSkills.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <span className="text-xs font-semibold uppercase text-muted-foreground">
               {filterLabel}
             </span>
             {filterSkills.map((skill) => (

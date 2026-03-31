@@ -156,8 +156,8 @@ export function ProfileHero({ profile, isOwner, connectionDegree, availableSkill
               {/* Trusted for: label + pills on same row */}
               {profile.verifiedSkills.length > 0 && (
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-sm text-muted-foreground whitespace-nowrap">
-                    TRUSTED FOR
+                  <span className="text-sm text-muted-foreground font-semibold uppercase whitespace-nowrap">
+                    Trusted For
                   </span>
                   <div className="flex flex-wrap gap-1">
                     {profile.verifiedSkills.slice(0, 3).map((skill) => (
