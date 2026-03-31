@@ -79,7 +79,7 @@ export function CarouselWithCount({
               <Badge
                 key={skill}
                 variant="outline"
-                className="rounded-full px-2.5 py-0.5 text-xs font-medium text-foreground"
+                className="rounded-full px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
               >
                 {skill}
               </Badge>
