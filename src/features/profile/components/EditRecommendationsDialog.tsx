@@ -112,6 +112,7 @@ export function EditRecommendationsDialog({
             <h2 className="font-serif text-2xl font-normal leading-8 text-popover-foreground">
               Manage your recommendations
             </h2>
+            <p class="text-base text-muted-foreground">Edit the numbers to put these in the order you want.</p>
           </div>
           <DialogClose asChild>
             <Button
@@ -205,7 +206,7 @@ function RecommendationRow({ item, visibleCount, onToggle, onReorder }: Recommen
           readOnly={!item.visible}
           aria-label="Recommendation order"
           className={cn(
-            "w-full min-h-8 rounded-lg border border-border bg-background px-2 text-center text-sm text-foreground transition-opacity focus:outline-none focus:ring-1 focus:ring-ring",
+            "w-full min-h-8 rounded-lg border border-border bg-background px-2 text-center text-sm text-foreground transition-opacity focus:outline-none focus:ring-1 focus:ring-ring shadow-md",
             !item.visible && "opacity-50"
           )}
         />
