@@ -35,6 +35,7 @@ import { ConfettiBurst, RemindDialog } from "@/features/dashboard/components/Hel
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { myHelpRequests, interactionChats } from "@/features/interactions/data";
 import { HelpRequestDialog, REQUEST_CATEGORIES, type AskMode } from "@/features/requests/components/HelpRequestDialog";
+import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
 import currentUser from "../../../data/current-user.json";
 import {
   BellPlus,
@@ -42,7 +43,6 @@ import {
   BriefcaseBusiness,
   ChevronDown,
   ChevronLeft,
-  ChevronsRight,
   Clock,
   Copy,
   Flag,
@@ -132,17 +132,6 @@ const categoryDisplayNames: Record<string, string> = {
   other: "Other",
 };
 
-function formatRelationship(rel: string): string {
-  return rel.startsWith("Colleagues ") ? rel.slice("Colleagues ".length) : rel;
-}
-
-function formatDueDate(dateString?: string | null): string {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
-}
-
 function getInitials(name: string): string {
   return name
     .split(" ")
@@ -152,34 +141,13 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-function ConnectionNode({
-  name,
-  role,
-  avatarUrl,
-  href,
-}: {
-  name: string;
-  role: string;
-  avatarUrl: string | null;
-  href?: string;
-}) {
-  const inner = (
-    <>
-      <Avatar className={`h-10 w-10 shrink-0 border-2 border-background shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition-colors${href ? " group-hover/member:border-primary" : ""}`}>
-        <AvatarImage src={avatarUrl ?? undefined} alt={name} />
-        <AvatarFallback className="text-xs font-semibold">{getInitials(name)}</AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col">
-        <span className={`text-base font-semibold text-card-foreground leading-tight transition-colors${href ? " group-hover/member:text-primary" : ""}`}>{name}</span>
-        <span className="text-xs text-muted-foreground">{role}</span>
-      </div>
-    </>
-  );
-  if (href) {
-    return <a href={href} className="flex items-center gap-2 group/member">{inner}</a>;
-  }
-  return <div className="flex items-center gap-2">{inner}</div>;
+function formatDueDate(dateString?: string | null): string {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
 }
+
 
 export default function RequestDetailPage({ id }: { id: string }) {
   const request = allRequests.find((r) => r.id === id);
@@ -715,50 +683,11 @@ export default function RequestDetailPage({ id }: { id: string }) {
                     <Separator />
                   </>
                 )}
-                {(() => {
-                  const degree = detail.author.connectionDegree;
-                  const collapsed = degree === "3rd+" || degree === "3rd" || degree === "none";
-                  const youNode = resolveNode(detail.connectionPath[0]);
-                  const requesterNode = resolveNode(detail.connectionPath[detail.connectionPath.length - 1]);
-                  return (
-                    <div className="flex flex-col gap-3.5">
-                      <p className="text-xs text-muted-foreground tracking-widest uppercase">Your Connection</p>
-                      <div className="flex flex-col">
-                        {collapsed ? (
-                          <>
-                            <ConnectionNode name={youNode.name} role={youNode.role} avatarUrl={youNode.avatarUrl} href="/trusted-list/profile" />
-                            <div className="ml-5 border-l border-border pl-5 h-9 flex items-center gap-3.5">
-                              <div className="flex items-center gap-0.5 min-w-0">
-                                <ChevronsRight className="h-3 w-3 text-muted-foreground/75 shrink-0 mb-px" />
-                                <p className="text-xs text-muted-foreground/75 leading-none truncate">
-                                  {degree === "none" ? "Not connected" : "Connected indirectly"}
-                                </p>
-                              </div>
-                            </div>
-                            <ConnectionNode name={requesterNode.name} role={requesterNode.role} avatarUrl={requesterNode.avatarUrl} href={`/trusted-list/members/${requesterNode.name.toLowerCase().replace(/\s+/g, "-")}`} />
-                          </>
-                        ) : (
-                          detail.connectionPath.map((node, i) => {
-                            const resolved = resolveNode(node);
-                            return (
-                              <React.Fragment key={i}>
-                                {i > 0 && node.relationship && (
-                                  <div className="ml-5 border-l border-border pl-5 h-9 flex items-center gap-3.5">
-                                    <div className="flex items-center gap-0.5 min-w-0">
-                                      <ChevronsRight className="h-3 w-3 text-muted-foreground/75 shrink-0 mb-px" />
-                                      <p className="text-xs text-muted-foreground/75 leading-none truncate">{formatRelationship(node.relationship)}</p>
-                                    </div>
-                                  </div>
-                                )}
-                                <ConnectionNode name={resolved.name} role={resolved.role} avatarUrl={resolved.avatarUrl} href={node.type === "you" ? "/trusted-list/profile" : `/trusted-list/members/${resolved.name.toLowerCase().replace(/\s+/g, "-")}`} />
-                              </React.Fragment>
-                            );
-                          })
-                        )}
-                      </div>
-                    </div>
-                  );
-                })()}
+                <ConnectionPath
+                  connectionPath={detail.connectionPath}
+                  connectionDegree={detail.author.connectionDegree}
+                  resolveNode={resolveNode}
+                />
                 <Separator />
               </>
             )}
@@ -784,7 +713,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
                     {(isOwnRequest
                       ? currentUser.verifiedSkills
                       : resolvedAbout.trustedExpertise.split(",").map((s) => s.trim())
-                    ).map((skill) => (
+                    ).slice(0, 3).map((skill) => (
                       <span
                         key={skill}
                         className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold text-muted-foreground bg-background border border-border leading-4"

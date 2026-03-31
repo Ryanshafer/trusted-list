@@ -7,12 +7,344 @@
   "avatarUrl": "/trusted-list/ryan-shafer.jpg",
   "title": "Head of Design",
   "company": "The Trusted List",
-  "bio": "Building tools that make professional trust legible. Passionate about design systems, community, and finding the right people.",
-  "location": "Ostuni, Italy",
-  "linkedInUrl": "https://www.linkedin.com/in/ryanshafer",
-  "trustScore": 950,
+  "trustScore": 900,
+  "trustTier": "Trustworthy",
+  "jobStatus": "open_to_right_role",
+  "verifiedSkills": [
+    "Product Design",
+    "UX Strategy",
+    "Leadership",
+    "Design Systems",
+    "Research"
+  ],
+  "unvouchedSkills": [
+    "Systems Thinking",
+    "Facilitation",
+    "Hiring & Recruiting",
+    "Public Speaking",
+    "Stakeholder Management"
+  ],
+  "about": {
+    "bio": "20 years shaping UX at scale — from MTV's 700M users to building design practices from the ground up. Award-winning, patent-named, and still hands-on.",
+    "location": "Ostuni, Italy",
+    "websiteUrl": "https://ryanshafer.com",
+    "linkedInUrl": "https://www.linkedin.com/in/ryanshafer",
+    "githubUrl": "https://github.com/ryanshafer"
+  },
+  "circle": [
+    {
+      "userId": "user-jen-wu",
+      "name": "Jen Wu",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "Product Design",
+        "UX Research",
+        "Design Leadership"
+      ],
+      "invitedBy": "user-ryan-shafer"
+    },
+    {
+      "userId": "user-marcus-bell",
+      "name": "Marcus Bell",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "Leadership",
+        "Product Strategy",
+        "Team Building"
+      ]
+    },
+    {
+      "userId": "user-anika-osei",
+      "name": "Anika Osei",
+      "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "UX Strategy",
+        "Systems Thinking",
+        "Service Design"
+      ]
+    },
+    {
+      "userId": "user-devon-cross",
+      "name": "Devon Cross",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "Engineering Leadership",
+        "Backend Systems",
+        "Distributed Architecture"
+      ],
+      "invitedByMe": true
+    },
+    {
+      "userId": "user-priya-nair",
+      "name": "Priya Nair",
+      "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "UX Strategy",
+        "Systems Thinking",
+        "Research"
+      ],
+      "invitedByMe": true
+    },
+    {
+      "userId": "user-tom-reilly",
+      "name": "Tom Reilly",
+      "avatarUrl": null,
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "Engineering Leadership",
+        "Platform Architecture"
+      ],
+      "invitedByMe": true,
+      "awaiting": true
+    },
+    {
+      "userId": "user-sofia-mendes",
+      "name": "Sofia Mendes",
+      "avatarUrl": null,
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "Growth Design",
+        "Conversion Optimization"
+      ],
+      "invitedByMe": true,
+      "awaiting": true
+    },
+    {
+      "userId": "user-james-park",
+      "name": "James Park",
+      "avatarUrl": null,
+      "connectionDegree": "1st",
+      "verifiedSkills": [
+        "Product Strategy",
+        "B2B SaaS"
+      ],
+      "invitedByMe": true,
+      "awaiting": true
+    }
+  ],
+  "connectionPath": [
+    {
+      "type": "you",
+      "role": "Head of Design · The Trusted List",
+      "relationship": null
+    },
+    {
+      "type": "connector",
+      "name": "Jen Wu",
+      "role": "Design Director · Acme Corp",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+      "relationship": "Colleagues 2020–2022 · Northbound Studio"
+    }
+  ],
+  "connectionDegree": "1st",
+  "openRequests": [
+    {
+      "requestId": "req-ryan-1",
+      "title": "Looking for freelance design opportunities",
+      "category": "Career Advice",
+      "description": "I'm exploring contract and advisory work alongside my current role. Looking for teams that need a senior design partner for 0→1 work or design system maturation.",
+      "endDate": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "requestId": "req-ryan-2",
+      "title": "Design portfolio feedback needed",
+      "category": "Career Advice",
+      "description": "My portfolio firm disputed after three different roles in product marketing. Could you do a thorough pass, suggest edits, and flag anything that would hold me back?",
+      "endDate": "2026-05-24T00:00:00.000Z"
+    }
+  ],
+  "contributions": {
+    "skillsInAction": [
+      "Product Design",
+      "UX Strategy",
+      "Design Systems"
+    ],
+    "items": [
+      {
+        "requestId": "helped-1",
+        "requesterName": "Sam Smith",
+        "requesterAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "requesterConnectionDegree": "1st",
+        "requesterTrustedFor": [
+          "Product Strategy",
+          "Roadmap Prioritisation"
+        ],
+        "requestTitle": "Gut check my promotion packet",
+        "feedbackSubject": "Sam thinks this request worked out!",
+        "feedbackBody": "Ryan was really responsive! He gave me exactly what I was looking for and some ideas and tips that I'd never even thought of before. Thanks for all the help!"
+      },
+      {
+        "requestId": "helped-3",
+        "requesterName": "Leo Chang",
+        "requesterAvatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
+        "requesterConnectionDegree": "2nd",
+        "requesterTrustedFor": [
+          "UX Research"
+        ],
+        "requestTitle": "Research plan sanity check",
+        "feedbackSubject": "Leo thinks this request worked out!",
+        "feedbackBody": "Ryan reviewed my research plan with surgical precision. He spotted gaps I'd completely overlooked and reframed the core questions in a way that made everything finally click. Highly recommend asking him for a review."
+      },
+      {
+        "requestId": "helped-5",
+        "requesterName": "Wei Zhang",
+        "requesterAvatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "requesterConnectionDegree": "2nd",
+        "requesterTrustedFor": [
+          "Design Systems",
+          "Frontend"
+        ],
+        "requestTitle": "Onboarding flow critique",
+        "feedbackSubject": "Wei thinks this partially worked out",
+        "feedbackBody": "Ryan tore apart our onboarding flow in the most constructive way possible. He identified three points where users were likely to drop off that we had completely missed. His suggestions were actionable and well considered."
+      },
+      {
+        "requestId": "helped-7",
+        "requesterName": "Jen Wu",
+        "requesterAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "requesterConnectionDegree": "1st",
+        "requesterTrustedFor": [
+          "Product Design",
+          "UX Research"
+        ],
+        "requestTitle": "Help me think through a design system migration",
+        "feedbackSubject": "Jen thinks this request worked out!",
+        "feedbackBody": "Ryan has deep experience with design system migrations at scale. His advice was pragmatic and realistic — he helped us avoid a lot of the traps we would have walked straight into. An hour with him saved us weeks of rework."
+      },
+      {
+        "requestId": "req-design-1",
+        "requesterName": "Priya Nair",
+        "requesterAvatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "requesterConnectionDegree": "1st",
+        "requesterTrustedFor": [
+          "UX Strategy",
+          "Systems Thinking"
+        ],
+        "requestTitle": "Portfolio review before senior interviews",
+        "feedbackSubject": "Priya thinks this request worked out!",
+        "feedbackBody": "Ryan is one of those rare people who can look at your work and immediately understand what you were going for — and then tell you why it's not landing. His feedback was direct without being harsh, and genuinely changed how I present my work."
+      },
+      {
+        "requestId": "req-career-2",
+        "requesterName": "Anika Osei",
+        "requesterAvatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "requesterConnectionDegree": "1st",
+        "requesterTrustedFor": [
+          "UX Strategy",
+          "Systems Thinking"
+        ],
+        "requestTitle": "Career pivot advice: from IC to design leadership",
+        "feedbackSubject": "Anika thinks this request worked out!",
+        "feedbackBody": "Ryan didn't just give me advice — he gave me a framework for thinking about leadership that I still use. He was honest about the hard parts of the transition and generous with his own experience. Exactly the kind of conversation I was hoping for."
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "recommenderName": "Jen Wu",
+      "recommenderAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+      "recommenderConnectionDegree": "1st",
+      "recommenderTrustedFor": [
+        "Product Design",
+        "UX Research"
+      ],
+      "body": "Ryan has an extraordinary ability to make complex design problems feel approachable. He helped me rethink our entire onboarding flow in a single conversation — the kind of clarity that usually takes weeks to arrive at. Anyone lucky enough to have him in their circle should ask him everything."
+    },
+    {
+      "recommenderName": "Marcus Bell",
+      "recommenderAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+      "recommenderConnectionDegree": "1st",
+      "recommenderTrustedFor": [
+        "Leadership",
+        "Product Strategy"
+      ],
+      "body": "I've worked alongside a lot of design leaders, and Ryan stands out for how grounded his instincts are. He doesn't just give opinions — he asks the right questions first. When I was navigating a messy stakeholder situation, his perspective helped me see the path through."
+    },
+    {
+      "recommenderName": "Anika Osei",
+      "recommenderAvatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+      "recommenderConnectionDegree": "1st",
+      "recommenderTrustedFor": [
+        "UX Strategy",
+        "Systems Thinking"
+      ],
+      "body": "Ryan is the person I go to when I need to think through something that doesn't have a clean answer. He's thoughtful, direct, and genuinely cares about helping — not just being seen as helpful. That's a rare combination."
+    }
+  ],
+  "inTheirOwnWords": [
+    {
+      "question": "What help do people ask you for?",
+      "answer": "Usually it's design leadership — how to build a team, how to advocate for quality when the pressure is on, how to make decisions without all the information. Sometimes it's more specific: portfolio feedback, navigating a tricky team dynamic, or thinking through a career pivot. I try to be the kind of advisor I wish I'd had earlier."
+    },
+    {
+      "question": "What problems do you love solving?",
+      "answer": "Anything at the intersection of systems and people. I love the moment when a messy, tangled problem starts to reveal its underlying structure. Design systems are an obvious version of that, but so is org design, or figuring out why a product keeps confusing people in the same spot. The common thread is: there's usually a hidden logic waiting to be found."
+    },
+    {
+      "question": "What does a great work day look like?",
+      "answer": "A morning of deep focus — no meetings, just me and a complex problem. A mid-day conversation that challenges how I've been thinking about it. Enough context-switching to feel useful, but not so much that I can't get back into flow. Finishing with something that didn't exist in the morning. And preferably outside somewhere in the afternoon."
+    }
+  ],
+  "experience": {
+    "jobs": [
+      {
+        "startDate": "Aug-2025",
+        "endDate": "present",
+        "location": "Europe (Remote)",
+        "title": "Founder, Head of User Experience Design",
+        "company": "The Trusted List"
+      },
+      {
+        "startDate": "Oct 2022",
+        "endDate": "Apr 2025",
+        "location": "Europe (Remote)",
+        "title": "Head of User Experience Design",
+        "company": "Oritain",
+        "description": "Defined the UX vision and product strategy for Oritain's first enterprise SaaS platform—translating complex workflows into a usable, scalable experience that advanced business and client goals."
+      },
+      {
+        "startDate": "Jun 2017",
+        "endDate": "Jan 2019",
+        "location": "Europe (Remote)",
+        "title": "Head of User Experience Design",
+        "company": "Showmax",
+        "description": "First internal UX hire, owning acquisition, activation, and core platform flows for a multi-market streaming service and improving cross-team collaboration to meet key metrics."
+      },
+      {
+        "startDate": "Oct 2011",
+        "endDate": "Apr 2015",
+        "location": "New York City, NY, USA",
+        "title": "Vice President of User Experience Design",
+        "company": "Viacom Music Group",
+        "description": "Defined platform strategy for four brands (MTV, VH1, CMT, Logo) as central UX organization, navigating competing priorities while building a design practice supporting web, mobile, and TV."
+      },
+      {
+        "startDate": "Dec 2004",
+        "endDate": "Oct 2011",
+        "location": "New York City, NY, USA",
+        "title": "UX/UI Designer → Senior → Lead → Director",
+        "company": "Viacom Music Group",
+        "description": "Progressed from hands-on UI designer to design lead, developing the cultural and operational foundation for Viacom's future UX organization."
+      }
+    ],
+    "education": [
+      {
+        "graduationYear": "2000",
+        "institution": "Rhode Island School of Design",
+        "location": "Providence, RI",
+        "degree": "Bachelor of Fine Arts",
+        "field": "Film, Animation, and Video"
+      }
+    ]
+  },
   "peopleHelped": 141,
   "totalRequests": 76,
-  "verifiedSkills": ["Product Design", "UX Strategy", "Leadership"],
-  "unvouchedSkills": ["Systems Thinking", "Facilitation", "Hiring & Recruiting", "Public Speaking", "Stakeholder Management"]
+  "linkedInUrl": "https://www.linkedin.com/in/ryanshafer",
+  "bio": "Building tools that make professional trust legible. Passionate about design systems, community, and finding the right people.",
+  "location": "Ostuni, Italy"
 }

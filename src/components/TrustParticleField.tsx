@@ -6,6 +6,10 @@ interface TrustParticleFieldProps {
     tierIndex: number;
     avatarUrl: string;
     className?: string;
+    circular?: boolean;
+    /** Fraction of canvas min-dimension used for physics/sizing (default 1).
+     *  Use < 1 to keep avatar/particle sizes fixed when the canvas is larger than the content area. */
+    contentScale?: number;
 }
 
 interface Particle {
@@ -132,7 +136,7 @@ function lerpConfig(current: TierConfig, target: TierConfig, t: number): TierCon
     };
 }
 
-export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustParticleFieldProps) => {
+export const TrustParticleField = ({ tierIndex, avatarUrl, className, circular = false, contentScale = 1 }: TrustParticleFieldProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imageRef = useRef<HTMLImageElement | null>(null);
     const particlesRef = useRef<Particle[]>([]);
@@ -181,7 +185,10 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
         const getDimensions = () => {
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
-            return { w: rect.width, h: rect.height, dpr };
+            const w = rect.width;
+            const h = rect.height;
+            const effectiveSize = Math.min(w, h) * contentScale;
+            return { w, h, dpr, effectiveSize };
         };
 
         const spawnParticle = (
@@ -191,7 +198,7 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
             angle: number,
             fadeIn: boolean
         ): Particle => {
-            const spreadBand = Math.min(canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height) * 0.18;
+            const spreadBand = Math.min(canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height) * contentScale * 0.18;
             const targetR = cfg.minRadius + Math.random() * (cfg.maxRadius - cfg.minRadius);
             const minDist = avatarRadius + cfg.orbitPadding + targetR;
             const orbitDist = minDist + Math.random() * spreadBand;
@@ -210,7 +217,7 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
         };
 
         const initializeParticles = () => {
-            const { w, h, dpr } = getDimensions();
+            const { w, h, dpr, effectiveSize } = getDimensions();
             canvas.width = w * dpr;
             canvas.height = h * dpr;
             canvas.style.width = `${w}px`;
@@ -223,7 +230,7 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
 
             const cx = w / 2;
             const cy = h / 2;
-            const avatarRadius = Math.min(w, h) * cfg.avatarFraction;
+            const avatarRadius = effectiveSize * cfg.avatarFraction;
 
             particlesRef.current = [];
             pulsesRef.current = [];
@@ -237,10 +244,10 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
 
         const transitionTier = (newTierIndex: number) => {
             const newCfg = TIER_CONFIGS[Math.min(Math.max(newTierIndex, 0), TIER_CONFIGS.length - 1)];
-            const { w, h } = getDimensions();
+            const { w, h, effectiveSize } = getDimensions();
             const cx = w / 2;
             const cy = h / 2;
-            const avatarRadius = Math.min(w, h) * avatarFractionRef.current;
+            const avatarRadius = effectiveSize * avatarFractionRef.current;
 
             const active = particlesRef.current.filter(p => !p.removing);
 
@@ -282,10 +289,10 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
             avatarFractionRef.current = lerp(avatarFractionRef.current, targetCfgRef.current.avatarFraction, LERP_RATE_AVATAR);
 
             const cfg = currentCfgRef.current;
-            const { w, h } = getDimensions();
+            const { w, h, effectiveSize } = getDimensions();
             const cx = w / 2;
             const cy = h / 2;
-            const avatarRadius = Math.min(w, h) * avatarFractionRef.current;
+            const avatarRadius = effectiveSize * avatarFractionRef.current;
 
             ctx.clearRect(0, 0, w, h);
 
@@ -336,6 +343,21 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
                 if (p.x > w) p.vx -= 0.15;
                 if (p.y < 0) p.vy += 0.15;
                 if (p.y > h) p.vy -= 0.15;
+
+                // Circular boundary — soft pressure zone starting at 78% of radius
+                if (circular) {
+                    const r = effectiveSize / 2;
+                    const softZone = r * 0.78;
+                    const pdx = p.x - cx;
+                    const pdy = p.y - cy;
+                    const pdist = Math.sqrt(pdx * pdx + pdy * pdy) || 1;
+                    if (pdist > softZone) {
+                        const excess = (pdist - softZone) / (r - softZone); // 0→1 across the zone
+                        const push = excess * excess * 0.12;
+                        p.vx -= (pdx / pdist) * push;
+                        p.vy -= (pdy / pdist) * push;
+                    }
+                }
             }
 
             // Particle-particle repulsion
@@ -488,14 +510,15 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className }: TrustPar
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const maskImage = circular
+        ? "radial-gradient(circle at 50% 50%, black 70%, transparent 92%)"
+        : "radial-gradient(ellipse 78% 82% at 44% 50%, black 35%, transparent 95%)";
+
     return (
         <canvas
             ref={canvasRef}
             className={cn("absolute inset-0 w-full h-full", className)}
-            style={{
-                maskImage: "radial-gradient(ellipse 78% 82% at 44% 50%, black 35%, transparent 95%)",
-                WebkitMaskImage: "radial-gradient(ellipse 78% 82% at 44% 50%, black 35%, transparent 95%)",
-            }}
+            style={{ maskImage, WebkitMaskImage: maskImage }}
         />
     );
 };

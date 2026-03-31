@@ -95,6 +95,7 @@ type CreateProps = BaseProps & {
   userUnvouchedSkills?: string[];
   companies?: string[];
   initialCategories?: string[];
+  initialSelectedContacts?: AskContact[];
   onSubmit?: (payload: CreatePayload) => void;
 };
 
@@ -192,6 +193,7 @@ export function HelpRequestDialog(props: Props) {
     } else {
       const p = props as CreateProps;
       setRequestCategories(p.initialCategories ?? []);
+      setSelectedContacts(p.initialSelectedContacts ?? []);
     }
     setErrors({});
     setCategoryOpen(false);

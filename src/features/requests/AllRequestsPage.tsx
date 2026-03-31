@@ -82,7 +82,7 @@ const shuffleArray = <T,>(items: T[]) => {
 export default function AllRequestsPage() {
   const [search, setSearch] = React.useState("");
   const [showSuggestions, setShowSuggestions] = React.useState(false);
-  const [carouselCategories] = React.useState(() => {
+  const buildCarouselCategories = () => {
     const titleTemplates = shuffleArray(carouselTitleTemplates);
     const promoTitleTemplates = shuffleArray(carouselPromoTitleTemplates);
     const availableCategories = categoryOptions
@@ -100,7 +100,28 @@ export default function AllRequestsPage() {
         promoTitle: promoTitleTemplates[index % promoTitleTemplates.length](category.label),
         promoCopy: `Browse more open requests in ${category.label.toLowerCase()} and find places where your experience can help.`,
       }));
-  });
+  };
+
+  const [carouselCategories, setCarouselCategories] = React.useState(() =>
+    categoryOptions
+      .map(({ value, label }) => ({
+        slug: value,
+        label,
+        cards: allRequests.filter((card) => card.category.toLowerCase() === value),
+      }))
+      .filter((cat) => cat.cards.length > 0)
+      .slice(0, 3)
+      .map((cat) => ({
+        ...cat,
+        title: carouselTitleTemplates[0](cat.label),
+        promoTitle: carouselPromoTitleTemplates[0](cat.label),
+        promoCopy: `Browse more open requests in ${cat.label.toLowerCase()} and find places where your experience can help.`,
+      }))
+  );
+
+  React.useEffect(() => {
+    setCarouselCategories(buildCarouselCategories());
+  }, []);
   const term = search.toLowerCase();
   const matchesSearch = (card: RequestCard) => {
     if (!term) return true;
@@ -346,7 +367,7 @@ export default function AllRequestsPage() {
                 return (
                   <section key={title} className="space-y-4">
                     <CarouselSectionHeader title={title} count={cards.length} />
-                    <div className="relative">
+                    <div className="relative overflow-hidden">
                       <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full">
                         <CarouselContent>
                         {cards.map((card) => (

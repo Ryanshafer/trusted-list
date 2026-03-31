@@ -3433,5 +3433,306 @@
       "requests": 2,
       "trustRating": "Reliable"
     }
+  },
+  "contrib-jen-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Research Feedback",
+    "topics": [
+      "UX Research",
+      "Research Planning"
+    ],
+    "author": {
+      "name": "Sam Smith",
+      "role": "UX Researcher",
+      "company": "Habitat Labs",
+      "connectionDegree": "2nd",
+      "trustedFor": "Qualitative Research, Usability Testing",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Jen Wu",
+        "role": "Design Director · Acme Corp",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2021–2023 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "role": "UX Researcher · Habitat Labs",
+        "relationship": "Met at Research Summit 2023"
+      }
+    ],
+    "about": {
+      "career": "3 years in UX research. Runs usability studies and has helped ship 4 major product features at Habitat.",
+      "location": "Seattle, WA",
+      "trustedExpertise": "Qualitative Research, Usability Testing, Survey Design"
+    },
+    "stats": {
+      "peopleHelped": 7,
+      "requests": 2,
+      "trustRating": "Trustworthy"
+    }
+  },
+  "contrib-jen-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Design Leadership",
+    "topics": [
+      "Design Leadership",
+      "Team Building"
+    ],
+    "author": {
+      "name": "Marcus Bell",
+      "role": "Design Director",
+      "company": "Meridian",
+      "connectionDegree": "1st",
+      "trustedFor": "Design Leadership, UX Strategy",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Design Director · Meridian",
+        "relationship": "Colleagues 2019–2021 · Northbound Studio"
+      }
+    ],
+    "about": {
+      "career": "10 years in design leadership. Has built and scaled design teams at two Series B startups.",
+      "location": "New York, NY",
+      "trustedExpertise": "Design Leadership, Team Culture, Design Systems"
+    },
+    "stats": {
+      "peopleHelped": 22,
+      "requests": 8,
+      "trustRating": "Stellar"
+    }
+  },
+  "contrib-jen-3": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Portfolio Review",
+      "Career Growth"
+    ],
+    "author": {
+      "name": "Priya Nair",
+      "role": "Senior Product Designer",
+      "company": "Fieldwork",
+      "connectionDegree": "1st",
+      "trustedFor": "UX Strategy, Visual Design",
+      "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Senior Product Designer · Fieldwork",
+        "relationship": "Connected via UX community"
+      }
+    ],
+    "about": {
+      "career": "5 years in product design across fintech and SaaS. Preparing for senior IC interviews.",
+      "location": "Austin, TX",
+      "trustedExpertise": "UX Strategy, Interaction Design, Portfolio Development"
+    },
+    "stats": {
+      "peopleHelped": 3,
+      "requests": 1,
+      "trustRating": "Reliable"
+    }
+  },
+  "contrib-marcus-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Design Operations",
+      "Leadership"
+    ],
+    "author": {
+      "name": "Jordan Ellis",
+      "role": "Design Manager",
+      "company": "Folio",
+      "connectionDegree": "2nd",
+      "trustedFor": "Design Management, Hiring",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Marcus Bell",
+        "role": "Design Director · Meridian",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Former colleagues · Northbound Studio"
+      },
+      {
+        "type": "requester",
+        "role": "Design Manager · Folio",
+        "relationship": "Met at Config 2024"
+      }
+    ],
+    "about": {
+      "career": "6 years in design, 2 as a manager. First time making a headcount case to a non-design exec.",
+      "location": "Chicago, IL",
+      "trustedExpertise": "Design Management, Process Improvement"
+    },
+    "stats": {
+      "peopleHelped": 4,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "contrib-marcus-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Stakeholder Management",
+      "Product Design"
+    ],
+    "author": {
+      "name": "Taylor Brooks",
+      "role": "Senior Designer",
+      "company": "Versant",
+      "connectionDegree": "2nd",
+      "trustedFor": "Product Design, Systems Thinking",
+      "avatarUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Marcus Bell",
+        "role": "Design Director · Meridian",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Former colleagues · Northbound Studio"
+      },
+      {
+        "type": "requester",
+        "role": "Senior Designer · Versant",
+        "relationship": "Connected via Dribbble community"
+      }
+    ],
+    "about": {
+      "career": "5 years in product design. Works cross-functionally across PM, engineering, and marketing.",
+      "location": "Denver, CO",
+      "trustedExpertise": "Product Design, Stakeholder Communication"
+    },
+    "stats": {
+      "peopleHelped": 5,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "contrib-anika-1": {
+    "audience": "Trusted List",
+    "audienceCategory": "Career Advice",
+    "topics": [
+      "Career Planning",
+      "UX Research"
+    ],
+    "author": {
+      "name": "Devon Clarke",
+      "role": "UX Designer",
+      "company": "Brightline",
+      "connectionDegree": "2nd",
+      "trustedFor": "UX Design, User Interviews",
+      "avatarUrl": "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Anika Osei",
+        "role": "UX Research Lead · Fieldwork",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "relationship": "Former colleagues · Brightline"
+      },
+      {
+        "type": "requester",
+        "role": "UX Designer · Brightline",
+        "relationship": "Colleagues 2023–present"
+      }
+    ],
+    "about": {
+      "career": "4 years in UX design, primarily execution-focused. Exploring a shift into research-led roles.",
+      "location": "Portland, OR",
+      "trustedExpertise": "UX Design, Wireframing, User Interviews"
+    },
+    "stats": {
+      "peopleHelped": 2,
+      "requests": 1,
+      "trustRating": "New"
+    }
+  },
+  "contrib-anika-2": {
+    "audience": "Trusted List",
+    "audienceCategory": "Research Operations",
+    "topics": [
+      "UX Research",
+      "Research Synthesis"
+    ],
+    "author": {
+      "name": "Riley Nguyen",
+      "role": "Research Lead",
+      "company": "Fieldwork",
+      "connectionDegree": "2nd",
+      "trustedFor": "Mixed Methods Research, Research Ops",
+      "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Anika Osei",
+        "role": "UX Research Lead · Fieldwork",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "relationship": "Current colleagues · Fieldwork"
+      },
+      {
+        "type": "requester",
+        "role": "Research Lead · Fieldwork",
+        "relationship": "Colleagues 2022–present"
+      }
+    ],
+    "about": {
+      "career": "6 years in UX research. Runs a team of 3 researchers and is trying to scale insight sharing across the org.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Mixed Methods Research, Research Operations, Synthesis"
+    },
+    "stats": {
+      "peopleHelped": 9,
+      "requests": 3,
+      "trustRating": "Trustworthy"
+    }
   }
 }

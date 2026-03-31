@@ -1,0 +1,711 @@
+[
+  {
+    "id": "user-jen-wu",
+    "name": "Jen Wu",
+    "firstName": "Jen",
+    "lastName": "Wu",
+    "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    "title": "Design Director",
+    "company": "Acme Corp",
+    "trustScore": 750,
+    "trustTier": "Proven",
+    "jobStatus": null,
+    "verifiedSkills": [
+      "Product Design",
+      "UX Research",
+      "Design Leadership"
+    ],
+    "connectionDegree": "1st",
+    "about": {
+      "bio": "Design director obsessed with the space between user research and product strategy. I help teams build things people actually want to use.",
+      "location": "San Francisco, CA",
+      "websiteUrl": "https://jenwu.design",
+      "linkedInUrl": "https://www.linkedin.com/in/jenwudesign",
+      "githubUrl": null
+    },
+    "circle": [
+      {
+        "userId": "user-ryan-shafer",
+        "name": "Ryan Shafer",
+        "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "connectionDegree": "You",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Strategy",
+          "Prototyping"
+        ]
+      },
+      {
+        "userId": "user-marcus-bell",
+        "name": "Marcus Bell",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Leadership",
+          "Product Strategy",
+          "Team Building"
+        ]
+      },
+      {
+        "userId": "user-priya-nair",
+        "name": "Priya Nair",
+        "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Research"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-sam-smith",
+        "name": "Sam Smith",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "connectionDegree": "2nd",
+        "verifiedSkills": [
+          "Product Strategy",
+          "Roadmap Prioritization",
+          "Stakeholder Alignment"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-anika-osei",
+        "name": "Anika Osei",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "connectionDegree": "2nd",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Service Design"
+        ]
+      },
+      {
+        "userId": "user-carlos-andres",
+        "name": "Carlos Andres",
+        "avatarUrl": null,
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Product Management",
+          "Go-to-Market Strategy"
+        ],
+        "invitedByMe": true,
+        "awaiting": true
+      },
+      {
+        "userId": "user-yuki-tanaka",
+        "name": "Yuki Tanaka",
+        "avatarUrl": null,
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Motion Design",
+          "Interaction Design"
+        ],
+        "invitedByMe": true,
+        "awaiting": true
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "name": "Jen Wu",
+        "role": "Design Director · Acme Corp",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2020–2022 · Northbound Studio"
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "jen-req-1",
+        "title": "Feedback on our new onboarding redesign",
+        "category": "Design Critique",
+        "description": "We've just shipped a major rework of our onboarding flow and I'd love fresh eyes before we run a wider usability study. Looking for honest critique on clarity and visual hierarchy.",
+        "endDate": "2026-04-15T00:00:00.000Z"
+      },
+      {
+        "requestId": "jen-req-2",
+        "title": "Intro to a PM who's worked on marketplace products",
+        "category": "Networking",
+        "description": "Building out a marketplace feature and want to talk to someone who's been through this before — particularly around trust and fraud at scale.",
+        "endDate": "2026-04-28T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "Product Design",
+        "UX Research",
+        "Design Systems"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-jen-1",
+          "requesterName": "Sam Smith",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "2nd",
+          "requesterTrustedFor": [
+            "Product Strategy",
+            "Roadmap Prioritisation"
+          ],
+          "requestTitle": "Research plan sanity check",
+          "feedbackSubject": "Sam thinks this request worked out!",
+          "feedbackBody": "Jen was incredibly generous with her time. She reviewed my research plan with surgical precision — caught gaps I'd completely overlooked and reframed the core questions in a way that made everything click. Her instinct for what actually matters in user research is rare."
+        },
+        {
+          "requestId": "contrib-jen-2",
+          "requesterName": "Marcus Bell",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Leadership",
+            "Product Strategy"
+          ],
+          "requestTitle": "Help us define our design principles",
+          "feedbackSubject": "Marcus thinks this request worked out!",
+          "feedbackBody": "Jen brought a level of clarity and structure to our design principles workshop that completely changed the outcome. She asked the questions our team had been avoiding and helped us arrive at principles that actually felt true to who we are."
+        },
+        {
+          "requestId": "contrib-jen-3",
+          "requesterName": "Priya Nair",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "UX Strategy",
+            "Systems Thinking"
+          ],
+          "requestTitle": "Critique my portfolio before senior interviews",
+          "feedbackSubject": "Priya thinks this partially worked out",
+          "feedbackBody": "Really honest and specific feedback that I could act on immediately. Jen doesn't just tell you what's wrong — she explains the underlying principle so you can fix it yourself next time. That's the kind of mentorship that actually sticks."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Ryan Shafer",
+        "recommenderAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "recommenderConnectionDegree": "You",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Strategy"
+        ],
+        "body": "Jen has an extraordinary ability to make complex design problems feel approachable. She helped me rethink our entire onboarding flow in a single conversation — the kind of clarity that usually takes weeks to arrive at. Anyone lucky enough to have her in their circle should ask her everything."
+      },
+      {
+        "recommenderName": "Marcus Bell",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "Leadership",
+          "Product Strategy"
+        ],
+        "body": "Working with Jen is what I imagine it would be like to have a senior partner to think out loud with. She's got great instincts and even better questions. Every conversation ends with me seeing the problem differently."
+      },
+      {
+        "recommenderName": "Priya Nair",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "UX Strategy",
+          "Systems Thinking"
+        ],
+        "body": "Jen is the kind of design leader who makes everyone around her better — not through instruction but through the quality of her thinking. She gave me the most useful portfolio feedback I've ever received and did it in under 20 minutes."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "Usually design critique and research strategy. People bring me half-formed ideas or work that isn't landing and want to understand why. I'm good at diagnosing root causes rather than just describing symptoms — which is the part that's actually hard."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "The ones where the product problem and the people problem are the same problem. When you trace a confusing UX back to a fuzzy team decision, or a high churn rate back to misaligned priorities — that's where I want to spend my time. I really love diving into these type of issues with engineers and PMs and working together as a team to solve it. It may not always be glamorous, but it's where the real impact is made."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "A morning doing actual design work with no interruptions. A long lunch walk. An afternoon of reviews and conversation where I feel like I'm genuinely useful rather than just present. Finishing the day with something tangible to show for it."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "09-2021",
+          "endDate": "present",
+          "location": "San Francisco, CA",
+          "title": "Design Director",
+          "company": "Acme Corp",
+          "description": "Leading a team of 12 designers across product and brand. Responsible for design system, research operations, and strategic design partnerships."
+        },
+        {
+          "startDate": "06-2019",
+          "endDate": "08-2021",
+          "location": "San Francisco, CA",
+          "title": "Senior Product Designer",
+          "company": "Northbound Studio",
+          "description": "Embedded design partner for B2B SaaS clients. Worked alongside Ryan Shafer on three major product launches."
+        },
+        {
+          "startDate": "03-2016",
+          "endDate": "05-2019",
+          "location": "New York, NY",
+          "title": "Product Designer",
+          "company": "Beacon Health",
+          "description": "Designed patient-facing mobile experiences for a digital health platform serving 500K users."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2016",
+          "institution": "Carnegie Mellon University",
+          "location": "Pittsburgh, PA",
+          "degree": "Master of Human-Computer Interaction",
+          "field": "HCI"
+        }
+      ]
+    }
+  },
+  {
+    "id": "user-marcus-bell",
+    "name": "Marcus Bell",
+    "firstName": "Marcus",
+    "lastName": "Bell",
+    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+    "title": "VP of Product",
+    "company": "Relay",
+    "trustScore": 680,
+    "trustTier": "Proven",
+    "jobStatus": "open_to_right_role",
+    "verifiedSkills": [
+      "Leadership",
+      "Product Strategy",
+      "Team Building"
+    ],
+    "connectionDegree": "1st",
+    "about": {
+      "bio": "Product leader who's spent 15 years building B2B tools people actually use at work. I care deeply about organisational design as much as product design.",
+      "location": "New York, NY",
+      "websiteUrl": null,
+      "linkedInUrl": "https://www.linkedin.com/in/marcusbell",
+      "githubUrl": null
+    },
+    "circle": [
+      {
+        "userId": "user-ryan-shafer",
+        "name": "Ryan Shafer",
+        "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "connectionDegree": "You",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Strategy",
+          "Prototyping"
+        ]
+      },
+      {
+        "userId": "user-jen-wu",
+        "name": "Jen Wu",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Research",
+          "Design Leadership"
+        ]
+      },
+      {
+        "userId": "user-anika-osei",
+        "name": "Anika Osei",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Service Design"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-devon-cross",
+        "name": "Devon Cross",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "connectionDegree": "2nd",
+        "verifiedSkills": [
+          "Engineering Leadership",
+          "Backend Systems",
+          "Distributed Architecture"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-nadia-fischer",
+        "name": "Nadia Fischer",
+        "avatarUrl": null,
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Research",
+          "Qual Methods",
+          "Usability Testing"
+        ],
+        "invitedByMe": true,
+        "awaiting": true
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "name": "Marcus Bell",
+        "role": "VP of Product · Relay",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2017–2019 · Relay"
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "marcus-req-1",
+        "title": "Intro to a Head of Design open to a VP-partnership role",
+        "category": "Networking",
+        "description": "Growing a product org and want to partner with a design leader who thinks in systems. Looking for warm intros rather than cold outreach.",
+        "endDate": "2026-05-01T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "Leadership",
+        "Product Strategy",
+        "Hiring"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-marcus-1",
+          "requesterName": "Jen Wu",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Product Design",
+            "UX Research"
+          ],
+          "requestTitle": "How do I make the case for more design headcount?",
+          "feedbackSubject": "Jen thinks this request worked out!",
+          "feedbackBody": "Marcus gave me the clearest framework I've ever heard for making the business case for design investment. He's been on both sides of the table and it shows — practical, direct, and exactly what I needed to go into that conversation prepared."
+        },
+        {
+          "requestId": "contrib-marcus-2",
+          "requesterName": "Ryan Shafer",
+          "requesterAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+          "requesterConnectionDegree": "You",
+          "requesterTrustedFor": [
+            "Product Design",
+            "UX Strategy"
+          ],
+          "requestTitle": "Help me navigate a messy stakeholder situation",
+          "feedbackSubject": "Ryan thinks this request worked out!",
+          "feedbackBody": "I've worked alongside a lot of product leaders, and Marcus stands out for how grounded his instincts are. He doesn't just give opinions — he asks the right questions first. His perspective helped me see the path through a situation I'd been stuck on for weeks."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Ryan Shafer",
+        "recommenderAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "recommenderConnectionDegree": "You",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Strategy"
+        ],
+        "body": "Marcus is one of those rare product leaders who makes design better without being a designer. He understands what great design is for and makes room for it. If you're a designer who wants to work with someone who genuinely gets it, Marcus is your person."
+      },
+      {
+        "recommenderName": "Anika Osei",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "UX Strategy",
+          "Systems Thinking"
+        ],
+        "body": "Marcus helped me reframe a difficult product decision I'd been overthinking for weeks. In one conversation he cut through all the noise and helped me see what actually mattered. He has a gift for simplifying without losing the important nuance."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "Career navigation and org design, mostly. How to structure a product team, how to influence up, how to make decisions with incomplete information. I've been a PM, a manager, and an executive — so I can usually see a situation from multiple angles at once."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "The messy people-and-process problems that product leaders often can't talk about publicly. When a team is stuck not because of strategy but because of some unspoken dynamic — that's where I want to help."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "Making at least one person's job materially easier. A hard decision well made. An honest conversation that needed to happen. Good food and getting outside at some point. Simple things."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "01-2021",
+          "endDate": "present",
+          "location": "New York, NY",
+          "title": "VP of Product",
+          "company": "Relay",
+          "description": "Leading product for a B2B communication platform. Grew the team from 4 to 18 PMs and redesigned the product planning process end-to-end."
+        },
+        {
+          "startDate": "07-2017",
+          "endDate": "12-2020",
+          "location": "New York, NY",
+          "title": "Director of Product",
+          "company": "Relay",
+          "description": "Owned the core product roadmap. Launched the notification and inbox systems used by 2M+ users."
+        },
+        {
+          "startDate": "04-2014",
+          "endDate": "06-2017",
+          "location": "Boston, MA",
+          "title": "Senior Product Manager",
+          "company": "Fieldwork Agency",
+          "description": "PM for enterprise accounts, managing multi-million dollar product contracts across media and retail sectors."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2014",
+          "institution": "Harvard Business School",
+          "location": "Cambridge, MA",
+          "degree": "MBA",
+          "field": "Technology & Operations Management"
+        }
+      ]
+    }
+  },
+  {
+    "id": "user-anika-osei",
+    "name": "Anika Osei",
+    "firstName": "Anika",
+    "lastName": "Osei",
+    "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop",
+    "title": "Principal UX Strategist",
+    "company": "Thoughtworks",
+    "trustScore": 100,
+    "trustTier": "Emerging",
+    "jobStatus": "actively_looking",
+    "verifiedSkills": [
+      "UX Strategy",
+      "Systems Thinking",
+      "Service Design"
+    ],
+    "connectionDegree": "1st",
+    "about": {
+      "bio": "I help organisations understand the gap between what they think their product does and what it actually does to people. Systems thinker, service designer, recovering academic.",
+      "location": "London, UK",
+      "websiteUrl": "https://anikaosei.com",
+      "linkedInUrl": "https://www.linkedin.com/in/anikaosei",
+      "githubUrl": null
+    },
+    "circle": [
+      {
+        "userId": "user-ryan-shafer",
+        "name": "Ryan Shafer",
+        "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "connectionDegree": "You",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Strategy",
+          "Prototyping"
+        ]
+      },
+      {
+        "userId": "user-jen-wu",
+        "name": "Jen Wu",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Research",
+          "Design Leadership"
+        ]
+      },
+      {
+        "userId": "user-priya-nair",
+        "name": "Priya Nair",
+        "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Research"
+        ],
+        "invitedByMe": true
+      },
+      {
+        "userId": "user-leo-chang",
+        "name": "Leo Chang",
+        "avatarUrl": "",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Research",
+          "Mixed Methods",
+          "Data Analysis"
+        ],
+        "invitedByMe": true,
+        "awaiting": true
+      },
+      {
+        "userId": "user-amara-diallo",
+        "name": "Amara Diallo",
+        "avatarUrl": "",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Content Strategy",
+          "Design Writing"
+        ],
+        "invitedByMe": true,
+        "awaiting": true
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "name": "Anika Osei",
+        "role": "Principal UX Strategist · Thoughtworks",
+        "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2021 · Conference circuit"
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "anika-req-1",
+        "title": "Looking for a Head of Design role in Europe",
+        "category": "Career Advice",
+        "description": "Ready for my next step into design leadership. Looking for warm intros at companies that take design seriously at the executive level — particularly in fintech, health, or civic tech.",
+        "endDate": "2026-06-01T00:00:00.000Z"
+      },
+      {
+        "requestId": "anika-req-2",
+        "title": "Peer review on a service blueprint",
+        "category": "Design Critique",
+        "description": "Working on a complex service design engagement and want a second set of eyes on a blueprint before I present to the client. Looking for someone who's done this at scale.",
+        "endDate": "2026-04-10T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "UX Strategy",
+        "Systems Thinking",
+        "Service Design"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-anika-1",
+          "requesterName": "Ryan Shafer",
+          "requesterAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+          "requesterConnectionDegree": "You",
+          "requesterTrustedFor": [
+            "Product Design",
+            "UX Strategy"
+          ],
+          "requestTitle": "Help me think through a career pivot",
+          "feedbackSubject": "Ryan thinks this request worked out!",
+          "feedbackBody": "Anika is the person I go to when I need to think through something that doesn't have a clean answer. She's thoughtful, direct, and genuinely cares about helping — not just being seen as helpful. That's a rare combination."
+        },
+        {
+          "requestId": "contrib-anika-2",
+          "requesterName": "Jen Wu",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Product Design",
+            "UX Research"
+          ],
+          "requestTitle": "Research synthesis framework advice",
+          "feedbackSubject": "Jen thinks this request worked out!",
+          "feedbackBody": "Anika has a rare ability to see structure in messy qualitative data. She helped me rebuild our entire synthesis process in a way that actually scales. I've recommended her to three other teams since."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Ryan Shafer",
+        "recommenderAvatarUrl": "/trusted-list/ryan-shafer.jpg",
+        "recommenderConnectionDegree": "You",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Strategy"
+        ],
+        "body": "Anika thinks at a level of abstraction that most designers can't reach. She helped me see the systemic reasons behind a product problem I'd been treating as a UX issue. If you're working on something complex and interconnected, she's exactly who you want in the room."
+      },
+      {
+        "recommenderName": "Jen Wu",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Research"
+        ],
+        "body": "I've worked with a lot of strategists. Anika is one of the few who can hold the big picture and the fine detail simultaneously — and she makes both legible to everyone in the room, regardless of their background."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "Making sense of complexity. When a product or a team is stuck and nobody can quite name why, I help surface the underlying structure. Whether that's a service blueprint, a systems map, or just a conversation that cuts through the noise."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "The ones that turn out to be several simpler problems wearing a coat. Most 'wicked' problems in organisations are actually a cluster of easier problems nobody's had the courage or the space to disentangle. That's where I want to be."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "Thinking hard in the morning. Teaching or sharing in the afternoon. A walk somewhere green in between. Ending the day with something I didn't understand when I started."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "03-2020",
+          "endDate": "present",
+          "location": "London, UK",
+          "title": "Principal UX Strategist",
+          "company": "Thoughtworks",
+          "description": "Leading service design engagements for public sector and healthcare clients. Responsible for practice development and training junior strategists."
+        },
+        {
+          "startDate": "01-2017",
+          "endDate": "02-2020",
+          "location": "London, UK",
+          "title": "Senior Service Designer",
+          "company": "Government Digital Service",
+          "description": "Designed end-to-end government services used by millions of citizens. Core member of the service design community of practice."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2016",
+          "institution": "Royal College of Art",
+          "location": "London, UK",
+          "degree": "MA Service Design",
+          "field": "Service Design"
+        },
+        {
+          "graduationYear": "2014",
+          "institution": "University of Ghana",
+          "location": "Accra, Ghana",
+          "degree": "Bachelor of Science",
+          "field": "Computer Science"
+        }
+      ]
+    }
+  }
+]

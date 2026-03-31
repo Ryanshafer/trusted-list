@@ -1,7 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ProfilePage } from "../../features/profile/components/ProfilePage";
 import requestsData from "../../../data/requests.json";
 import requestDetailsData from "../../../data/request-details.json";
+import profilesData from "../../../data/profiles.json";
+import currentUser from "../../../data/current-user.json";
+import type { ProfileData, ViewerData } from "../../features/profile/types";
 
 type PersonStub = {
   name: string;
@@ -11,9 +15,9 @@ type PersonStub = {
 };
 
 export function getStaticPaths() {
+  // Build a map of all known people (for stub fallback)
   const people = new Map<string, PersonStub>();
 
-  // Primary source: requests.json
   for (const r of requestsData) {
     if (!people.has(r.name)) {
       people.set(r.name, {
@@ -25,7 +29,6 @@ export function getStaticPaths() {
     }
   }
 
-  // Secondary source: request-details.json authors and connection path nodes
   for (const detail of Object.values(requestDetailsData as Record<string, any>)) {
     const author = detail.author;
     if (author?.name && author.name !== "You" && !people.has(author.name)) {
@@ -48,6 +51,18 @@ export function getStaticPaths() {
     }
   }
 
+  // Also add all people from profiles.json
+  for (const p of profilesData as unknown as ProfileData[]) {
+    if (!people.has(p.name)) {
+      people.set(p.name, {
+        name: p.name,
+        avatarUrl: p.avatarUrl ?? null,
+        subtitle: `${p.title} · ${p.company}`,
+        trustedFor: p.verifiedSkills?.join(", ") ?? null,
+      });
+    }
+  }
+
   return [...people.values()].map((person) => ({
     params: { name: person.name.toLowerCase().replace(/\s+/g, "-") },
     props: { person },
@@ -55,6 +70,23 @@ export function getStaticPaths() {
 }
 
 const { person } = Astro.props;
+
+// Check if a rich profile exists for this person
+const richProfile = (profilesData as unknown as ProfileData[]).find(
+  (p) => p.name.toLowerCase() === person.name.toLowerCase()
+);
+
+// Viewer data = current logged-in user
+const viewer = currentUser as unknown as ProfileData;
+const viewerData: ViewerData = {
+  name: viewer.name,
+  firstName: viewer.firstName,
+  avatarUrl: viewer.avatarUrl,
+  role: `${viewer.title} · ${viewer.company}`,
+  sharedConnectionIds: viewer.circle?.map((m: any) => m.userId) ?? [],
+};
+
+// Initials fallback for stub
 const initials = person.name
   .split(" ")
   .map((n: string) => n[0])
@@ -67,31 +99,45 @@ const initials = person.name
   title={`${person.name} — The Trusted List`}
   description={`Profile for ${person.name}`}
   bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
 >
-  <div class="mx-auto max-w-2xl px-6 py-16" slot="main">
-    <button
-      type="button"
-      class="mb-8 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-      onclick="window.history.back()"
-    >
-      <span aria-hidden="true">←</span>
-      Back
-    </button>
-    <div class="flex items-center gap-4">
-      <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-md">
-        {person.avatarUrl
-          ? <img src={person.avatarUrl} alt={person.name} class="h-full w-full object-cover" />
-          : <div class="flex h-full w-full items-center justify-center bg-muted text-lg font-semibold text-muted-foreground">{initials}</div>
-        }
+  {richProfile ? (
+    <ProfilePage
+      profile={richProfile}
+      viewerData={viewerData}
+      isOwner={false}
+      connectionDegree={richProfile.connectionDegree ?? null}
+      basePath="/trusted-list"
+      client:load
+      slot="main"
+    />
+  ) : (
+    <div class="mx-auto max-w-2xl px-6 py-16" slot="main">
+      <button
+        type="button"
+        class="mb-8 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+        onclick="window.history.back()"
+      >
+        <span aria-hidden="true">←</span>
+        Back
+      </button>
+      <div class="flex items-center gap-4">
+        <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-md">
+          {person.avatarUrl
+            ? <img src={person.avatarUrl} alt={person.name} class="h-full w-full object-cover" />
+            : <div class="flex h-full w-full items-center justify-center bg-muted text-lg font-semibold text-muted-foreground">{initials}</div>
+          }
+        </div>
+        <div>
+          <h1 class="text-2xl font-semibold text-foreground">{person.name}</h1>
+          {person.subtitle && <p class="text-sm text-muted-foreground">{person.subtitle}</p>}
+          {person.trustedFor && (
+            <p class="mt-1 text-sm text-muted-foreground">Trusted for {person.trustedFor}</p>
+          )}
+        </div>
       </div>
-      <div>
-        <h1 class="text-2xl font-semibold text-foreground">{person.name}</h1>
-        {person.subtitle && <p class="text-sm text-muted-foreground">{person.subtitle}</p>}
-        {person.trustedFor && (
-          <p class="mt-1 text-sm text-muted-foreground">Trusted for {person.trustedFor}</p>
-        )}
-      </div>
+      <p class="mt-12 text-sm text-muted-foreground">Full profile coming soon.</p>
     </div>
-    <p class="mt-12 text-sm text-muted-foreground">Full profile coming soon.</p>
-  </div>
+  )}
 </BaseLayout>
