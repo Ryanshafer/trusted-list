@@ -223,7 +223,7 @@ function RecommendationRow({ item, visibleCount, onToggle, onReorder }: Recommen
           {/* User info */}
           <div className="flex items-center gap-3">
             {/* Avatar */}
-            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-sm">
+            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-background shadow-md">
               {item.rec.recommenderAvatarUrl ? (
                 <img
                   src={item.rec.recommenderAvatarUrl}
