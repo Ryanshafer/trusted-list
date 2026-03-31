@@ -1,4 +1,4 @@
-import{c}from"./createLucideIcon.xD6jD0Ge.js";import{j as e}from"./jsx-runtime.D_zvdyIk.js";import{R as g}from"./index.DMVOjPfi.js";import{A as j,a as b,b as N}from"./dialog.BDjyO8XK.js";/**
+import{c}from"./createLucideIcon.xD6jD0Ge.js";import{j as e}from"./jsx-runtime.D_zvdyIk.js";import{R as g}from"./index.DMVOjPfi.js";import{A as j,a as b,b as N}from"./dialog.CXJyhMcT.js";/**
  * @license lucide-react v0.552.0 - ISC
  *
  * This source code is licensed under the ISC license.
