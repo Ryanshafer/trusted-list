@@ -212,7 +212,7 @@ function RecommendationRow({ item, visibleCount, onToggle, onReorder }: Recommen
       </div>
 
       {/* Content + eye button */}
-      <div className="flex flex-1 items-center gap-5 pr-3 py-2">
+      <div className="flex flex-1 items-center gap-5 pl-5 pr-3 py-5">
         {/* Recommendation content */}
         <div
           className={cn(
