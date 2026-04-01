@@ -104,7 +104,7 @@ export function ProfileHero({ profile, isOwner, userEmail, connectionDegree, ava
                   onClick={() => setEditOpen(true)}
                 >
                   <SquarePen className="h-4 w-4" />
-                  Edit profile
+                  Edit personal info
                 </Button>
                 {/* Settings icon button */}
                 <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-border text-muted-foreground" onClick={() => setSettingsOpen(true)}>
