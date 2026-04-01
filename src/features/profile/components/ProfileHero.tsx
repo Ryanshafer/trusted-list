@@ -141,7 +141,7 @@ export function ProfileHero({ profile, isOwner, connectionDegree, availableSkill
             {/* Profile Details: badge + name + trusted-for + job status */}
             <div className="flex flex-col gap-3">
               {/* Tier badge (serif 2xl) + Name (serif 7xl) grouped tightly */}
-              <div className="flex flex-col gap-0">
+              <div className="flex flex-col gap-1">
                 <TrustTierBadge
                   tierIndex={currentTierIndex}
                   static

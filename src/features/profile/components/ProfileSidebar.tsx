@@ -121,7 +121,7 @@ export function ProfileSidebar({
       {visibleOpenRequests.length > 0 && (
         <>
           <div className="h-px w-full shrink-0 bg-border" />
-          <section id="open-requests" className="flex w-full flex-col gap-3.5 py-5 rounded-2xl">
+          <section id="open-requests" className="flex w-full flex-col gap-3.5 py-5 rounded-2xl scroll-mt-36">
             <div className="flex w-full items-center justify-between">
               <span className="text-sm text-muted-foreground uppercase">
                 OPEN REQUESTS FOR HELP

@@ -182,7 +182,7 @@ function RecommendationRow({ item, visibleCount, onToggle, onReorder }: Recommen
       )}
     >
       {/* Order selector panel */}
-      <div className="flex w-[76px] shrink-0 items-center self-stretch border-r border-border bg-muted/50 px-3">
+      <div className="flex w-19 shrink-0 items-center self-stretch border-r border-border bg-muted/50 px-3">
         <Select
           value={item.visible ? String(item.order) : undefined}
           onValueChange={(val) => onReorder(parseInt(val, 10))}
