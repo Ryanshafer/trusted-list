@@ -3,13 +3,12 @@
 import * as React from "react"
 import {
   AlertTriangle,
+  AppWindow,
   Ban,
   Bell,
   CreditCard,
   Mail,
   Shield,
-  Smartphone,
-  Sparkles,
   Upload,
   UserRound,
 } from "lucide-react"
@@ -348,21 +347,19 @@ function NotificationsSection({
   return (
     <div className="flex flex-col">
       {/* Sticky header with column labels */}
-      <div className="sticky top-0 z-10 flex items-end justify-between bg-background/95 px-8 pb-3 pt-8 backdrop-blur-sm border-b border-border/50">
+      <div className="sticky top-0 z-10 flex items-end justify-between bg-background/70 px-8 pb-3 pt-8 backdrop-blur-sm border-b border-border/50">
         <div className="flex flex-col gap-0.5">
           <h2 className="text-base font-semibold text-foreground">Notifications</h2>
           <p className="text-sm text-muted-foreground">
             Choose how and when you hear about activity.
           </p>
         </div>
-        <div className="flex shrink-0 pb-0.5">
-          <div className="flex w-[72px] items-center justify-center gap-1 text-xs text-muted-foreground">
-            <Smartphone className="h-3 w-3" />
-            In-App
+        <div className="flex shrink-0 pb-0.5 px-7 gap-2">
+          <div className="flex w-15 items-center justify-center text-muted-foreground">
+            <AppWindow className="h-5 w-5" />
           </div>
-          <div className="flex w-[72px] items-center justify-center gap-1 text-xs text-muted-foreground">
-            <Mail className="h-3 w-3" />
-            Email
+          <div className="flex w-15 items-center justify-center text-muted-foreground">
+            <Mail className="h-5 w-5" />
           </div>
         </div>
       </div>
@@ -370,7 +367,7 @@ function NotificationsSection({
       <div className="px-8 pb-8 flex flex-col gap-7 pt-6">
         {NOTIF_GROUPS.map((group) => (
           <div key={group.label}>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="mb-3 text-sm font-medium text-muted-foreground">
               {group.label}
             </p>
             <div className="flex flex-col rounded-xl border border-border/60 divide-y divide-border/50 overflow-hidden">
