@@ -6,7 +6,9 @@ import { ProfileParticleAvatar } from "./ProfileParticleAvatar";
 import { TrustTierBadge } from "./TrustTierBadge";
 import { JobStatusIndicator } from "./JobStatusIndicator";
 import { ProfileCTAs } from "./ProfileCTAs";
-import { EditProfileDialog } from "./EditProfileDialog";
+import { EditProfileDialog } from "./EditProfileDialog"
+import { AccountSettingsDialog } from "@/features/account";
+import currentUser from "../../../../data/current-user.json";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,13 +32,15 @@ function getTierIndex(score: number): number {
 interface ProfileHeroProps {
   profile: ProfileData;
   isOwner: boolean;
+  userEmail?: string;
   connectionDegree?: string | null;
   availableSkills?: string[];
   onProfileUpdate: (updated: ProfileData) => void;
 }
 
-export function ProfileHero({ profile, isOwner, connectionDegree, availableSkills, onProfileUpdate }: ProfileHeroProps) {
+export function ProfileHero({ profile, isOwner, userEmail, connectionDegree, availableSkills, onProfileUpdate }: ProfileHeroProps) {
   const [editOpen, setEditOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const finalTierIndex = getTierIndex(profile.trustScore);
   const [currentTierIndex, setCurrentTierIndex] = useState(
@@ -104,7 +108,7 @@ export function ProfileHero({ profile, isOwner, connectionDegree, availableSkill
                   Edit profile
                 </Button>
                 {/* Settings icon button */}
-                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-border text-muted-foreground">
+                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-border text-muted-foreground" onClick={() => setSettingsOpen(true)}>
                   <Settings className="h-4 w-4" />
                   <span className="sr-only">Settings</span>
                 </Button>
@@ -187,6 +191,19 @@ export function ProfileHero({ profile, isOwner, connectionDegree, availableSkill
         profile={profile}
         availableSkills={availableSkills}
         onSave={onProfileUpdate}
+      />
+
+      <AccountSettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        user={{
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: userEmail ?? "",
+          avatar: profile.avatarUrl ?? "",
+        }}
+        initialNotif={currentUser.notificationSettings as any}
+        initialBlockedUsers={currentUser.blockedUsers}
       />
     </>
   );

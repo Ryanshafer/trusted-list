@@ -24,7 +24,8 @@ const navLinks: { title: string; url: string; icon: LucideIcon }[] = [
 ]
 
 const user = {
-  name: currentUserData.name,
+  firstName: currentUserData.firstName,
+  lastName: currentUserData.lastName,
   email: currentUserData.email,
   avatar: currentUserData.avatarUrl,
 }

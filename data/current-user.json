@@ -5,11 +5,14 @@
   "lastName": "Shafer",
   "email": "ryan.shafer@email.com",
   "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+
   "title": "Head of Design",
   "company": "The Trusted List",
+  "jobStatus": "open_to_right_role",
+
   "trustScore": 900,
   "trustTier": "Trustworthy",
-  "jobStatus": "open_to_right_role",
+
   "verifiedSkills": [
     "Product Design",
     "UX Strategy",
@@ -24,6 +27,7 @@
     "Public Speaking",
     "Stakeholder Management"
   ],
+
   "about": {
     "bio": "20 years shaping UX at scale — from MTV's 700M users to building design practices from the ground up. Award-winning, patent-named, and still hands-on.",
     "location": "Ostuni, Italy",
@@ -31,6 +35,22 @@
     "linkedInUrl": "https://www.linkedin.com/in/ryanshafer",
     "githubUrl": "https://github.com/ryanshafer"
   },
+
+  "connectionDegree": "1st",
+  "connectionPath": [
+    {
+      "type": "you",
+      "role": "Head of Design · The Trusted List",
+      "relationship": null
+    },
+    {
+      "type": "connector",
+      "name": "Jen Wu",
+      "role": "Design Director · Acme Corp",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+      "relationship": "Colleagues 2020–2022 · Northbound Studio"
+    }
+  ],
   "circle": [
     {
       "userId": "user-jen-wu",
@@ -127,21 +147,10 @@
       "awaiting": true
     }
   ],
-  "connectionPath": [
-    {
-      "type": "you",
-      "role": "Head of Design · The Trusted List",
-      "relationship": null
-    },
-    {
-      "type": "connector",
-      "name": "Jen Wu",
-      "role": "Design Director · Acme Corp",
-      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
-      "relationship": "Colleagues 2020–2022 · Northbound Studio"
-    }
-  ],
-  "connectionDegree": "1st",
+
+  "peopleHelped": 141,
+  "totalRequests": 76,
+
   "openRequests": [
     {
       "requestId": "req-ryan-1",
@@ -348,6 +357,7 @@
       "body": "Ryan is the person I go to when I need to think through something that doesn't have a clean answer. He's thoughtful, direct, and genuinely cares about helping — not just being seen as helpful. That's a rare combination."
     }
   ],
+
   "inTheirOwnWords": [
     {
       "question": "What help do people ask you for?",
@@ -414,9 +424,22 @@
       }
     ]
   },
-  "peopleHelped": 141,
-  "totalRequests": 76,
-  "linkedInUrl": "https://www.linkedin.com/in/ryanshafer",
-  "bio": "Building tools that make professional trust legible. Passionate about design systems, community, and finding the right people.",
-  "location": "Ostuni, Italy"
+
+  "notificationSettings": {
+    "volunteerHelp":         { "inApp": true,  "email": true  },
+    "directRequest":         { "inApp": true,  "email": true  },
+    "newMessage":            { "inApp": true,  "email": false },
+    "feedbackLeft":          { "inApp": true,  "email": true  },
+    "reminderFires":         { "inApp": true,  "email": false },
+    "circlePosted":          { "inApp": true,  "email": false },
+    "circleJoinRequest":     { "inApp": true,  "email": true  },
+    "skillValidated":        { "inApp": true,  "email": false },
+    "recommendationOutcome": { "inApp": true,  "email": true  },
+    "weeklyDigest":          { "inApp": false, "email": true  }
+  },
+  "blockedUsers": [
+    { "id": "1", "name": "Jordan Marsh", "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop" },
+    { "id": "2", "name": "Taylor Brooks", "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop" },
+    { "id": "3", "name": "Morgan Lee", "avatar": "" }
+  ]
 }

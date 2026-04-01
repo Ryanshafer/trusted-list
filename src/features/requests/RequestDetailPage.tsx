@@ -233,7 +233,12 @@ export default function RequestDetailPage({ id }: { id: string }) {
     ? { ...detail.author, name: currentUser.name, avatarUrl: currentUser.avatarUrl, role: `${currentUser.title} · ${currentUser.company}` }
     : { ...detail.author, name: request.name, avatarUrl: request.avatarUrl ?? null };
   const resolvedAbout = isOwnRequest
-    ? { ...detail.about, career: currentUser.bio, location: currentUser.location }
+    ? {
+        ...detail.about,
+        career: currentUser.about?.bio ?? detail.about.career,
+        location: currentUser.about?.location ?? detail.about.location,
+        linkedInUrl: currentUser.about?.linkedInUrl ?? detail.about.linkedInUrl,
+      }
     : detail.about;
   const resolvedStats = isOwnRequest
     ? {

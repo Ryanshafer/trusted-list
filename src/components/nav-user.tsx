@@ -9,8 +9,8 @@ import {
   CreditCard,
   LogOut,
   Moon,
-  Sparkles,
   Settings,
+  Sparkles,
   Sun,
   UserRound,
 } from "lucide-react"
@@ -35,24 +35,43 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { NotificationPanel, type Notification } from "@/features/notifications/components/NotificationPanel"
+import { AccountSettingsDialog } from "@/features/account"
+import notificationsRaw from "../../data/notifications.json"
+import currentUser from "../../data/current-user.json"
 
 export function NavUser({
   user,
 }: {
   user: {
-    name: string
+    firstName: string
+    lastName: string
     email: string
     avatar: string
   }
 }) {
   const { isMobile } = useSidebar()
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
+  const fullName = `${user.firstName} ${user.lastName}`
+  const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`.toUpperCase()
+
   const [theme, setTheme] = React.useState<"light" | "dark">("light")
+  const [notifOpen, setNotifOpen] = React.useState(false)
+  const [settingsOpen, setSettingsOpen] = React.useState(false)
+  const [notifications, setNotifications] = React.useState<Notification[]>(
+    notificationsRaw as unknown as Notification[]
+  )
+
+  const unreadCount = notifications.filter((n) => !n.read).length
+
+  const handleMarkRead = React.useCallback((id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    )
+  }, [])
+
+  const handleMarkAllRead = React.useCallback(() => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+  }, [])
 
   React.useEffect(() => {
     if (typeof window === "undefined") return
@@ -79,79 +98,128 @@ export function NavUser({
   }
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <Avatar className="h-8 w-8 rounded-full border-2 border-background shadow-md">
-                <AvatarImage src={user.avatar} alt={user.name} className="object-cover" />
-                <AvatarFallback className="rounded-full">{initials}</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-full border-2 border-background shadow-md">
-                  <AvatarImage src={user.avatar} alt={user.name} className="object-cover" />
-                  <AvatarFallback className="rounded-full">{initials}</AvatarFallback>
-                </Avatar>
+    <>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
+                {/* Avatar — unread dot on the badge is purely visual */}
+                <div className="relative shrink-0">
+                  <Avatar className="h-8 w-8 rounded-full border-2 border-background shadow-md">
+                    <AvatarImage src={user.avatar} alt={fullName} className="object-cover" />
+                    <AvatarFallback className="rounded-full">{initials}</AvatarFallback>
+                  </Avatar>
+                  {unreadCount > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-destructive ring-1 ring-sidebar"
+                    />
+                  )}
+                </div>
+
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate font-semibold">{fullName}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <a href="/trusted-list/profile">
-                  <UserRound />
-                  My Profile
-                </a>
-              </DropdownMenuItem>
+                <ChevronsUpDown className="ml-auto size-4" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              side={isMobile ? "bottom" : "right"}
+              align="end"
+              sideOffset={4}
+            >
+              {/* Identity header */}
+              <DropdownMenuLabel className="p-0 font-normal">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                  <Avatar className="h-8 w-8 rounded-full border-2 border-background shadow-md">
+                    <AvatarImage src={user.avatar} alt={fullName} className="object-cover" />
+                    <AvatarFallback className="rounded-full">{initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">{fullName}</span>
+                    <span className="truncate text-xs">{user.email}</span>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <a href="/trusted-list/profile">
+                    <UserRound />
+                    My Profile
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuGroup>
+                {/* Notifications — opens the Sheet panel */}
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault()
+                    setNotifOpen(true)
+                  }}
+                >
+                  <Bell />
+                  Notifications
+                  {unreadCount > 0 && (
+                    <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[11px] font-bold tabular-nums text-primary-foreground">
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={toggleTheme}>
+                  {theme === "dark" ? <Sun /> : <Moon />}
+                  {theme === "dark" ? "Set theme to light" : "Set theme to dark"}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault()
+                    setSettingsOpen(true)
+                  }}
+                >
+                  <Settings />
+                  Account Settings
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+                <LogOut />
+                Log out
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={toggleTheme}>
-                {theme === "dark" ? <Sun /> : <Moon />}
-                {theme === "dark" ? "Set theme to light" : "Set theme to dark"}
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings />
-                Account Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+
+      <NotificationPanel
+        open={notifOpen}
+        onOpenChange={setNotifOpen}
+        notifications={notifications}
+        onMarkRead={handleMarkRead}
+        onMarkAllRead={handleMarkAllRead}
+      />
+
+      <AccountSettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        user={user}
+        initialNotif={currentUser.notificationSettings as any}
+        initialBlockedUsers={currentUser.blockedUsers}
+      />
+    </>
   )
 }

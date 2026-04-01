@@ -1,0 +1,150 @@
+[
+  {
+    "id": "notif-001",
+    "type": "circle_join_request",
+    "read": false,
+    "relativeTime": "12 minutes ago",
+    "actor": {
+      "id": "user-tom-reilly",
+      "name": "Tom Reilly",
+      "avatarUrl": null,
+      "trustedFor": ["Engineering Leadership", "Platform Architecture", "Backend Systems"]
+    },
+    "payload": {
+      "requestId": "circle-req-001"
+    }
+  },
+  {
+    "id": "notif-002",
+    "type": "direct_help_request",
+    "read": false,
+    "relativeTime": "1 hour ago",
+    "actor": {
+      "id": "user-priya-nair",
+      "name": "Priya Nair",
+      "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+      "trustedFor": ["UX Strategy", "Systems Thinking", "Research"]
+    },
+    "payload": {
+      "requestId": "req-direct-001",
+      "requestTitle": "Reviewing our IA before a major redesign",
+      "requestSummary": "I'd love your perspective on our new information architecture before we go further."
+    }
+  },
+  {
+    "id": "notif-003",
+    "type": "skill_validated",
+    "read": false,
+    "relativeTime": "3 hours ago",
+    "actor": {
+      "id": "user-marcus-bell",
+      "name": "Marcus Bell",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+      "trustedFor": ["Leadership", "Product Strategy", "Team Building"]
+    },
+    "payload": {
+      "skill": "Design Systems"
+    }
+  },
+  {
+    "id": "notif-004",
+    "type": "volunteer_offer",
+    "read": true,
+    "relativeTime": "Yesterday",
+    "actor": {
+      "id": "user-anika-osei",
+      "name": "Anika Osei",
+      "avatarUrl": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&h=120&fit=crop",
+      "trustedFor": ["UX Strategy", "Systems Thinking", "Service Design"]
+    },
+    "payload": {
+      "requestId": "req-ryan-2",
+      "requestTitle": "Design portfolio feedback needed"
+    }
+  },
+  {
+    "id": "notif-005",
+    "type": "circle_new_request",
+    "read": true,
+    "relativeTime": "Yesterday",
+    "actor": {
+      "id": "user-jen-wu",
+      "name": "Jen Wu",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+      "trustedFor": ["Product Design", "UX Research", "Design Leadership"]
+    },
+    "payload": {
+      "requestId": "req-circle-001",
+      "requestTitle": "Thinking through a design org restructure"
+    }
+  },
+  {
+    "id": "notif-006",
+    "type": "new_message",
+    "read": true,
+    "relativeTime": "2 days ago",
+    "actor": {
+      "id": "user-devon-cross",
+      "name": "Devon Cross",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+      "trustedFor": ["Engineering Leadership", "Backend Systems", "Distributed Architecture"]
+    },
+    "payload": {
+      "requestId": "req-ryan-3",
+      "requestTitle": "Hiring a senior product designer"
+    }
+  },
+  {
+    "id": "notif-007",
+    "type": "feedback_received",
+    "read": true,
+    "relativeTime": "4 days ago",
+    "actor": {
+      "id": "user-sam-smith",
+      "name": "Sam Smith",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+      "trustedFor": ["Product Strategy", "Roadmap Prioritisation"]
+    },
+    "payload": {
+      "requestId": "helped-1",
+      "requestTitle": "Gut check my promotion packet",
+      "outcome": "worked-out"
+    }
+  },
+  {
+    "id": "notif-008",
+    "type": "recommendation_outcome",
+    "read": true,
+    "relativeTime": "Mar 25",
+    "actor": null,
+    "payload": {
+      "recommendedName": "Sofia Mendes",
+      "recommendedAvatarUrl": null,
+      "outcome": "accepted",
+      "profileUrl": "/trusted-list/members/sofia-mendes"
+    }
+  },
+  {
+    "id": "notif-009",
+    "type": "content_flagged",
+    "read": true,
+    "relativeTime": "Mar 20",
+    "actor": null,
+    "payload": {
+      "requestId": "req-ryan-1",
+      "requestTitle": "Looking for freelance design opportunities"
+    }
+  },
+  {
+    "id": "notif-010",
+    "type": "moderation_decision",
+    "read": true,
+    "relativeTime": "Mar 21",
+    "actor": null,
+    "payload": {
+      "requestId": "req-ryan-1",
+      "requestTitle": "Looking for freelance design opportunities",
+      "decision": "reinstated"
+    }
+  }
+]

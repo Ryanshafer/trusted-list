@@ -18,6 +18,7 @@ interface ProfilePageProps {
   profile: ProfileData;
   viewerData?: ViewerData;
   isOwner: boolean;
+  userEmail?: string;
   connectionDegree?: string | null;
   availableSkills?: string[];
   basePath?: string;
@@ -27,6 +28,7 @@ export function ProfilePage({
   profile: initialProfile,
   viewerData,
   isOwner,
+  userEmail,
   connectionDegree,
   availableSkills = [],
   basePath = "/trusted-list",
@@ -60,6 +62,7 @@ export function ProfilePage({
               <ProfileHero
                 profile={profile}
                 isOwner={isOwner}
+                userEmail={userEmail}
                 connectionDegree={connectionDegree}
                 availableSkills={availableSkills}
                 onProfileUpdate={setProfile}
