@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Eye, EyeClosed, X } from "lucide-react";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { Recommendation } from "../types";
 
@@ -112,7 +113,7 @@ export function EditRecommendationsDialog({
             <h2 className="font-serif text-2xl font-normal leading-8 text-popover-foreground">
               Manage your recommendations
             </h2>
-            <p className="text-base text-muted-foreground">Edit the numbers to put these in the order you want.</p>
+            <p className="text-base text-muted-foreground">Select the order you want your recommendations to appear in.</p>
           </div>
           <DialogClose asChild>
             <Button
@@ -173,21 +174,6 @@ interface RecommendationRowProps {
 }
 
 function RecommendationRow({ item, visibleCount, onToggle, onReorder }: RecommendationRowProps) {
-  const [inputValue, setInputValue] = useState(item.visible ? String(item.order) : "-");
-
-  useEffect(() => {
-    setInputValue(item.visible ? String(item.order) : "-");
-  }, [item.order, item.visible]);
-
-  function commitOrder() {
-    const parsed = parseInt(inputValue, 10);
-    if (!isNaN(parsed) && parsed >= 1 && parsed <= visibleCount) {
-      onReorder(parsed);
-    } else {
-      setInputValue(item.visible ? String(item.order) : "-");
-    }
-  }
-
   return (
     <div
       className={cn(
@@ -195,21 +181,30 @@ function RecommendationRow({ item, visibleCount, onToggle, onReorder }: Recommen
         item.visible ? "bg-card" : "bg-sidebar"
       )}
     >
-      {/* Order input panel */}
-      <div className="flex w-[60px] shrink-0 items-center self-stretch border-r border-border bg-muted/50 px-3">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => item.visible && setInputValue(e.target.value)}
-          onBlur={commitOrder}
-          onKeyDown={(e) => e.key === "Enter" && commitOrder()}
-          readOnly={!item.visible}
-          aria-label="Recommendation order"
-          className={cn(
-            "w-full min-h-8 rounded-lg border border-border bg-background px-2 text-center text-sm text-foreground transition-opacity focus:outline-none focus:ring-1 focus:ring-ring shadow-md",
-            !item.visible && "opacity-50"
-          )}
-        />
+      {/* Order selector panel */}
+      <div className="flex w-[76px] shrink-0 items-center self-stretch border-r border-border bg-muted/50 px-3">
+        <Select
+          value={item.visible ? String(item.order) : undefined}
+          onValueChange={(val) => onReorder(parseInt(val, 10))}
+          disabled={!item.visible}
+        >
+          <SelectTrigger
+            className={cn(
+              "h-8 w-full rounded-lg border border-border bg-background pl-3 pr-2 text-sm text-foreground shadow-none focus:ring-1 focus:ring-ring",
+              !item.visible && "opacity-50"
+            )}
+            aria-label="Recommendation order"
+          >
+            <SelectValue placeholder="–" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: visibleCount }, (_, i) => i + 1).map((n) => (
+              <SelectItem key={n} value={String(n)}>
+                {n}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Content + eye button */}
