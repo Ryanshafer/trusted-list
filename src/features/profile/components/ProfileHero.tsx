@@ -43,12 +43,11 @@ export function ProfileHero({ profile, isOwner, userEmail, connectionDegree, ava
   const [settingsOpen, setSettingsOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const finalTierIndex = getTierIndex(profile.trustScore);
-  const [currentTierIndex, setCurrentTierIndex] = useState(
-    prefersReducedMotion ? finalTierIndex : 0
-  );
+  const [currentTierIndex, setCurrentTierIndex] = useState(finalTierIndex); // TEMP: skip animation, load end state
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    return; // TEMP: animation disabled — remove this line to re-enable
     if (prefersReducedMotion) {
       setCurrentTierIndex(finalTierIndex);
       return;
