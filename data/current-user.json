@@ -87,8 +87,8 @@
       ]
     },
     {
-      "userId": "user-devon-cross",
-      "name": "Devon Cross",
+      "userId": "user-benedict-cumberbatch",
+      "name": "Benedict Cumberbatch",
       "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
       "connectionDegree": "1st",
       "verifiedSkills": [
@@ -213,7 +213,7 @@
         },
         {
           "id": "resp-ryan-4",
-          "name": "Devon Cross",
+          "name": "Benedict Cumberbatch",
           "role": "Engineering Leader",
           "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
           "status": "In Progress",

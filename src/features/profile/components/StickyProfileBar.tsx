@@ -98,7 +98,7 @@ export function StickyProfileBar({ profile, connectionDegree }: StickyProfileBar
                     )}
                   </div>
                   {profile.verifiedSkills.length > 0 && (
-                    <p className="text-xs font-normal leading-4 text-muted-foreground">
+                    <p className="text-sm font-normal leading-4 text-muted-foreground">
                       Trusted for {profile.verifiedSkills.slice(0, 3).join(", ")}
                     </p>
                   )}

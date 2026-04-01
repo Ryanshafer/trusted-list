@@ -12,11 +12,15 @@ function OwnWordsAnswer({ entry }: { entry: OwnWordsEntry }) {
   useEffect(() => {
     const el = bodyRef.current;
     if (!el) return;
-    setIsClamped(el.scrollHeight > el.clientHeight);
+    const check = () => setIsClamped(el.scrollHeight > el.clientHeight);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   return (
-    <div className="flex flex-col gap-0.5 self-start">
+    <div className="flex flex-col gap-0.5 self-start max-w-[66ch]">
       <p
         ref={bodyRef}
         className={`font-serif text-xl font-normal leading-8 text-foreground ${!expanded ? "line-clamp-6" : ""}`}
@@ -72,7 +76,7 @@ export function OwnWordsGrid({ firstName, entries, isOwner, onEditClick }: OwnWo
         )}
       </div>
 
-      <div className="grid grid-cols-[21.5rem_1fr] gap-x-14 gap-y-8 pt-4 pr-10">
+      <div className="grid grid-cols-1 gap-y-2 pt-4 pr-10 lg:grid-cols-[0.25fr_1fr] lg:gap-x-24 md:gap-y-8">
         {entries.slice(0, 3).map((entry, i) => (
           <Fragment key={i}>
             <div className="flex items-center gap-2 self-start">

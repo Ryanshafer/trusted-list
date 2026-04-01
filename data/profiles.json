@@ -328,8 +328,8 @@
         "invitedByMe": true
       },
       {
-        "userId": "user-devon-cross",
-        "name": "Devon Cross",
+        "userId": "user-benedict-cumberbatch",
+        "name": "Benedict Cumberbatch",
         "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
         "connectionDegree": "1st",
         "verifiedSkills": [
@@ -782,8 +782,8 @@
         "invitedByMe": true
       },
       {
-        "userId": "user-devon-cross",
-        "name": "Devon Cross",
+        "userId": "user-benedict-cumberbatch",
+        "name": "Benedict Cumberbatch",
         "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
         "connectionDegree": "1st",
         "verifiedSkills": [
@@ -943,10 +943,10 @@
     }
   },
   {
-    "id": "user-devon-cross",
-    "name": "Devon Cross",
-    "firstName": "Devon",
-    "lastName": "Cross",
+    "id": "user-benedict-cumberbatch",
+    "name": "Benedict Cumberbatch",
+    "firstName": "Benedict",
+    "lastName": "Cumberbatch",
     "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
     "title": "Director of Infrastructure",
     "company": "PulseGrid",
@@ -963,9 +963,9 @@
     "about": {
       "bio": "I build reliable infrastructure teams and help product leaders understand what it takes to ship resilient distributed systems.",
       "location": "Portland, OR",
-      "websiteUrl": "https://devoncross.dev",
-      "linkedInUrl": "https://www.linkedin.com/in/devoncross",
-      "githubUrl": "https://github.com/devoncross"
+      "websiteUrl": "https://benedictcumberbatch.dev",
+      "linkedInUrl": "https://www.linkedin.com/in/benedictcumberbatch",
+      "githubUrl": "https://github.com/benedictcumberbatch"
     },
     "circle": [
       {
@@ -1022,7 +1022,7 @@
       },
       {
         "type": "requester",
-        "name": "Devon Cross",
+        "name": "Benedict Cumberbatch",
         "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
         "role": "Director of Infrastructure · PulseGrid",
         "relationship": "Colleagues 2021–present · PulseGrid"
@@ -1062,7 +1062,7 @@
           ],
           "requestTitle": "Design review for multi-region observability",
           "feedbackSubject": "Avery thinks this request worked out!",
-          "feedbackBody": "Devon helped us choose the right signals to watch and how to express them to product. His questions made our telemetry plan far more actionable."
+          "feedbackBody": "Ben helped us choose the right signals to watch and how to express them to product. His questions made our telemetry plan far more actionable."
         },
         {
           "requestId": "contrib-devon-2",
@@ -1075,7 +1075,7 @@
           ],
           "requestTitle": "How we lean into platform engineering without slowing product",
           "feedbackSubject": "Marcus thinks this request worked out!",
-          "feedbackBody": "Devon kept our discussion focused on outcomes and pointed to the few variables that matter when you're trying to scale both reliability and speed."
+          "feedbackBody": "Benedict kept our discussion focused on outcomes and pointed to the few variables that matter when you're trying to scale both reliability and speed."
         }
       ]
     },
@@ -1088,7 +1088,7 @@
           "Product Design",
           "UX Strategy"
         ],
-        "body": "Devon is the engineer you want in the room when the architecture looks like a bowl of spaghetti. He explains the trade-offs without jargon and then helps you choose the one that keeps the user experience intact."
+        "body": "Benedict is the engineer you want in the room when the architecture looks like a bowl of spaghetti. He explains the trade-offs without jargon and then helps you choose the one that keeps the user experience intact."
       },
       {
         "recommenderName": "Marcus Bell",
@@ -1098,7 +1098,7 @@
           "Leadership",
           "Product Strategy"
         ],
-        "body": "Devon keeps product and engineering honest. His ability to separate signal from noise is why his teams have such reliable launches."
+        "body": "Benedict keeps product and engineering honest. His ability to separate signal from noise is why his teams have such reliable launches."
       },
       {
         "recommenderName": "Priya Nair",
@@ -1108,7 +1108,7 @@
           "UX Strategy",
           "Systems Thinking"
         ],
-        "body": "I learn something every time I ask Devon to coach me through a technical problem. He makes it easy for non-engineers to understand the constraints without flattening the nuance."
+        "body": "I learn something every time I ask Benedict to coach me through a technical problem. He makes it easy for non-engineers to understand the constraints without flattening the nuance."
       }
     ],
     "inTheirOwnWords": [
