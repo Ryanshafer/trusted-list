@@ -318,7 +318,7 @@ function ProfileSection({
 
       <FieldRow
         label="Email address"
-        hint="Changing your address requires re-verification. All notification emails route here."
+        hint="Changing your address requires re-verification. All notification emails are sent here."
       >
         <Input
           type="email"

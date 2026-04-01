@@ -27,7 +27,7 @@ import {
 import { JobStatusDot, JOB_STATUS_CONFIG } from "./JobStatusIndicator";
 import type { ProfileData, JobStatus } from "../types";
 
-const LINK_TYPES = ["Portfolio", "LinkedIn", "Github", "Twitter", "Other"] as const;
+const LINK_TYPES = ["Portfolio", "LinkedIn", "Github", "X/Twitter", "Other"] as const;
 const SUMMARY_MAX = 220;
 const NOT_LOOKING_LABEL = "Not looking";
 
