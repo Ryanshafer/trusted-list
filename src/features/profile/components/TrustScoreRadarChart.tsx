@@ -20,7 +20,7 @@ const chartConfig = {
 
 export function TrustScoreRadarChart({ data }: TrustScoreRadarChartProps) {
   return (
-    <section className="flex w-full flex-col gap-3.5">
+    <section id="what-shapes-your-trust-score" className="flex w-full flex-col gap-3.5">
       <div className="flex items-center gap-2">
         <span className="text-sm uppercase text-muted-foreground">
           What shapes your trust score

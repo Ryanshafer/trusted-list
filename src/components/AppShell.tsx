@@ -13,6 +13,7 @@ import type { CardData, SectionKey } from "@/features/dashboard/types";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Check, CircleHelp, IterationCcw, ChevronRight, HeartHandshake } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Badge } from "./ui/badge";
 import { HELP_CATEGORIES } from "@/features/requests/components/HelpRequestDialog";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "./ui/empty";
@@ -345,13 +346,23 @@ const TrustScoreSection = () => {
           className="bg-primary/10 rounded-r-lg relative flex flex-col justify-end pb-9 pl-4 pr-4 gap-1 cursor-pointer select-none"
           onClick={handleCycle}
         >
-          <button
-            className="absolute top-[10px] right-[10px] rounded-full p-2.5 text-muted-foreground hover:bg-background/50 transition-colors"
-            aria-label="About trust score"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <CircleHelp className="h-4 w-4" />
-          </button>
+          <TooltipProvider delayDuration={150}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  href="/trusted-list/profile#what-shapes-your-trust-score"
+                  className="absolute top-[10px] right-[10px] rounded-full p-2.5 text-muted-foreground hover:bg-background/50 transition-colors"
+                  aria-label="View your profile"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <CircleHelp className="h-4 w-4" />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                View your private profile for insights into your Trust Score.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <p className="text-base text-muted-foreground">Your Trust Score</p>
           <AnimatePresence mode="wait">
             <motion.p
