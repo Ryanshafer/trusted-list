@@ -31,21 +31,10 @@ import { cn } from "@/lib/utils"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+type NotifGroupKey = "myRequests" | "helpingOthers" | "myCircle" | "digest"
+
 type NotifChannels = { inApp: boolean; email: boolean }
-
-type NotifKey =
-  | "volunteerHelp"
-  | "directRequest"
-  | "newMessage"
-  | "feedbackLeft"
-  | "reminderFires"
-  | "circlePosted"
-  | "circleJoinRequest"
-  | "skillValidated"
-  | "recommendationOutcome"
-  | "weeklyDigest"
-
-type NotifSettings = Record<NotifKey, NotifChannels>
+type NotifSettings = Record<NotifGroupKey, NotifChannels>
 
 interface BlockedUser {
   id: string
@@ -56,56 +45,59 @@ interface BlockedUser {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const DEFAULT_NOTIF: NotifSettings = {
-  volunteerHelp:          { inApp: true,  email: true  },
-  directRequest:          { inApp: true,  email: true  },
-  newMessage:             { inApp: true,  email: false },
-  feedbackLeft:           { inApp: true,  email: true  },
-  reminderFires:          { inApp: true,  email: false },
-  circlePosted:           { inApp: true,  email: false },
-  circleJoinRequest:      { inApp: true,  email: true  },
-  skillValidated:         { inApp: true,  email: false },
-  recommendationOutcome:  { inApp: true,  email: true  },
-  weeklyDigest:           { inApp: false, email: true  },
+  myRequests:    { inApp: true,  email: true  },
+  helpingOthers: { inApp: true,  email: true  },
+  myCircle:      { inApp: true,  email: false },
+  digest:        { inApp: false, email: true  },
 }
 
 const NOTIF_GROUPS: {
+  key: NotifGroupKey
   label: string
-  rows: { key: NotifKey; label: string; sub?: string; noInApp?: boolean }[]
+  description: string
+  items: string[]
+  noInApp?: boolean
 }[] = [
   {
+    key: "myRequests",
     label: "My Requests",
-    rows: [
-      { key: "volunteerHelp", label: "Someone volunteers to help" },
+    description: "Alerts about your open requests.",
+    items: [
+      "Someone has offered to help",
     ],
   },
   {
+    key: "helpingOthers",
     label: "Helping Others",
-    rows: [
-      { key: "directRequest", label: "Direct help request sent to me" },
-      { key: "newMessage",    label: "New message in an active chat" },
-      { key: "feedbackLeft",  label: "Feedback left on a completed interaction" },
-      { key: "reminderFires", label: "A snoozed reminder fires" },
+    description: "Updates when you're actively helping someone.",
+    items: [
+      "A direct request for your help",
+      "A new message in an active help chat",
+      "Feedback received after closing the loop",
+      "A reminder to follow through",
     ],
   },
   {
+    key: "myCircle",
     label: "My Circle",
-    rows: [
-      { key: "circlePosted",          label: "Circle member posts a new request" },
-      { key: "circleJoinRequest",     label: "Someone requests to join my circle" },
-      { key: "skillValidated",        label: "One of my skills is validated" },
-      { key: "recommendationOutcome", label: "My recommendation is decided" },
+    description: "Activity from your trusted connections.",
+    items: [
+      "Someone in your circle needs help",
+      "Someone requests to join your circle",
+      "A connection has vouched for one of your skills",
+      "Your nomination has been accepted",
     ],
   },
   {
-    label: "Digest & Defaults",
-    rows: [
-      {
-        key: "weeklyDigest",
-        label: "Weekly activity digest",
-        sub: "A weekly summary of network activity, reminders, and outstanding actions.",
-        noInApp: true,
-      },
+    key: "digest",
+    label: "Weekly Digest",
+    description: "A weekly summary of your network activity and outstanding actions.",
+    items: [
+      "Requests in your circle you haven't responded to",
+      "Help you've committed to but haven't completed",
+      "Highlights from your network this week",
     ],
+    noInApp: true,
   },
 ]
 
@@ -151,7 +143,7 @@ export function AccountSettingsDialog({
   const [newPw, setNewPw] = React.useState("")
   const [confirmPw, setConfirmPw] = React.useState("")
 
-  function toggleNotif(key: NotifKey, channel: "inApp" | "email") {
+  function toggleNotif(key: NotifGroupKey, channel: "inApp" | "email") {
     setNotif((prev) => ({
       ...prev,
       [key]: { ...prev[key], [channel]: !prev[key][channel] },
@@ -342,73 +334,89 @@ function NotificationsSection({
   onToggle,
 }: {
   notif: NotifSettings
-  onToggle: (key: NotifKey, channel: "inApp" | "email") => void
+  onToggle: (key: NotifGroupKey, channel: "inApp" | "email") => void
 }) {
+  const anyEnabled = (channels: NotifChannels) => channels.inApp || channels.email
+
   return (
     <div className="flex flex-col">
-      {/* Sticky header with column labels */}
+      {/* Sticky header with channel labels */}
       <div className="sticky top-0 z-10 flex items-end justify-between bg-background/70 px-8 pb-3 pt-8 backdrop-blur-sm border-b border-border/50">
         <div className="flex flex-col gap-0.5">
           <h2 className="text-base font-semibold text-foreground">Notifications</h2>
           <p className="text-sm text-muted-foreground">
-            Choose how and when you hear about activity.
+            Choose how you hear about each type of activity.
           </p>
         </div>
-        <div className="flex shrink-0 pb-0.5 px-7 gap-2">
-          <div className="flex w-15 items-center justify-center text-muted-foreground">
-            <AppWindow className="h-5 w-5" />
+        <div className="flex shrink-0 pb-0.5 gap-1 px-5">
+          <div className="flex w-[72px] items-center justify-center gap-1.5 text-xs text-muted-foreground">
+            <AppWindow className="h-4 w-4 shrink-0" />
           </div>
-          <div className="flex w-15 items-center justify-center text-muted-foreground">
-            <Mail className="h-5 w-5" />
+          <div className="flex w-[72px] items-center justify-center gap-1.5 text-xs text-muted-foreground">
+            <Mail className="h-4 w-4 shrink-0" />
           </div>
         </div>
       </div>
 
-      <div className="px-8 pb-8 flex flex-col gap-7 pt-6">
-        {NOTIF_GROUPS.map((group) => (
-          <div key={group.label}>
-            <p className="mb-3 text-sm font-medium text-muted-foreground">
-              {group.label}
-            </p>
-            <div className="flex flex-col rounded-xl border border-border/60 divide-y divide-border/50 overflow-hidden">
-              {group.rows.map((row) => (
-                <div
-                  key={row.key}
-                  className="flex items-center justify-between gap-4 bg-card px-4 py-3.5"
-                >
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="text-sm text-foreground">{row.label}</span>
-                    {row.sub && (
-                      <span className="text-xs leading-relaxed text-muted-foreground">
-                        {row.sub}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex shrink-0">
-                    <div className="flex w-[72px] items-center justify-center">
-                      {row.noInApp ? (
-                        <span className="text-xs text-muted-foreground/30 select-none">—</span>
-                      ) : (
-                        <Switch
-                          checked={notif[row.key].inApp}
-                          onCheckedChange={() => onToggle(row.key, "inApp")}
-                          aria-label={`In-app: ${row.label}`}
-                        />
-                      )}
-                    </div>
-                    <div className="flex w-[72px] items-center justify-center">
-                      <Switch
-                        checked={notif[row.key].email}
-                        onCheckedChange={() => onToggle(row.key, "email")}
-                        aria-label={`Email: ${row.label}`}
-                      />
-                    </div>
-                  </div>
+      <div className="px-8 pb-8 pt-6 flex flex-col gap-3">
+        {NOTIF_GROUPS.map((group) => {
+          const channels = notif[group.key]
+          const active = anyEnabled(channels)
+          return (
+            <div
+              key={group.key}
+              className={cn(
+                "flex items-start gap-4 rounded-xl border px-5 py-4 transition-colors",
+                active ? "border-border/60 bg-card" : "border-border/40 bg-muted/20"
+              )}
+            >
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="flex flex-col gap-0.5">
+                  <span className={cn("text-sm font-medium", active ? "text-foreground" : "text-muted-foreground")}>
+                    {group.label}
+                  </span>
+                  <span className={cn("text-xs text-muted-foreground", active ? "text-muted-foreground" : "text-muted-foreground/50")}>
+                    {group.description}
+                  </span>
                 </div>
-              ))}
+                <ul className="flex flex-col gap-0.5">
+                  {group.items.map((item) => (
+                    <li
+                      key={item}
+                      className={cn(
+                        "text-xs flex items-center gap-1.5",
+                        active ? "text-muted-foreground" : "text-muted-foreground/40"
+                      )}
+                    >
+                      <span className="h-1 w-1 rounded-full bg-current shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex shrink-0 items-center pt-0.5">
+                <div className="flex w-[72px] justify-center">
+                  {group.noInApp ? (
+                    <span className="text-xs text-muted-foreground/30 select-none">—</span>
+                  ) : (
+                    <Switch
+                      checked={channels.inApp}
+                      onCheckedChange={() => onToggle(group.key, "inApp")}
+                      aria-label={`In-app: ${group.label}`}
+                    />
+                  )}
+                </div>
+                <div className="flex w-[72px] justify-center">
+                  <Switch
+                    checked={channels.email}
+                    onCheckedChange={() => onToggle(group.key, "email")}
+                    aria-label={`Email: ${group.label}`}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

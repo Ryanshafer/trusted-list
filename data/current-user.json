@@ -426,16 +426,10 @@
   },
 
   "notificationSettings": {
-    "volunteerHelp":         { "inApp": true,  "email": true  },
-    "directRequest":         { "inApp": true,  "email": true  },
-    "newMessage":            { "inApp": true,  "email": false },
-    "feedbackLeft":          { "inApp": true,  "email": true  },
-    "reminderFires":         { "inApp": true,  "email": false },
-    "circlePosted":          { "inApp": true,  "email": false },
-    "circleJoinRequest":     { "inApp": true,  "email": true  },
-    "skillValidated":        { "inApp": true,  "email": false },
-    "recommendationOutcome": { "inApp": true,  "email": true  },
-    "weeklyDigest":          { "inApp": false, "email": true  }
+    "myRequests":    { "inApp": true,  "email": true  },
+    "helpingOthers": { "inApp": true,  "email": true  },
+    "myCircle":      { "inApp": true,  "email": false },
+    "digest":        { "inApp": false, "email": true  }
   },
   "blockedUsers": [
     { "id": "1", "name": "Jordan Marsh", "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop" },
