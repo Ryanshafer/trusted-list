@@ -1173,7 +1173,7 @@
     "company": "Fieldwork",
     "trustScore": 610,
     "trustTier": "Rising",
-    "jobStatus": null,
+    "jobStatus": "open_to_right_role",
     "verifiedSkills": [
       "Product Strategy",
       "Roadmap Prioritization",
@@ -1397,7 +1397,7 @@
     "company": "Lumio",
     "trustScore": 200,
     "trustTier": "Emerging",
-    "jobStatus": null,
+    "jobStatus": "actively_looking",
     "verifiedSkills": [
       "Growth Strategy",
       "B2B SaaS",
