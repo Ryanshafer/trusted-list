@@ -12,15 +12,12 @@ import { IncomingRequestCard } from "@/features/dashboard/components/HelpRequest
 import type { CardData, SectionKey } from "@/features/dashboard/types";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Label } from "./ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
 import { Check, CircleHelp, IterationCcw, ChevronRight, HeartHandshake } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { HELP_CATEGORIES } from "@/features/requests/components/HelpRequestDialog";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "./ui/empty";
 import { AskForHelpDialog, type AskContact } from "@/features/requests/components/HelpRequestDialog";
+import { InviteDialog } from "@/features/invites/components/InviteDialog";
 import { interactions } from "@/features/interactions/data";
 import { RotateWords } from "./anim/rotate-words";
 import { AnimatePresence, motion } from "framer-motion";
@@ -65,12 +62,6 @@ const helpSectionData = Object.fromEntries(
 const sectionOrder: SectionKey[] = ["contact", "circle", "community"];
 const firstSectionAnchorId = "requests-for-your-help";
 
-const getGreetingForNow = () => {
-  const hours = new Date().getHours();
-  if (hours < 12) return "Good morning";
-  if (hours < 18) return "Good afternoon";
-  return "Good evening";
-};
 
 const AppShell = () => {
   const [sections, setSections] = React.useState<
@@ -569,129 +560,6 @@ const InviteModule = ({ onInvite }: { onInvite: () => void }) => {
   );
 };
 
-// ── InviteDialog ──────────────────────────────────────────────────────────────
-
-const InviteDialog = ({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (v: boolean) => void;
-}) => {
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [linkedin, setLinkedin] = React.useState("");
-  const [skills, setSkills] = React.useState<string[]>([]);
-  const [skillQuery, setSkillQuery] = React.useState("");
-
-  const skillOptions = React.useMemo(
-    () => [
-      "Design", "Research", "Analysis", "Engineering Management",
-      "Product Strategy", "UX Writing", "Growth", "Data Science",
-      "Mobile", "Infrastructure", "People Management", "Hiring",
-      "Career Coaching", "Fundraising", "Storytelling",
-    ],
-    [],
-  );
-
-  const filteredSkills = React.useMemo(() => {
-    const query = skillQuery.trim().toLowerCase();
-    return skillOptions
-      .filter((o) => !skills.includes(o))
-      .filter((o) => (query ? o.toLowerCase().includes(query) : true))
-      .slice(0, 6);
-  }, [skillOptions, skills, skillQuery]);
-
-  const addSkill = (skill: string) => {
-    if (skills.includes(skill)) return;
-    setSkills((prev) => [...prev, skill]);
-    setSkillQuery("");
-  };
-  const removeSkill = (skill: string) => setSkills((prev) => prev.filter((s) => s !== skill));
-
-  const handleSubmit = () => onOpenChange(false);
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Invite someone to The Trusted List</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">
-              Great referrals start with great contact details, and a quick double-check goes a long way.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="invite-first-name">First name</Label>
-              <Input id="invite-first-name" placeholder="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="mt-1" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="invite-last-name">Last name</Label>
-              <Input id="invite-last-name" placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-1" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="invite-email">Email address</Label>
-              <Input id="invite-email" type="email" placeholder="first.last@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="invite-linkedin">LinkedIn profile</Label>
-              <Input id="invite-linkedin" placeholder="https://www.linkedin.com/in/username" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} className="mt-1" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="invite-skills">Highlight their skills</Label>
-            <div className="relative mt-1">
-              <div
-                className="min-h-[46px] w-full rounded-md border border-input bg-background p-2 flex flex-wrap items-center gap-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
-                onClick={() => (document.getElementById("invite-skills-input") as HTMLInputElement | null)?.focus()}
-              >
-                {skills.map((skill) => (
-                  <span key={skill} className="inline-flex items-center gap-2 rounded-sm bg-foreground px-3 py-1 text-sm font-medium text-background">
-                    {skill}
-                    <button type="button" className="text-muted-foreground hover:text-background" aria-label={`Remove ${skill}`} onClick={() => removeSkill(skill)}>×</button>
-                  </span>
-                ))}
-                <input
-                  id="invite-skills-input"
-                  className="flex-1 min-w-[120px] bg-transparent text-sm outline-none placeholder:text-muted-foreground/75"
-                  placeholder={skills.length === 0 ? "Start typing a skill..." : ""}
-                  value={skillQuery}
-                  onChange={(e) => setSkillQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && skillQuery.trim()) { e.preventDefault(); addSkill(skillQuery.trim()); }
-                    if (e.key === "Backspace" && !skillQuery && skills.length) removeSkill(skills[skills.length - 1]);
-                  }}
-                />
-              </div>
-              {skillQuery.trim().length > 0 && filteredSkills.length > 0 && (
-                <div className="absolute z-10 mt-2 w-full rounded-lg border border-border bg-background shadow-lg">
-                  <ul className="max-h-48 overflow-auto py-2">
-                    {filteredSkills.map((skill) => (
-                      <li key={skill}>
-                        <button type="button" className="flex w-full items-center justify-between px-3 py-2 text-sm hover:bg-muted/50" onClick={() => addSkill(skill)}>
-                          <span>{skill}</span>
-                          <span className="text-xs text-muted-foreground">Add</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <DialogFooter className="gap-2 sm:gap-3">
-          <Button variant="ghost" className="rounded-full font-semibold leading-none" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button className="rounded-full font-semibold leading-none" onClick={handleSubmit} disabled={!firstName || !lastName || !email}>Invite</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
 
 export default AppShell;
 
