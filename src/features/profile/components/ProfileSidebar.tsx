@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AboutSection } from "./AboutSection";
+import { TrustScoreRadarChart } from "./TrustScoreRadarChart";
 import { CircleAvatarStack } from "./CircleAvatarStack";
 import { OpenRequestCard } from "./OpenRequestCard";
 import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
@@ -14,6 +15,7 @@ interface ProfileSidebarProps {
   profile: ProfileData;
   viewerData?: ViewerData;
   isOwner: boolean;
+  publicView?: boolean;
   connectionDegree?: string | null;
   basePath?: string;
 }
@@ -22,6 +24,7 @@ export function ProfileSidebar({
   profile,
   viewerData,
   isOwner,
+  publicView = false,
   connectionDegree,
   basePath = "/trusted-list",
 }: ProfileSidebarProps) {
@@ -85,7 +88,15 @@ export function ProfileSidebar({
         <AboutSection profile={profile} />
       </div>
 
-            {/* Connection path — connected visitor only */}
+      {/* Trust score breakdown — owner private view only */}
+      {isOwner && !publicView && profile.trustScoreBreakdown && profile.trustScoreBreakdown.length > 0 && (
+        <>
+          <div className="h-px w-full shrink-0 bg-border" />
+          <TrustScoreRadarChart data={profile.trustScoreBreakdown} />
+        </>
+      )}
+
+      {/* Connection path — connected visitor only */}
       {showConnectionPath && viewerData && (
         <>
           <div className="h-px w-full shrink-0 bg-border" />

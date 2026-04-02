@@ -84,6 +84,11 @@ export interface EducationEntry {
 
 export type JobStatus = "open_to_right_role" | "actively_looking" | null;
 
+export interface TrustScoreDimension {
+  dimension: string;
+  value: number;
+}
+
 export interface ProfileData {
   id: string;
   name: string;
@@ -117,6 +122,7 @@ export interface ProfileData {
     jobs: JobEntry[];
     education: EducationEntry[];
   };
+  trustScoreBreakdown?: TrustScoreDimension[];
 }
 
 export interface ViewerData {

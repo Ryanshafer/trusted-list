@@ -425,6 +425,15 @@
     ]
   },
 
+  "trustScoreBreakdown": [
+    { "dimension": "Recommendations", "value": 88 },
+    { "dimension": "Help Quality",    "value": 73 },
+    { "dimension": "Reliability",  "value": 82 },
+    { "dimension": "Circle Judgment", "value": 70 },
+    { "dimension": "Participation",   "value": 90 },
+    { "dimension": "Engagement",      "value": 85 }
+  ],
+
   "notificationSettings": {
     "myRequests":    { "inApp": true,  "email": true  },
     "helpingOthers": { "inApp": true,  "email": true  },

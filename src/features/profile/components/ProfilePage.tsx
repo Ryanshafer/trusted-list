@@ -83,6 +83,7 @@ export function ProfilePage({
                 profile={profile}
                 viewerData={viewerData}
                 isOwner={isOwner}
+                publicView={publicView}
                 connectionDegree={connectionDegree}
                 basePath={basePath}
               />
