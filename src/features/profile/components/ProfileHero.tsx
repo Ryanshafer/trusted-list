@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Flag, MoreHorizontal, Settings, SquarePen, UserRoundX } from "lucide-react";
+import { ArrowRightLeft, Flag, MoreHorizontal, Settings, SquarePen, UserRoundX } from "lucide-react";
 import { ProfileParticleAvatar } from "./ProfileParticleAvatar";
 import { TrustTierBadge } from "./TrustTierBadge";
 import { JobStatusIndicator } from "./JobStatusIndicator";
@@ -32,13 +32,15 @@ function getTierIndex(score: number): number {
 interface ProfileHeroProps {
   profile: ProfileData;
   isOwner: boolean;
+  publicView?: boolean;
+  basePath?: string;
   userEmail?: string;
   connectionDegree?: string | null;
   availableSkills?: string[];
   onProfileUpdate: (updated: ProfileData) => void;
 }
 
-export function ProfileHero({ profile, isOwner, userEmail, connectionDegree, availableSkills, onProfileUpdate }: ProfileHeroProps) {
+export function ProfileHero({ profile, isOwner, publicView = false, basePath = "/trusted-list", userEmail, connectionDegree, availableSkills, onProfileUpdate }: ProfileHeroProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -97,20 +99,47 @@ export function ProfileHero({ profile, isOwner, userEmail, connectionDegree, ava
           <div className="flex items-start justify-end gap-3 pt-10 pr-10">
             {isOwner ? (
               <>
-                {/* Edit button — outline with primary border/text */}
-                <Button
-                  variant="outline"
-                  className="rounded-full h-10 px-6 text-sm font-medium border-primary text-primary hover:bg-primary hover:text-primary-foreground gap-2"
-                  onClick={() => setEditOpen(true)}
-                >
-                  <SquarePen className="h-4 w-4" />
-                  Edit personal info
-                </Button>
-                {/* Settings icon button */}
-                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-border text-muted-foreground" onClick={() => setSettingsOpen(true)}>
-                  <Settings className="h-4 w-4" />
-                  <span className="sr-only">Settings</span>
-                </Button>
+                {publicView ? (
+                  /* On /members — switch back to private view */
+                  <Button
+                    variant="outline"
+                    className="rounded-full h-10 px-6 text-sm font-semibold border-border text-foreground gap-2"
+                    asChild
+                  >
+                    <a href={`${basePath}/profile`}>
+                      <ArrowRightLeft className="h-4 w-4" />
+                      Switch to private view
+                    </a>
+                  </Button>
+                ) : (
+                  <>
+                    {/* Switch to public view */}
+                    <Button
+                      variant="outline"
+                      className="rounded-full h-10 px-6 text-sm font-semibold border-border text-foreground gap-2"
+                      asChild
+                    >
+                      <a href={`${basePath}/members/${profile.name.toLowerCase().replace(/\s+/g, "-")}`}>
+                        <ArrowRightLeft className="h-4 w-4" />
+                        Switch to public view
+                      </a>
+                    </Button>
+                    {/* Edit button */}
+                    <Button
+                      variant="outline"
+                      className="rounded-full h-10 px-6 text-sm font-medium border-primary text-primary hover:bg-primary hover:text-primary-foreground gap-2"
+                      onClick={() => setEditOpen(true)}
+                    >
+                      <SquarePen className="h-4 w-4" />
+                      Edit personal info
+                    </Button>
+                    {/* Settings icon button */}
+                    <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-border text-muted-foreground" onClick={() => setSettingsOpen(true)}>
+                      <Settings className="h-4 w-4" />
+                      <span className="sr-only">Settings</span>
+                    </Button>
+                  </>
+                )}
               </>
             ) : null}
             {/* More options — visitor only */}

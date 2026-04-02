@@ -18,6 +18,7 @@ interface ProfilePageProps {
   profile: ProfileData;
   viewerData?: ViewerData;
   isOwner: boolean;
+  publicView?: boolean;
   userEmail?: string;
   connectionDegree?: string | null;
   availableSkills?: string[];
@@ -28,6 +29,7 @@ export function ProfilePage({
   profile: initialProfile,
   viewerData,
   isOwner,
+  publicView = false,
   userEmail,
   connectionDegree,
   availableSkills = [],
@@ -38,6 +40,9 @@ export function ProfilePage({
   const [editRecsDialogOpen, setEditRecsDialogOpen] = useState(false);
   const [hiddenRecs, setHiddenRecs] = useState<ProfileData["recommendations"]>([]);
 
+  // Edit affordances are only shown in the private view, not on the public /members page
+  const canEdit = isOwner && !publicView;
+
   const contributionCards = profile.contributions.items.map((item) => (
     <ContributionCard key={item.requestId} item={item} basePath={basePath} />
   ));
@@ -46,7 +51,7 @@ export function ProfilePage({
     <RecommendationCard key={i} rec={rec} basePath={basePath} />
   ));
   const shouldShowRecommendationsSection =
-    recommendationCards.length > 0 || (isOwner && hiddenRecs.length > 0);
+    recommendationCards.length > 0 || (canEdit && hiddenRecs.length > 0);
 
   return (
     <SidebarProvider>
@@ -62,6 +67,8 @@ export function ProfilePage({
               <ProfileHero
                 profile={profile}
                 isOwner={isOwner}
+                publicView={publicView}
+                basePath={basePath}
                 userEmail={userEmail}
                 connectionDegree={connectionDegree}
                 availableSkills={availableSkills}
@@ -99,13 +106,13 @@ export function ProfilePage({
                     title="What colleagues say"
                     totalCount={profile.recommendations.length}
                     countLabel="Recommendations"
-                    filterLabel={isOwner ? undefined : "Trusted for"}
-                    filterSkills={isOwner ? [] : profile.verifiedSkills.slice(0, 3)}
-                    actionLabel={isOwner ? "Edit recommendations" : undefined}
-                    onActionClick={isOwner ? () => setEditRecsDialogOpen(true) : undefined}
+                    filterLabel={canEdit ? undefined : "Trusted for"}
+                    filterSkills={canEdit ? [] : profile.verifiedSkills.slice(0, 3)}
+                    actionLabel={canEdit ? "Edit recommendations" : undefined}
+                    onActionClick={canEdit ? () => setEditRecsDialogOpen(true) : undefined}
                     items={recommendationCards}
                     itemBasis="basis-96"
-                    showWhenEmpty={isOwner && hiddenRecs.length > 0}
+                    showWhenEmpty={canEdit && hiddenRecs.length > 0}
                   />
                 )}
 
@@ -113,7 +120,7 @@ export function ProfilePage({
                   <OwnWordsGrid
                     firstName={profile.firstName}
                     entries={profile.inTheirOwnWords}
-                    isOwner={isOwner}
+                    isOwner={canEdit}
                     onEditClick={() => setOwnWordsDialogOpen(true)}
                   />
                 )}
@@ -122,7 +129,7 @@ export function ProfilePage({
                   jobs={profile.experience.jobs}
                   education={profile.experience.education}
                   firstName={profile.firstName}
-                  isOwner={isOwner}
+                  isOwner={canEdit}
                   onSave={(experience) =>
                     setProfile((prev) => ({ ...prev, experience }))
                   }

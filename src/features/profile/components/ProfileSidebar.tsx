@@ -67,7 +67,9 @@ export function ProfileSidebar({
   }
 
   const showConnectionPath =
-    !isOwner && connectionDegree && connectionDegree !== "none" && connectionPathNodes.length >= 2;
+    !isOwner &&
+    (connectionDegree === "1st" || connectionDegree === "2nd") &&
+    connectionPathNodes.length >= 2;
 
   const viewerContact = {
     id: "viewer",
@@ -83,8 +85,29 @@ export function ProfileSidebar({
         <AboutSection profile={profile} />
       </div>
 
-      {/* Circle */}
-      {profile.circle.length > 0 && (
+            {/* Connection path — connected visitor only */}
+      {showConnectionPath && viewerData && (
+        <>
+          <div className="h-px w-full shrink-0 bg-border" />
+          <section className="flex w-full flex-col gap-3.5">
+            <span className="text-sm text-muted-foreground uppercase">
+              {connectionDegree === "1st"
+                ? `YOUR CONNECTION TO ${profile.firstName.toUpperCase()}`
+                : `YOUR ${connectionDegree?.toUpperCase()} DEGREE CONNECTION TO ${profile.firstName.toUpperCase()}`}
+            </span>
+            <ConnectionPath
+              connectionPath={connectionPathNodes}
+              connectionDegree={connectionDegree!}
+              resolveNode={resolveConnectionNode}
+              basePath={basePath}
+              hideHeader={true}
+            />
+          </section>
+        </>
+      )}
+
+      {/* Circle — hidden for 2nd degree and beyond */}
+      {profile.circle.length > 0 && (isOwner || connectionDegree === "1st") && (
         <>
           <div className="h-px w-full shrink-0 bg-border" />
           <CircleAvatarStack
@@ -95,25 +118,6 @@ export function ProfileSidebar({
             isOwner={isOwner}
             basePath={basePath}
           />
-        </>
-      )}
-
-      {/* Connection path — connected visitor only */}
-      {showConnectionPath && viewerData && (
-        <>
-          <div className="h-px w-full shrink-0 bg-border" />
-          <section className="flex w-full flex-col gap-3.5">
-            <span className="text-sm text-muted-foreground uppercase">
-              YOUR CONNECTION TO {profile.firstName.toUpperCase()}
-            </span>
-            <ConnectionPath
-              connectionPath={connectionPathNodes}
-              connectionDegree={connectionDegree!}
-              resolveNode={resolveConnectionNode}
-              basePath={basePath}
-              hideHeader={true}
-            />
-          </section>
         </>
       )}
 

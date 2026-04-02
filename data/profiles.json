@@ -1162,5 +1162,389 @@
         }
       ]
     }
+  },
+  {
+    "id": "user-sam-smith",
+    "name": "Sam Smith",
+    "firstName": "Sam",
+    "lastName": "Smith",
+    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+    "title": "Head of Product",
+    "company": "Fieldwork",
+    "trustScore": 610,
+    "trustTier": "Rising",
+    "jobStatus": null,
+    "verifiedSkills": [
+      "Product Strategy",
+      "Roadmap Prioritization",
+      "Stakeholder Alignment"
+    ],
+    "connectionDegree": "2nd",
+    "about": {
+      "bio": "Product leader at a Series B startup building research tooling for enterprise teams. I think a lot about how to make prioritisation feel less political and more grounded.",
+      "location": "Chicago, IL",
+      "websiteUrl": null,
+      "linkedInUrl": "https://www.linkedin.com/in/samsmith-product",
+      "githubUrl": null
+    },
+    "circle": [
+      {
+        "userId": "user-jen-wu",
+        "name": "Jen Wu",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Product Design",
+          "UX Research",
+          "Design Leadership"
+        ]
+      },
+      {
+        "userId": "user-marcus-bell",
+        "name": "Marcus Bell",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Leadership",
+          "Product Strategy",
+          "Team Building"
+        ]
+      },
+      {
+        "userId": "user-priya-nair",
+        "name": "Priya Nair",
+        "avatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "UX Strategy",
+          "Systems Thinking",
+          "Research"
+        ]
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Jen Wu",
+        "role": "Design Director · Acme Corp",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "relationship": "Worked together 2019–2021 · Acme Corp"
+      },
+      {
+        "type": "requester",
+        "name": "Sam Smith",
+        "role": "Head of Product · Fieldwork",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Worked together 2015–2018 · Acme Corp"
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "sam-req-1",
+        "title": "How do you run quarterly planning without it becoming a political nightmare?",
+        "category": "Advice",
+        "description": "We're a 40-person startup hitting the point where roadmap planning is getting contentious. Looking for PMs or founders who have navigated this and come out with a healthier process.",
+        "endDate": "2026-05-10T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "Product Strategy",
+        "Roadmap Prioritization",
+        "Stakeholder Alignment"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-sam-1",
+          "requesterName": "Jen Wu",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Product Design",
+            "UX Research"
+          ],
+          "requestTitle": "Intro to a PM who's worked on marketplace products",
+          "feedbackSubject": "Jen thinks this request worked out!",
+          "feedbackBody": "Sam connected me to exactly the right person without me having to over-explain the context. He clearly listens before he helps — rare and incredibly valuable. Within two days I had a conversation that reshaped how I was thinking about the problem."
+        },
+        {
+          "requestId": "contrib-sam-2",
+          "requesterName": "Marcus Bell",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Leadership",
+            "Product Strategy"
+          ],
+          "requestTitle": "How do I structure a product org for our next stage of growth?",
+          "feedbackSubject": "Marcus thinks this request worked out!",
+          "feedbackBody": "Sam has a rare ability to think structurally about organisations without losing sight of the humans inside them. He helped me think through our team structure in a way that was both pragmatic and principled — I left with a clear path forward that I felt genuinely good about."
+        },
+        {
+          "requestId": "contrib-sam-3",
+          "requesterName": "Priya Nair",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "UX Strategy",
+            "Systems Thinking"
+          ],
+          "requestTitle": "Feedback on how I'm framing a discovery process to sceptical stakeholders",
+          "feedbackSubject": "Priya thinks this partially worked out",
+          "feedbackBody": "Sam was honest in a way that was useful rather than just reassuring. He pushed back on a framing I'd gotten attached to and offered a cleaner alternative. Not the answer I expected but definitely the one I needed."
+        },
+        {
+          "requestId": "contrib-sam-4",
+          "requesterName": "Alex Rivera",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "3rd",
+          "requesterTrustedFor": [
+            "Growth Strategy",
+            "B2B SaaS"
+          ],
+          "requestTitle": "How do you run quarterly planning without it becoming a political nightmare?",
+          "feedbackSubject": "Alex thinks this request worked out!",
+          "feedbackBody": "Sam brought a practitioner's perspective that I couldn't have gotten from an article or a framework. He's been through the exact scenario I was facing and shared what actually worked — not the sanitised version. Exactly the kind of conversation I needed."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Jen Wu",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "Product Design",
+          "UX Research"
+        ],
+        "body": "Sam has a rare combination of strategic clarity and genuine generosity. He helped me navigate a thorny stakeholder situation by asking questions I hadn't thought to ask myself. He also made a warm intro that changed the direction of a product initiative — completely unprompted. That's the kind of person you want in your circle."
+      },
+      {
+        "recommenderName": "Alex Rivera",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "3rd",
+        "recommenderTrustedFor": [
+          "Growth Strategy",
+          "B2B SaaS"
+        ],
+        "body": "I've only interacted with Sam a handful of times but each one left a mark. He has a clarity of thinking that cuts through ambiguity fast — the kind of person who asks the one question that reframes everything. Anyone working on hard product problems should find a way to get him in the room."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "Usually roadmap decisions and stakeholder dynamics. People come to me when they're stuck between competing priorities or need someone to pressure-test their thinking before a big conversation. I've made most of the classic PM mistakes, so I'm good at spotting the traps before you fall in them."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "The ones where the real blocker isn't the product — it's the room. Misaligned incentives, competing definitions of success, teams that are rowing in different directions. Getting clarity there unlocks everything else."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "A morning of deep thinking with no Slack. A focused spec review with the team where we actually disagree productively. A short call where I help someone think through a problem. Ending the day knowing which three things matter most for tomorrow."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "03-2022",
+          "endDate": "present",
+          "location": "Chicago, IL",
+          "title": "Head of Product",
+          "company": "Fieldwork",
+          "description": "Leading product for a research tooling platform serving enterprise UX teams. Responsible for roadmap, discovery process, and cross-functional alignment across engineering, design, and GTM."
+        },
+        {
+          "startDate": "06-2019",
+          "endDate": "02-2022",
+          "location": "Chicago, IL",
+          "title": "Senior Product Manager",
+          "company": "Lattice",
+          "description": "Owned the performance management suite. Drove a full redesign of the review cycle builder, reducing setup time by 40% and earning the product's highest NPS quarter."
+        },
+        {
+          "startDate": "08-2016",
+          "endDate": "05-2019",
+          "location": "New York, NY",
+          "title": "Product Manager",
+          "company": "Wirecutter (NYT)",
+          "description": "Managed editorial tooling and content workflows for a team of 60 journalists and reviewers."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2016",
+          "institution": "University of Michigan",
+          "location": "Ann Arbor, MI",
+          "degree": "Bachelor of Arts",
+          "field": "Cognitive Science"
+        }
+      ]
+    }
+  },
+  {
+    "id": "user-alex-rivera",
+    "name": "Alex Rivera",
+    "firstName": "Alex",
+    "lastName": "Rivera",
+    "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
+    "title": "VP of Growth",
+    "company": "Lumio",
+    "trustScore": 200,
+    "trustTier": "Emerging",
+    "jobStatus": null,
+    "verifiedSkills": [
+      "Growth Strategy",
+      "B2B SaaS",
+      "Revenue Operations"
+    ],
+    "connectionDegree": "3rd",
+    "about": {
+      "bio": "Growth leader at a B2B SaaS company helping mid-market teams streamline their ops. I care about sustainable growth — the kind that doesn't collapse under its own weight.",
+      "location": "Austin, TX",
+      "websiteUrl": null,
+      "linkedInUrl": "https://www.linkedin.com/in/alexrivera-growth",
+      "githubUrl": null
+    },
+    "circle": [
+      {
+        "userId": "user-sam-smith",
+        "name": "Sam Smith",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "connectionDegree": "1st",
+        "verifiedSkills": [
+          "Product Strategy",
+          "Roadmap Prioritization",
+          "Stakeholder Alignment"
+        ]
+      }
+    ],
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Head of Design · The Trusted List",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Jen Wu",
+        "role": "Design Director · Acme Corp",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+        "relationship": "In Sam's circle"
+      },
+      {
+        "type": "connector",
+        "name": "Sam Smith",
+        "role": "Head of Product · Fieldwork",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "In Alex's circle"
+      },
+      {
+        "type": "requester",
+        "name": "Alex Rivera",
+        "role": "VP of Growth · Lumio",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+        "relationship": null
+      }
+    ],
+    "openRequests": [
+      {
+        "requestId": "alex-req-1",
+        "title": "Looking for a PLG advisor who's done it at a mid-market B2B company",
+        "category": "Advice",
+        "description": "We're exploring a product-led growth motion alongside our existing sales-led approach. Would love to talk to someone who's navigated that transition without blowing up the existing revenue base.",
+        "endDate": "2026-05-20T00:00:00.000Z"
+      }
+    ],
+    "contributions": {
+      "skillsInAction": [
+        "Growth Strategy",
+        "B2B SaaS",
+        "Revenue Operations"
+      ],
+      "items": [
+        {
+          "requestId": "contrib-alex-1",
+          "requesterName": "Sam Smith",
+          "requesterAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+          "requesterConnectionDegree": "1st",
+          "requesterTrustedFor": [
+            "Product Strategy",
+            "Roadmap Prioritization"
+          ],
+          "requestTitle": "How do you run quarterly planning without it becoming a political nightmare?",
+          "feedbackSubject": "Sam thinks this request worked out!",
+          "feedbackBody": "Alex brought a practitioner's perspective that I couldn't have gotten from an article or a framework. She's been through the exact scenario I was facing and shared what actually worked — not the sanitised version. Exactly the kind of conversation I needed."
+        }
+      ]
+    },
+    "recommendations": [
+      {
+        "recommenderName": "Sam Smith",
+        "recommenderAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "recommenderConnectionDegree": "1st",
+        "recommenderTrustedFor": [
+          "Product Strategy",
+          "Stakeholder Alignment"
+        ],
+        "body": "Alex thinks in systems, not tactics. When she helped me work through our planning process she didn't just answer my question — she helped me see why it was the wrong question. That kind of thinking is rare and genuinely useful."
+      }
+    ],
+    "inTheirOwnWords": [
+      {
+        "question": "What help do people come to you for?",
+        "answer": "Usually growth strategy at the awkward middle stage — when you've found product-market fit but the old playbook is starting to break. I've lived through that transition twice and made most of the expensive mistakes so others don't have to."
+      },
+      {
+        "question": "What problems do you love solving?",
+        "answer": "The ones where the growth lever isn't obvious. Anyone can optimise a funnel that's already working. I like the problems where you have to figure out which funnel you should even be running."
+      },
+      {
+        "question": "What does a great work day look like?",
+        "answer": "A sharp 1:1 with someone who pushes back on my thinking. A metric that moved because of something we shipped last week. Leaving early enough to cook dinner."
+      }
+    ],
+    "experience": {
+      "jobs": [
+        {
+          "startDate": "01-2023",
+          "endDate": "present",
+          "location": "Austin, TX",
+          "title": "VP of Growth",
+          "company": "Lumio",
+          "description": "Leading growth for a B2B revenue operations platform. Responsible for acquisition, activation, and expansion across a 400-customer mid-market base."
+        },
+        {
+          "startDate": "05-2019",
+          "endDate": "12-2022",
+          "location": "San Francisco, CA",
+          "title": "Director of Growth",
+          "company": "Capsule CRM",
+          "description": "Owned the full growth funnel from paid acquisition to onboarding optimisation. Grew MRR 3× over three years through a combination of PLG experiments and sales-assist improvements."
+        },
+        {
+          "startDate": "06-2016",
+          "endDate": "04-2019",
+          "location": "New York, NY",
+          "title": "Growth Manager",
+          "company": "Intercom",
+          "description": "Ran self-serve acquisition and activation experiments across the SMB segment."
+        }
+      ],
+      "education": [
+        {
+          "graduationYear": "2016",
+          "institution": "New York University",
+          "location": "New York, NY",
+          "degree": "Bachelor of Science",
+          "field": "Marketing & Information Systems"
+        }
+      ]
+    }
   }
 ]

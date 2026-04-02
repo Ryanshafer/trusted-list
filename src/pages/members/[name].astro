@@ -4,7 +4,7 @@ import { ProfilePage } from "../../features/profile/components/ProfilePage";
 import requestsData from "../../../data/requests.json";
 import requestDetailsData from "../../../data/request-details.json";
 import profilesData from "../../../data/profiles.json";
-import currentUser from "../../../data/current-user.json";
+import currentUserData from "../../../data/current-user.json";
 import type { ProfileData, ViewerData } from "../../features/profile/types";
 
 type PersonStub = {
@@ -63,6 +63,17 @@ export function getStaticPaths() {
     }
   }
 
+  // Also include the current user so /members/<their-slug> resolves
+  const cu = currentUserData as any;
+  if (!people.has(cu.name)) {
+    people.set(cu.name, {
+      name: cu.name,
+      avatarUrl: cu.avatarUrl ?? null,
+      subtitle: `${cu.title} · ${cu.company}`,
+      trustedFor: cu.verifiedSkills?.join(", ") ?? null,
+    });
+  }
+
   return [...people.values()].map((person) => ({
     params: { name: person.name.toLowerCase().replace(/\s+/g, "-") },
     props: { person },
@@ -71,13 +82,17 @@ export function getStaticPaths() {
 
 const { person } = Astro.props;
 
-// Check if a rich profile exists for this person
-const richProfile = (profilesData as unknown as ProfileData[]).find(
+// Check if a rich profile exists — profiles.json first, then current-user.json
+const allProfiles = [
+  ...(profilesData as unknown as ProfileData[]),
+  currentUserData as unknown as ProfileData,
+];
+const richProfile = allProfiles.find(
   (p) => p.name.toLowerCase() === person.name.toLowerCase()
 );
 
 // Viewer data = current logged-in user
-const viewer = currentUser as unknown as ProfileData;
+const viewer = currentUserData as unknown as ProfileData;
 const viewerData: ViewerData = {
   name: viewer.name,
   firstName: viewer.firstName,
@@ -85,6 +100,8 @@ const viewerData: ViewerData = {
   role: `${viewer.title} · ${viewer.company}`,
   sharedConnectionIds: viewer.circle?.map((m: any) => m.userId) ?? [],
 };
+
+const isOwner = richProfile?.id === viewer.id;
 
 // Initials fallback for stub
 const initials = person.name
@@ -106,7 +123,8 @@ const initials = person.name
     <ProfilePage
       profile={richProfile}
       viewerData={viewerData}
-      isOwner={false}
+      isOwner={isOwner}
+      publicView={isOwner}
       connectionDegree={richProfile.connectionDegree ?? null}
       basePath="/trusted-list"
       client:load
