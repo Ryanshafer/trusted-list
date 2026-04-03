@@ -1,14 +1,12 @@
 import * as React from "react";
 import { toast } from "sonner";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
@@ -19,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 
 type FlagReason =
   | "spam"
@@ -41,8 +39,6 @@ export function FlagRequestDialog({
   onOpenChange,
   requestSummary,
   requestText,
-  requestorName,
-  requestorAvatarUrl,
   onSubmit,
 }: {
   open: boolean;
@@ -55,16 +51,6 @@ export function FlagRequestDialog({
 }) {
   const [reason, setReason] = React.useState<FlagReason>("spam");
   const [details, setDetails] = React.useState("");
-  const requestorInitials = React.useMemo(() => {
-    if (!requestorName) return "";
-    return requestorName
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-  }, [requestorName]);
-
   React.useEffect(() => {
     if (open) return;
     setReason("spam");
@@ -75,36 +61,35 @@ export function FlagRequestDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Flag as inappropriate</DialogTitle>
-          <DialogDescription>
-            Help keep The Trusted List safe. Your report is private.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="max-w-lg p-0 gap-0 overflow-hidden rounded-2xl [&>button]:hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="font-serif text-2xl font-normal leading-8">Flag as inappropriate</h2>
+            <p className="text-sm text-muted-foreground">Help keep The Trusted List safe. Your report is private.</p>
+          </div>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 rounded-full border-border bg-muted font-semibold"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </DialogClose>
+        </div>
 
-        <div className="space-y-5">
+        {/* Scrollable content */}
+        <div className="overflow-y-auto max-h-[calc(100vh-220px)] px-6 pt-4 pb-6 flex flex-col gap-5">
           <div className="rounded-xl border border-border bg-muted-25 p-4">
             <div className="space-y-2">
-              {requestorName ? (
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-7 w-7">
-                    <AvatarImage src={requestorAvatarUrl ?? undefined} alt={requestorName} />
-                    <AvatarFallback className="text-xs font-semibold text-foreground-75">
-                      {requestorInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-xs font-semibold tracking-wide text-muted-foreground">
-                    {requestorName}
-                  </div>
-                </div>
-              ) : null}
               {requestSummary ? (
-                <div className="text-sm font-semibold leading-snug text-foreground">
+                <div className="font-serif text-2xl leading-7 text-card-foreground">
                   {requestSummary}
                 </div>
               ) : null}
-              <div className="text-sm leading-relaxed text-muted-foreground">
+              <div className="line-clamp-5 text-sm leading-relaxed text-card-foreground">
                 {requestText}
               </div>
             </div>
@@ -142,12 +127,18 @@ export function FlagRequestDialog({
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="ghost" className="rounded-full font-semibold leading-none" onClick={() => onOpenChange(false)}>
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-4 px-6 py-4 bg-card border-t border-border">
+          <Button
+            variant="ghost"
+            className="rounded-full font-semibold"
+            onClick={() => onOpenChange(false)}
+            type="button"
+          >
             Cancel
           </Button>
           <Button
-            className="rounded-full font-semibold leading-none"
+            className="rounded-full font-semibold"
             disabled={!canSubmit}
             onClick={() => {
               onSubmit?.({ reason, details: details.trim() });
@@ -156,10 +147,11 @@ export function FlagRequestDialog({
               });
               onOpenChange(false);
             }}
+            type="button"
           >
             Submit report
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

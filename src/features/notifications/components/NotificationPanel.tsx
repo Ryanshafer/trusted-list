@@ -16,8 +16,7 @@ import {
   X,
 } from "lucide-react";
 
-import { cn, getInitials } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import { UserIdentityLink } from "@/components/UserIdentityLink";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,12 +26,7 @@ import {
   SheetContent,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChatMultiHelperModal } from "@/features/dashboard/components/ChatMultiHelperModal";
 
 // ---------------------------------------------------------------------------
@@ -78,8 +72,6 @@ export interface NotificationPanelProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-
 
 function memberHref(name: string) {
   return `/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`;
@@ -195,7 +187,9 @@ function getNotificationBody(notif: Notification): string {
         waitlisted: "has been placed on the waitlist",
         rejected: "was not accepted at this time",
       };
-      return `Your recommendation of ${notif.payload.recommendedName} ${outcomeMap[notif.payload.outcome ?? ""] ?? "has been reviewed"}`;
+      return `Your recommendation of ${notif.payload.recommendedName} ${
+        outcomeMap[notif.payload.outcome ?? ""] ?? "has been reviewed"
+      }`;
     }
     case "content_flagged":
       return `Your request "${notif.payload.requestTitle}" has been flagged and is under review`;
@@ -204,7 +198,9 @@ function getNotificationBody(notif: Notification): string {
         reinstated: "has been reviewed and reinstated",
         removed: "has been removed for violating community standards",
       };
-      return `Your request "${notif.payload.requestTitle}" ${decisionMap[notif.payload.decision ?? ""] ?? "has been reviewed"}`;
+      return `Your request "${notif.payload.requestTitle}" ${
+        decisionMap[notif.payload.decision ?? ""] ?? "has been reviewed"
+      }`;
     }
     default:
       return "";
@@ -369,7 +365,10 @@ function NotificationRow({
             {notif.type === "direct_help_request" && (
               <div className="flex items-center gap-3">
                 {helpDeclined ? (
-                  <Badge variant="outline" className="rounded-full border-transparent py-1 bg-muted text-muted-foreground">
+                  <Badge
+                    variant="outline"
+                    className="rounded-full border-transparent py-1 bg-muted text-muted-foreground"
+                  >
                     Declined
                   </Badge>
                 ) : (
@@ -403,13 +402,15 @@ function NotificationRow({
           open={helpOpen}
           onOpenChange={setHelpOpen}
           title={notif.payload.requestTitle}
-          contacts={[{
-            id: notif.actor.id,
-            name: notif.actor.name,
-            role: notif.actor.trustedFor[0] ?? "",
-            trustedFor: notif.actor.trustedFor.join(", "),
-            avatarUrl: notif.actor.avatarUrl ?? null,
-          }]}
+          contacts={[
+            {
+              id: notif.actor.id,
+              name: notif.actor.name,
+              role: notif.actor.trustedFor[0] ?? "",
+              trustedFor: notif.actor.trustedFor.join(", "),
+              avatarUrl: notif.actor.avatarUrl ?? null,
+            },
+          ]}
         />
       )}
     </>
@@ -426,9 +427,12 @@ function EmptyState() {
       <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
         <Bell className="h-5 w-5 text-muted-foreground/50" />
       </div>
-      <p className="text-sm font-semibold text-foreground">You&apos;re all caught up</p>
+      <p className="text-sm font-semibold text-foreground">
+        You&apos;re all caught up
+      </p>
       <p className="text-xs text-muted-foreground mt-1 leading-5">
-        New notifications will appear here when there&apos;s activity in your network.
+        New notifications will appear here when there&apos;s activity in your
+        network.
       </p>
     </div>
   );
@@ -563,21 +567,30 @@ export function NotificationPanel({
             value="all"
             className="flex-1 overflow-y-auto mt-3 data-[state=inactive]:hidden"
           >
-            <NotificationList notifications={notifications} onMarkRead={onMarkRead} />
+            <NotificationList
+              notifications={notifications}
+              onMarkRead={onMarkRead}
+            />
           </TabsContent>
 
           <TabsContent
             value="requests"
             className="flex-1 overflow-y-auto mt-3 data-[state=inactive]:hidden"
           >
-            <NotificationList notifications={requestsNotifs} onMarkRead={onMarkRead} />
+            <NotificationList
+              notifications={requestsNotifs}
+              onMarkRead={onMarkRead}
+            />
           </TabsContent>
 
           <TabsContent
             value="circle"
             className="flex-1 overflow-y-auto mt-3 data-[state=inactive]:hidden"
           >
-            <NotificationList notifications={circleNotifs} onMarkRead={onMarkRead} />
+            <NotificationList
+              notifications={circleNotifs}
+              onMarkRead={onMarkRead}
+            />
           </TabsContent>
         </Tabs>
       </SheetContent>
