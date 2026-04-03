@@ -1,7 +1,7 @@
 import type { CardData } from "@/features/dashboard/types";
-import data from "../../../data/interactions.json";
-import chats from "../../../data/interactions-chats.json";
-import currentUser from "../../../data/current-user.json";
+import data from "../../../../data/interactions.json";
+import chats from "../../../../data/interactions-chats.json";
+import currentUser from "../../../../data/current-user.json";
 
 export type RawMessage = {
   id: number;

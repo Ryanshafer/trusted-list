@@ -6,7 +6,7 @@ import { BadgeHelp, CircleUser, MessagesSquare, PanelLeft, Search, ShieldQuestio
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
-import { SearchCommandPalette } from "@/features/search/SearchCommandPalette"
+import { SearchCommandPalette } from "@/features/search/components/SearchCommandPalette"
 import currentUserData from "../../data/current-user.json"
 import {
   Sidebar,

@@ -1,18 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { ContributionItem } from "../types";
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 function memberHref(name: string, basePath = "/trusted-list") {
   return `${basePath}/members/${name.toLowerCase().replace(/\s+/g, "-")}`;
@@ -32,29 +22,15 @@ export function ContributionCard({ item, basePath = "/trusted-list" }: Contribut
   return (
     <div className="flex flex-col gap-3.5">
       {/* Requester identity */}
-      <a href={memberHref(item.requesterName, basePath)} className="group flex items-center gap-3">
-        <Avatar className="h-[60px] w-[60px] shrink-0 border-[3.5px] border-white shadow-md transition-colors group-hover:border-primary">
-          <AvatarImage src={item.requesterAvatarUrl ?? undefined} alt={item.requesterName} />
-          <AvatarFallback className="text-sm font-semibold">
-            {getInitials(item.requesterName)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-lg font-bold text-card-foreground transition-colors group-hover:text-primary">
-              {item.requesterName}
-            </span>
-            <Badge className="rounded-full border border-neutral-200 bg-neutral-100 hover:bg-neutral-100 px-2 py-0.5 text-xs font-semibold leading-4 text-neutral-800">
-              {item.requesterConnectionDegree}
-            </Badge>
-          </div>
-          {item.requesterTrustedFor.length > 0 && (
-            <p className="text-xs text-muted-foreground">
-              Trusted for {item.requesterTrustedFor.join(", ")}
-            </p>
-          )}
-        </div>
-      </a>
+      <UserIdentityLink
+        avatarUrl={item.requesterAvatarUrl}
+        name={item.requesterName}
+        connectionDegree={item.requesterConnectionDegree}
+        trustedFor={item.requesterTrustedFor}
+        href={memberHref(item.requesterName, basePath)}
+        avatarSize="md"
+        avatarBorderClass="border-white"
+      />
 
       {/* Request title */}
       <a

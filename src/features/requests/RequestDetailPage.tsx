@@ -6,7 +6,7 @@ import dashboardData from "../../../data/dashboard-content.json";
 import profilesData from "../../../data/profiles.json";
 import type { CardData } from "@/features/dashboard/types";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -34,7 +34,8 @@ import { ChatMultiHelperModal, type Message as MultiChatMessage, type Completion
 import completionFeedbackData from "../../../data/interaction-completion-feedback.json";
 import { ConfettiBurst, RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
-import { myHelpRequests, interactionChats } from "@/features/interactions/data";
+import { myHelpRequests, interactionChats } from "@/features/interactions/utils/data";
+import { getInitials, formatEndDate } from "@/lib/utils";
 import { HelpRequestDialog, REQUEST_CATEGORIES, type AskMode } from "@/features/requests/components/HelpRequestDialog";
 import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
 import currentUser from "../../../data/current-user.json";
@@ -182,21 +183,9 @@ const categoryDisplayNames: Record<string, string> = {
   other: "Other",
 };
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
-function formatDueDate(dateString?: string | null): string {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
-}
+
+
 
 
 export default function RequestDetailPage({ id }: { id: string }) {
@@ -218,7 +207,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
 
   const categoryLabel = request.category ? (categoryDisplayNames[request.category] ?? null) : null;
   const categoryHref = request.category ? `/trusted-list/requests/${request.category}` : null;
-  const dueDate = formatDueDate(request.endDate);
+  const dueDate = formatEndDate(request.endDate, false);
 
   const resolveNode = (node: { type: string; name?: string; role: string; avatarUrl?: string | null; relationship?: string | null }) => {
     if (node.type === "you") return { ...node, name: currentUser.name, role: `${currentUser.title} · ${currentUser.company}`, avatarUrl: currentUser.avatarUrl };
@@ -226,8 +215,8 @@ export default function RequestDetailPage({ id }: { id: string }) {
     return { ...node, name: node.name ?? "", avatarUrl: node.avatarUrl ?? null };
   };
 
-  const currentUserOpenRequest = (currentUser as any).openRequests?.find((r: any) => r.requestId === id) ?? null;
-  const myHelpReq = myHelpRequests.find((r) => r.id === id) ?? null;
+  const currentUserOpenRequest = (currentUser as any).openRequests?.find((r: { requestId: string }) => r.requestId === id) ?? null;
+  const myHelpReq = myHelpRequests.find((r: any) => r.id === id) ?? null;
   const isOwnRequest = !!myHelpReq || !!currentUserOpenRequest;
   const resolvedAuthor = isOwnRequest
     ? { ...detail.author, name: currentUser.name, avatarUrl: currentUser.avatarUrl, role: `${currentUser.title} · ${currentUser.company}` }
@@ -273,7 +262,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
     if (!isOwnRequest) return "active";
     if (!myHelpReq) return "active";
     const req = myHelpReq;
-    const isComplete = req.status === "Closed" || (req.type === "contact" && req.responses.some((r) => r.status === "Completed"));
+    const isComplete = req.status === "Closed" || (req.type === "contact" && req.responses.some((r: any) => r.status === "Completed"));
     if (isComplete) return "complete";
     const isPromotable = ["circle", "community"].includes(req.type);
     if (isPromotable && req.promoted === false) return "paused";
@@ -288,24 +277,24 @@ export default function RequestDetailPage({ id }: { id: string }) {
     contact: "My Contact",
     circle: "My Circle",
     community: "The Trusted List",
-  };
+  } as const;
 
   // Chat data for own requests
   const [localAudience, setLocalAudience] = React.useState<string>(
-    askModeToAudienceLabel[myHelpReq?.type ?? "circle"] ?? detail.audience
+    askModeToAudienceLabel[myHelpReq?.type as AskMode ?? "circle"] ?? detail.audience
   );
   const hasChats = !!(myHelpReq && myHelpReq.responses.length > 0);
   const rawResponses = React.useMemo(() => {
     const map: Record<string, string> = {};
     for (const resp of myHelpReq?.responses ?? []) {
-      if (resp.trustedFor) map[resp.id] = resp.trustedFor;
+      if ((resp as any).trustedFor) map[(resp as any).id] = (resp as any).trustedFor;
     }
     return map;
   }, [myHelpReq]);
 
   const multiContacts = React.useMemo(
     () =>
-      myHelpReq?.responses.map((r) => ({
+      myHelpReq?.responses.map((r: any) => ({
         id: r.id,
         name: r.name,
         role: r.role ?? "",
@@ -473,7 +462,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
                   {dueDate && (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground leading-none">
                       <Clock className="h-3 w-3 shrink-0 mb-0.5" />
-                      <span>Open until {dueDate}</span>
+                      <span>{dueDate}</span>
                     </span>
                   )}
                 </div>
@@ -487,32 +476,17 @@ export default function RequestDetailPage({ id }: { id: string }) {
               {/* Author card */}
               {(() => {
                 const authorSlug = isOwnRequest ? "/trusted-list/profile" : `/trusted-list/members/${resolvedAuthor.name.toLowerCase().replace(/\s+/g, "-")}`;
-                const authorInner = (
-                  <>
-                    <Avatar className={`h-15 w-15 shrink-0 border-2 border-background shadow-[0px_7px_10.5px_-1.75px_rgba(0,0,0,0.1),0px_3.5px_7px_-3.5px_rgba(0,0,0,0.1)] transition-colors${authorSlug ? " group-hover/member:border-primary" : ""}`}>
-                      <AvatarImage src={resolvedAuthor.avatarUrl ?? undefined} alt={resolvedAuthor.name} />
-                      <AvatarFallback className="text-sm font-semibold">{getInitials(resolvedAuthor.name)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col gap-0.5">
-                      <div className="flex items-center gap-3">
-                        <span className={`text-lg font-bold text-card-foreground leading-7 transition-colors${authorSlug ? " group-hover/member:text-primary" : ""}`}>
-                          {resolvedAuthor.name}
-                        </span>
-                        {(isOwnRequest || detail.author.connectionDegree !== "none") && (
-                          <Badge variant="outline" className="rounded-full border-neutral-200 bg-neutral-100 text-neutral-800 text-xs font-semibold leading-4">
-                            {isOwnRequest ? "You" : detail.author.connectionDegree}
-                          </Badge>
-                        )}
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        Trusted for {isOwnRequest ? currentUser.verifiedSkills.join(", ") : resolvedAuthor.trustedFor}
-                      </span>
-                    </div>
-                  </>
+                return (
+                  <UserIdentityLink
+                    avatarUrl={resolvedAuthor.avatarUrl}
+                    name={resolvedAuthor.name}
+                    connectionDegree={isOwnRequest || detail.author.connectionDegree !== "none" ? (isOwnRequest ? "You" : detail.author.connectionDegree) : undefined}
+                    trustedFor={isOwnRequest ? currentUser.verifiedSkills : resolvedAuthor.trustedFor}
+                    href={authorSlug}
+                    avatarSize="lg"
+                    groupClass="group/member"
+                  />
                 );
-                return authorSlug
-                  ? <a href={authorSlug} className="flex items-center gap-3 group/member">{authorInner}</a>
-                  : <div className="flex items-center gap-3">{authorInner}</div>;
               })()}
 
               {/* Body text */}
@@ -523,7 +497,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
               {/* Topics */}
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground tracking-widest uppercase">Topics</span>
-                {detail.topics.map((topic) => (
+                {detail.topics.map((topic: string) => (
                   <Badge key={topic} variant="secondary" className="rounded-full leading-4">
                     {topic}
                   </Badge>
@@ -754,8 +728,8 @@ export default function RequestDetailPage({ id }: { id: string }) {
                     <span className="text-sm text-muted-foreground whitespace-nowrap leading-5">Trusted for:</span>
                     {(isOwnRequest
                       ? currentUser.verifiedSkills
-                      : resolvedAbout.trustedExpertise.split(",").map((s) => s.trim())
-                    ).slice(0, 3).map((skill) => (
+                      : resolvedAbout.trustedExpertise.split(",").map((s: string) => s.trim())
+                    ).slice(0, 3).map((skill: string) => (
                       <span
                         key={skill}
                         className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold text-muted-foreground bg-background border border-border leading-4"

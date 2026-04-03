@@ -9,6 +9,7 @@ import { HandHelping, MoreHorizontal, BellPlus, Flag, MessageCircle, Filter, Sea
 import { LayoutToggle } from "@/components/LayoutToggle";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,7 @@ import {
 import { ChatDialog, type ChatMessage } from "@/features/dashboard/components/ChatDialog";
 import { RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
+import { formatEndDate } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type RequestCard = CardData & { category: string };
@@ -58,12 +60,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
       .filter((card) => !hiddenIds.has(card.id));
   }, [term, hiddenIds]);
 
-  const formatEndDate = (dateString?: string | null) => {
-    if (!dateString) return "No end date";
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) return "No end date";
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-  };
+
 
   const prepareLead = (card: RequestCard) => {
     const summary = card.requestSummary?.trim() ?? "";
@@ -123,18 +120,22 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
     return (
       <div className={`hidden lg:block ${isLast ? "" : "border-b border-border-50"} bg-muted-10`}>
         <div className={`grid grid-cols-12 gap-4 px-5 py-4 text-sm ${expanded ? "items-start" : "items-center"}`}>
-          <a href={`/trusted-list/members/${card.name.toLowerCase().replace(/\s+/g, "-")}`} className="col-span-3 flex items-center gap-3 min-w-0 group/member">
-            <Avatar className="h-10 w-10 border transition-colors group-hover/member:border-primary">
-              {card.avatarUrl ? <AvatarImage src={card.avatarUrl} alt={card.name} /> : null}
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
+          <UserIdentityLink
+            avatarUrl={card.avatarUrl}
+            name={card.name}
+            href={`/trusted-list/members/${card.name.toLowerCase().replace(/\s+/g, "-")}`}
+            avatarSize="sm"
+            showTrustedFor={false}
+            groupClass="group/member"
+            className="col-span-3 min-w-0"
+          >
             <div className="flex flex-col min-w-0">
               <span className="font-semibold leading-tight truncate transition-colors group-hover/member:text-primary">{card.name}</span>
               <span className="text-xs text-muted-foreground leading-tight truncate">
                 {card.subtitle || card.relationshipTag}
               </span>
             </div>
-          </a>
+          </UserIdentityLink>
 
           <div className="col-span-5 min-w-0">
             <div className="font-semibold leading-tight mb-1 truncate">
@@ -174,7 +175,7 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
           </div>
 
           <div className="col-span-2 text-xs text-muted-foreground">
-            <div className="truncate">{formatEndDate(card.endDate)}</div>
+            <div className="truncate">{formatEndDate(card.endDate, false)}</div>
           </div>
 
           <div className="col-span-2 flex items-center justify-end gap-2">

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { formatEndDate } from "@/lib/utils";
 import {
   BadgeHelp,
   Briefcase,
@@ -174,12 +175,7 @@ export default function AllRequestsPage() {
     return featured.helpedLikeYou.slice(0, 3);
   }, []);
 
-  const formatEndDate = (value?: string | null) => {
-    if (!value) return "No end date";
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "No end date";
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-  };
+
 
   const handleSearchSubmit = (value: string) => {
     const trimmed = value.trim();

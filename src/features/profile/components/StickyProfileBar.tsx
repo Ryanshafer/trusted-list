@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSidebar } from "@/components/ui/sidebar";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import {
   HelpRequestDialog,
   HELP_CATEGORIES,
@@ -71,39 +72,15 @@ export function StickyProfileBar({ profile, connectionDegree }: StickyProfileBar
           >
             <div className="flex w-full items-center justify-between rounded-lg bg-popover p-6 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]">
               {/* Left: avatar + name + badge + trusted-for */}
-              <div className="flex items-center gap-3">
-                <div className="relative h-[60px] w-[60px] shrink-0">
-                  <div className="absolute inset-0 overflow-hidden rounded-full border-[3.5px] border-background shadow-[0px_12px_18px_-2px_rgba(0,0,0,0.1),0px_6px_12px_-3px_rgba(0,0,0,0.1)]">
-                    {profile.avatarUrl ? (
-                      <img
-                        src={profile.avatarUrl}
-                        alt={profile.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-muted" />
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-0.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-sans text-lg font-bold leading-7 text-card-foreground whitespace-nowrap">
-                      {profile.name}
-                    </span>
-                    {connectionDegree && (
-                      <span className="rounded-full border border-muted-foreground bg-background px-2 py-0.5 text-xs font-semibold text-muted-foreground">
-                        {connectionDegree}
-                      </span>
-                    )}
-                  </div>
-                  {profile.verifiedSkills.length > 0 && (
-                    <p className="text-sm font-normal leading-4 text-muted-foreground">
-                      Trusted for {profile.verifiedSkills.slice(0, 3).join(", ")}
-                    </p>
-                  )}
-                </div>
-              </div>
+              <UserIdentityLink
+                avatarUrl={profile.avatarUrl}
+                name={profile.name}
+                connectionDegree={connectionDegree || undefined}
+                trustedFor={profile.verifiedSkills}
+                avatarSize="md"
+                avatarBorderClass="border-background"
+                showTrustedFor={profile.verifiedSkills.length > 0}
+              />
 
               {/* Right: action buttons */}
               <div className="flex items-center gap-3">

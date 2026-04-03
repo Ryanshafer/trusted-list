@@ -18,8 +18,10 @@ import type { CardData, CardVariant } from "../types";
 import { ChatMultiHelperModal, type Message as MultiChatMessage } from "./ChatMultiHelperModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatEndDate } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -61,28 +63,7 @@ function getDegreeBadge(variant: CardVariant, override?: string | null): string 
   return null;
 }
 
-// Helper to format end date as human-readable relative time
-export function formatEndDate(endDate: string | null | undefined): string {
-  if (!endDate) return "No deadline";
 
-  const end = new Date(endDate);
-  const now = new Date();
-  const diffMs = end.getTime() - now.getTime();
-
-  if (diffMs < 0) return "Ended";
-
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-
-  if (diffMinutes < 60) {
-    return diffMinutes === 1 ? "Help needed in next 1 minute" : `Help needed in next ${diffMinutes} minutes`;
-  }
-  if (diffHours < 24) {
-    return diffHours === 1 ? "Help needed in next 1 hour" : `Help needed in next ${diffHours} hours`;
-  }
-
-  return `Open until ${end.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
-}
 
 export const IncomingRequestCard = (card: HelpRequestCardProps) => {
   if (card.variant === "contact") return <DirectConnectionCard {...card} />;
@@ -149,23 +130,22 @@ export interface CardPersonRowProps {
 }
 
 export function CardPersonRow({ avatarUrl, name, trustedFor, label, action, avatarBorderClass }: CardPersonRowProps) {
-  const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  // Convert trustedFor string to array for UserIdentityLink
+  const trustedForArray = trustedFor ? [trustedFor] : [];
   return (
     <div className="flex flex-col gap-3">
       {label && <p className="text-sm font-normal text-muted-foreground">{label}</p>}
       <div className="flex items-center justify-between gap-2">
-        <a href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`} className="flex items-center gap-2 min-w-0 group/member">
-          <Avatar className={`h-10 w-10 shrink-0 border-2 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition-colors ${avatarBorderClass ?? "border-background"} group-hover/member:border-primary`}>
-            <AvatarImage src={avatarUrl ?? undefined} className="object-cover" />
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col min-w-0">
-            <span className="text-base font-semibold text-card-foreground truncate leading-6 transition-colors group-hover/member:text-primary">{name}</span>
-            {trustedFor && (
-              <span className="text-xs text-muted-foreground leading-4 line-clamp-2">Trusted for {trustedFor}</span>
-            )}
-          </div>
-        </a>
+        <UserIdentityLink
+          avatarUrl={avatarUrl}
+          name={name}
+          trustedFor={trustedForArray}
+          href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`}
+          avatarSize="sm"
+          avatarBorderClass={avatarBorderClass ?? "border-background"}
+          showTrustedFor={!!trustedFor}
+          groupClass="group/member"
+        />
         {action && <div className="shrink-0">{action}</div>}
       </div>
     </div>
@@ -255,28 +235,17 @@ export const ConnectedCardHeader = ({
   const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   return (
     <div className="flex flex-row items-start gap-3 pb-2 pt-5 select-none">
-      <a href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`} className="flex flex-row items-start gap-3 flex-1 min-w-0 group/member">
-        <Avatar className="h-10 w-10 shrink-0 border border-border mt-0.5 transition-colors group-hover/member:border-primary">
-          {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} className="object-cover" /> : null}
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="font-semibold text-lg truncate transition-colors group-hover/member:text-primary">{name}</span>
-            {degreeBadge && (
-              <span className="shrink-0 inline-flex items-center rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-800 leading-none">
-                {degreeBadge}
-              </span>
-            )}
-          </div>
-          <span className="text-xs text-muted-foreground flex items-center gap-1 leading-none">
-            {relationshipType === "direct" && <Link2 className="h-3 w-3 shrink-0 mb-0.5" />}
-            {relationshipType === "through-contact" && <Users className="h-3 w-3 shrink-0 mb-0.5" />}
-            {relationshipType === "skills-match" && <Globe className="h-3 w-3 shrink-0 mb-0.5" />}
-            {relationshipLabel}
-          </span>
-        </div>
-      </a>
+      <UserIdentityLink
+        avatarUrl={avatarUrl}
+        name={name}
+        connectionDegree={degreeBadge ?? undefined}
+        href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`}
+        avatarSize="sm"
+        avatarBorderClass="border-border mt-0.5"
+        showTrustedFor={false}
+        groupClass="group/member"
+        className="flex-1 min-w-0"
+      />
       <div className="-mt-2 -mr-2">
         <MoreOptionsButton onDismiss={onDismiss} onFlag={onFlag} />
       </div>
@@ -394,25 +363,17 @@ const IncomingRequestCardBase = ({
 
           {/* User info */}
           <div className="flex items-center gap-3 pt-5 border-t border-border">
-            <a href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`} className="flex items-center gap-3 min-w-0 group/member">
-              <Avatar className="h-[60px] w-[60px] shrink-0 border-2 border-background shadow-[0px_7px_10.5px_-1.75px_rgba(0,0,0,0.1),0px_3.5px_7px_-3.5px_rgba(0,0,0,0.1)] transition-colors group-hover/member:border-primary">
-                <AvatarImage src={avatarUrl ?? undefined} alt={name} className="object-cover" />
-                <AvatarFallback className="text-sm font-semibold">{initials}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-0.5 min-w-0">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-lg font-bold text-card-foreground leading-tight truncate transition-colors group-hover/member:text-primary">{name}</span>
-                  {degreeBadge && (
-                    <span className="shrink-0 inline-flex items-center rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-800 leading-none">
-                      {degreeBadge}
-                    </span>
-                  )}
-                </div>
-                {trustedFor && (
-                  <span className="text-xs text-muted-foreground line-clamp-2">Trusted for {trustedFor}</span>
-                )}
-              </div>
-            </a>
+            <UserIdentityLink
+              avatarUrl={avatarUrl}
+              name={name}
+              connectionDegree={degreeBadge ?? undefined}
+              trustedFor={trustedFor ? [trustedFor] : []}
+              href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`}
+              avatarSize="md"
+              showTrustedFor={!!trustedFor}
+              groupClass="group/member"
+              className="min-w-0"
+            />
           </div>
 
           {/* Actions */}

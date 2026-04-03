@@ -1,5 +1,5 @@
 "use client";
-import { TrustParticleField } from "@/components/TrustParticleField";
+import { TrustParticleField } from "@/features/dashboard/components/TrustParticleField";
 
 interface ProfileParticleAvatarProps {
   tierIndex: number;

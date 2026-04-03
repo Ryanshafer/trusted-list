@@ -13,6 +13,7 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import { LayoutToggle } from "@/components/LayoutToggle";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from "@/components/ui/empty";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +24,7 @@ import {
 import { ChatDialog, type ChatMessage } from "@/features/dashboard/components/ChatDialog";
 import { RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
+import { formatEndDate } from "@/lib/utils";
 
 type RequestCard = CardData & { category: string };
 
@@ -216,12 +218,7 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
     setFlagOpen(true);
   };
 
-  const formatEndDate = (dateString?: string | null) => {
-    if (!dateString) return "No end date";
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) return "No end date";
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-  };
+
 
   const CategoryListRow = ({
     card,
@@ -246,13 +243,15 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
     return (
       <TableRow className="hover:bg-transparent">
         <TableCell className="py-5 pl-4">
-          <a href={`/trusted-list/members/${card.name.toLowerCase().replace(/\s+/g, "-")}`} className="flex items-center gap-3 min-w-0 group/member">
-            <Avatar className="h-10 w-10 shrink-0 border-2 border-background shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition-colors group-hover/member:border-primary">
-              {card.avatarUrl ? <AvatarImage src={card.avatarUrl} className="object-cover" /> : null}
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
-            <span className="text-base font-medium truncate leading-tight transition-colors group-hover/member:text-primary">{card.name}</span>
-          </a>
+          <UserIdentityLink
+            avatarUrl={card.avatarUrl}
+            name={card.name}
+            href={`/trusted-list/members/${card.name.toLowerCase().replace(/\s+/g, "-")}`}
+            avatarSize="sm"
+            showTrustedFor={false}
+            groupClass="group/member"
+            className="min-w-0"
+          />
         </TableCell>
         <TableCell className="py-5">
           <a href={`/trusted-list/requests/view/${card.id}`} className="group/link flex flex-col min-w-0 overflow-hidden" onClick={(e) => e.stopPropagation()}>
@@ -262,7 +261,7 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
           </a>
         </TableCell>
         <TableCell className="py-5 text-base text-card-foreground whitespace-nowrap">
-          {formatEndDate(card.endDate)}
+          {formatEndDate(card.endDate, false)}
         </TableCell>
         <TableCell className="py-5 whitespace-nowrap">
           <AudienceBadge audience={cardVariantToAudienceKey(card.variant)} />

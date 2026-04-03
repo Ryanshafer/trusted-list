@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
@@ -68,14 +68,7 @@ const MOCK_MESSAGES: Message[] = chatData.messages as Message[];
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+
 
 // ---------------------------------------------------------------------------
 // Contact row

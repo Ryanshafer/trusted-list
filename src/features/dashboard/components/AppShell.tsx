@@ -2,28 +2,32 @@
 
 import * as React from "react";
 
-import dashboardData from "../../data/dashboard-content.json";
-import dashboardLayout from "../../data/dashboard-layout.json";
-import requestsData from "../../data/requests.json";
-import invitesData from "../../data/invites.json";
+import dashboardData from "../../../../data/dashboard-content.json";
+import dashboardLayout from "../../../../data/dashboard-layout.json";
+import requestsData from "../../../../data/requests.json";
+import invitesData from "../../../../data/invites.json";
 import { AppSidebar } from "@/components/app-sidebar";
 import { CarouselSectionHeader } from "@/components/CarouselSectionHeader";
 import { IncomingRequestCard } from "@/features/dashboard/components/HelpRequestCards";
 import type { CardData, SectionKey } from "@/features/dashboard/types";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Check, CircleHelp, IterationCcw, ChevronRight, HeartHandshake } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { Badge } from "./ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import { CategoryButton } from "./CategoryButton";
+import { TrustTierCard } from "./TrustTierCard";
+import { AvatarStack } from "./AvatarStack";
 import { HELP_CATEGORIES } from "@/features/requests/components/HelpRequestDialog";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "./ui/empty";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { AskForHelpDialog, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import { InviteDialog } from "@/features/invites/components/InviteDialog";
-import { interactions } from "@/features/interactions/data";
-import { RotateWords } from "./anim/rotate-words";
+import { interactions } from "@/features/interactions/utils/data";
+import { RotateWords } from "@/components/anim/rotate-words";
 import { AnimatePresence, motion } from "framer-motion";
 import { TrustParticleField } from "./TrustParticleField";
-import currentUser from "../../data/current-user.json";
+import currentUser from "../../../../data/current-user.json";
+import { filterAndSortCards, getGreetingTargetIndex, getDaysLeftInMonth, getInitialTierIndex } from "@/features/dashboard/utils/dashboard-utils";
 
 
 import {
@@ -32,8 +36,8 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "./ui/carousel";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "./ui/sidebar";
+} from "@/components/ui/carousel";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 type AskForHelpCard = {
   title: string;
@@ -63,51 +67,33 @@ const helpSectionData = Object.fromEntries(
 const sectionOrder: SectionKey[] = ["contact", "circle", "community"];
 const firstSectionAnchorId = "requests-for-your-help";
 
+// Memoize derived values
+const greetingWords = ["morning,", "afternoon,", "evening,"];
+
 
 const AppShell = () => {
   const [sections, setSections] = React.useState<
     Record<SectionKey, { cards: CardData[] }>
   >(
-    () =>
-      Object.fromEntries(
-        sectionOrder.map((key) => {
-          // Filter out cards where endDate has passed
-          const activeCards = helpSectionData[key].cards
-            .filter((card: CardData) => {
-              if (!card.endDate) return true;
-              return new Date(card.endDate).getTime() > Date.now();
-            })
-            .sort((a: CardData, b: CardData) => {
-              // Cards without deadlines go to the end
-              if (!a.endDate && !b.endDate) return 0;
-              if (!a.endDate) return 1;
-              if (!b.endDate) return -1;
-
-              // Sort by deadline (soonest first)
-              return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
-            });
-
-          return [
-            key,
-            { cards: activeCards },
-          ];
-        })
-      ) as Record<SectionKey, { cards: CardData[] }>
+    () => {
+      const initialSections = {} as Record<SectionKey, { cards: CardData[] }>;
+      sectionOrder.forEach((key) => {
+        initialSections[key] = { cards: filterAndSortCards(helpSectionData[key].cards) };
+      });
+      return initialSections;
+    }
   );
 
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [inviteDialogOpen, setInviteDialogOpen] = React.useState(false);
-  const introRequestCount =
-    (sections.contact?.cards.length ?? 0) +
-    (sections.circle?.cards.length ?? 0);
-  const greetingWords = ["morning,", "afternoon,", "evening,"];
-  const greetingTargetIndex = React.useMemo(() => {
-    const hours = new Date().getHours();
-    if (hours < 12) return 0;
-    if (hours < 18) return 1;
-    return 2;
-  }, []);
+
+  // Memoize derived values
+  const introRequestCount = React.useMemo(() => {
+    return (sections.contact?.cards.length ?? 0) + (sections.circle?.cards.length ?? 0);
+  }, [sections]);
+
+  const greetingTargetIndex = React.useMemo(() => getGreetingTargetIndex(), []);
 
   const handleClearCard = (section: SectionKey, cardId: string) => {
     setSections((prev) => ({
@@ -301,14 +287,6 @@ const TRUST_TIERS = [
   { label: "Stellar", subtitle: "You're a shining example to those around you" },
 ];
 
-const getInitialTierIndex = (score: number): number => {
-  if (score >= 900) return 4;
-  if (score >= 700) return 3;
-  if (score >= 500) return 2;
-  if (score >= 300) return 1;
-  return 0;
-};
-
 // ── TrustScoreSection ─────────────────────────────────────────────────────────
 
 const TrustScoreSection = () => {
@@ -399,24 +377,14 @@ const TrustScoreSection = () => {
           </div>
           <div className="flex flex-col gap-2 flex-1">
             {interactions.inProgress.map((item) => (
-              <a
+              <TrustTierCard
                 key={item.id}
+                id={item.id}
+                name={item.name}
+                requestSummary={(item as any).requestSummary}
+                avatarUrl={(item as any).avatarUrl}
                 href={`/trusted-list/interactions?tab=in-progress&open=${item.id}`}
-                className="group flex items-center justify-between bg-background rounded-lg shadow-sm pl-2.5 pr-1.5 py-2 hover:bg-muted/30 transition-colors"
-              >
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <Avatar className="h-6 w-6 shrink-0">
-                    <AvatarImage src={(item as any).avatarUrl ?? undefined} />
-                    <AvatarFallback className="text-xs">{item.name?.[0]}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-lg font-semibold truncate text-card-foreground group-hover:text-primary transition-colors leading-7">
-                    {(item as any).requestSummary ?? item.name}
-                  </span>
-                </div>
-                <span className="shrink-0 rounded-full bg-secondary flex items-center justify-center h-6 w-6">
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </span>
-              </a>
+              />
             ))}
           </div>
           <div className="flex justify-end pr-2 pb-1">
@@ -457,25 +425,15 @@ const HelpRequestStartModule = ({
     <div className="flex flex-col gap-4 items-center pb-3">
       <p className="text-base font-semibold text-card-foreground">Pick a category to get started:</p>
       <div className="flex flex-wrap gap-4 justify-center px-12">
-        {HELP_CATEGORIES.map((cat) => {
-          const isActive = selectedCategory === cat.value;
-          return (
-            <button
-              key={cat.value}
-              type="button"
-              onClick={() => setSelectedCategory(isActive ? null : cat.value)}
-              className={[
-                "inline-flex items-center gap-1.5 rounded-full min-h-[32px] px-3 py-1 text-sm border transition-colors",
-                isActive
-                  ? "bg-primary/10 border-primary text-card-foreground"
-                  : "border-muted-foreground text-card-foreground hover:border-primary hover:text-primary",
-              ].join(" ")}
-            >
-              {isActive && <Check className="h-3.5 w-3.5 shrink-0" />}
-              {cat.label}
-            </button>
-          );
-        })}
+        {HELP_CATEGORIES.map((cat) => (
+          <CategoryButton
+            key={cat.value}
+            value={cat.value}
+            label={cat.label}
+            isActive={selectedCategory === cat.value}
+            onClick={() => setSelectedCategory(selectedCategory === cat.value ? null : cat.value)}
+          />
+        ))}
       </div>
     </div>
     <div className="flex justify-end mt-auto">
@@ -496,8 +454,7 @@ const { invitesRemaining, lastMonthNominations } = invitesData;
 // ── InviteModule ──────────────────────────────────────────────────────────────
 
 const InviteModule = ({ onInvite }: { onInvite: () => void }) => {
-  const today = new Date();
-  const daysLeftInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate();
+  const daysLeftInMonth = React.useMemo(() => getDaysLeftInMonth(), []);
   return (
   <article className="flex-1 flex flex-col justify-between rounded-2xl bg-card shadow-md p-5 gap-4">
     <div className="flex flex-col gap-3">
@@ -521,21 +478,11 @@ const InviteModule = ({ onInvite }: { onInvite: () => void }) => {
     <div className="flex flex-col gap-2">
       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Last month's nominations</p>
       <div className="flex items-center gap-5">
-        <div className="flex items-center pr-[12.5px]">
-          {lastMonthNominations.nominees.map((person, i) => (
-            <a
-              key={person.name}
-              href={`/trusted-list/members/${person.slug}`}
-              className="group/member relative shrink-0"
-              style={{ marginRight: i < lastMonthNominations.nominees.length - 1 ? -12.5 : 0, zIndex: lastMonthNominations.nominees.length - i }}
-              aria-label={person.name}
-            >
-              <Avatar className="h-[50px] w-[50px] border-[3px] border-card shadow-md transition-colors group-hover/member:border-primary">
-                <AvatarImage src={person.avatarUrl} className="object-cover" />
-                <AvatarFallback className="text-sm">{person.name[0]}</AvatarFallback>
-              </Avatar>
-            </a>
-          ))}
+        <div className="pr-[12.5px]">
+          <AvatarStack
+            people={lastMonthNominations.nominees}
+            size="lg"
+          />
         </div>
         <div className="flex flex-col">
           <p className="text-sm font-semibold text-foreground leading-snug">

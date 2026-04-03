@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { getInitials } from "@/lib/utils";
 import {
     MoreHorizontal,
     Bell,
@@ -91,15 +92,6 @@ function getRelationshipColor(type: RelationshipType): string {
         default:
             return "bg-secondary text-secondary-foreground";
     }
-}
-
-function getInitials(name: string) {
-    return name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
 }
 
 // ---------------------------------------------------------------------------

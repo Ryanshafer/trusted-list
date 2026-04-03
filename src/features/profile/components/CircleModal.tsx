@@ -27,17 +27,9 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { CircleMember } from "../types";
+import { getInitials } from "@/lib/utils";
 
 type SortOrder = "recent" | "asc" | "desc";
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 function sortMembers(members: CircleMember[], order: SortOrder): CircleMember[] {
   if (order === "asc") return [...members].sort((a, b) => a.name.localeCompare(b.name));
@@ -307,16 +299,16 @@ export function CircleModal({
           <Tabs defaultValue="contacts" className="flex flex-col flex-1 min-h-0">
             {/* Tab switcher — centered */}
             <div className="flex justify-center px-6 shrink-0">
-              <TabsList className="bg-accent rounded-[10px] p-[3px] h-auto gap-0">
+              <TabsList className="bg-accent rounded-full p-1 h-auto gap-0">
                 <TabsTrigger
                   value="contacts"
-                  className="rounded-[8px] px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
+                  className="rounded-full px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
                 >
                   Contacts
                 </TabsTrigger>
                 <TabsTrigger
                   value="nominations"
-                  className="rounded-[8px] px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
+                  className="rounded-full px-3 py-1 text-sm font-medium data-[state=active]:bg-popover data-[state=active]:text-popover-foreground data-[state=active]:shadow-sm"
                 >
                   Nominations
                 </TabsTrigger>

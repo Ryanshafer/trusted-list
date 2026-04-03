@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/command"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-import allRequests from "../../../data/requests.json"
+import allRequests from "../../../../data/requests.json"
 
 type PersonResult = {
   type: "person"

@@ -16,8 +16,9 @@ import {
   X,
 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserIdentityLink } from "@/components/UserIdentityLink";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -78,14 +79,7 @@ export interface NotificationPanelProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+
 
 function memberHref(name: string) {
   return `/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`;
@@ -309,27 +303,16 @@ function NotificationRow({
           {/* Person row + timestamp */}
           <div className="flex items-center justify-between gap-2">
             {notif.actor ? (
-              <a
+              <UserIdentityLink
+                avatarUrl={notif.actor.avatarUrl}
+                name={notif.actor.name}
                 href={memberHref(notif.actor.name)}
-                className="group/person flex items-center gap-3 min-w-0"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Avatar className="h-10 w-10 shrink-0 border-2 border-background shadow-md transition-colors group-hover/person:border-primary">
-                  {notif.actor.avatarUrl ? (
-                    <AvatarImage
-                      src={notif.actor.avatarUrl}
-                      alt={notif.actor.name}
-                      className="object-cover"
-                    />
-                  ) : null}
-                  <AvatarFallback className="text-xs font-semibold bg-muted text-muted-foreground">
-                    {getInitials(notif.actor.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-base font-semibold text-card-foreground leading-7 truncate transition-colors group-hover/person:text-primary">
-                  {notif.actor.name}
-                </span>
-              </a>
+                avatarSize="sm"
+                showTrustedFor={false}
+                groupClass="group/person"
+                className="min-w-0"
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              />
             ) : (
               <div className="flex items-center gap-3">
                 <SystemAvatar type={notif.type} />
@@ -547,10 +530,10 @@ export function NotificationPanel({
         {/* Tabs */}
         <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
           <div className="px-5 pt-3 pb-0 shrink-0">
-            <TabsList className="w-full h-8 bg-muted/70 p-0.5">
+            <TabsList className="w-full bg-muted/70 p-1 rounded-full">
               <TabsTrigger
                 value="all"
-                className="flex-1 h-7 text-xs font-semibold data-[state=active]:shadow-sm"
+                className="flex-1 h-7 text-xs font-semibold data-[state=active]:shadow-sm rounded-full"
               >
                 All
                 {unreadCount > 0 && (
@@ -561,14 +544,14 @@ export function NotificationPanel({
               </TabsTrigger>
               <TabsTrigger
                 value="requests"
-                className="flex-1 h-7 text-xs font-semibold data-[state=active]:shadow-sm"
+                className="flex-1 h-7 text-xs font-semibold data-[state=active]:shadow-sm rounded-full"
                 disabled={requestsNotifs.length === 0}
               >
                 Requests
               </TabsTrigger>
               <TabsTrigger
                 value="circle"
-                className="flex-1 h-7 text-xs font-semibold data-[state=active]:shadow-sm"
+                className="flex-1 h-7 text-xs font-semibold data-[state=active]:shadow-sm rounded-full"
                 disabled={circleNotifs.length === 0}
               >
                 Circle

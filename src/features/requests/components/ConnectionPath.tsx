@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronsRight } from "lucide-react";
+import { getInitials } from "@/lib/utils";
 
 export type ConnectionPathNode = {
   type: "you" | "connector" | "requester";
@@ -24,14 +25,7 @@ export interface ConnectionPathProps {
   hideHeader?: boolean;
 }
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+
 
 function formatRelationship(rel: string): string {
   return rel.startsWith("Colleagues ") ? rel.slice("Colleagues ".length) : rel;
