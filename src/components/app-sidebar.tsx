@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/sidebar"
 
 const navLinks: { title: string; url: string; icon: LucideIcon }[] = [
-  { title: "My Help Opportunities", url: "/trusted-list/", icon: BadgeHelp },
+  { title: "Help Requests for You", url: "/trusted-list/", icon: BadgeHelp },
   { title: "Browse Help Requests", url: "/trusted-list/requests", icon: ShieldQuestion },
   { title: "Profile", url: "/trusted-list/profile", icon: CircleUser },
   { title: "Help Activity", url: "/trusted-list/interactions", icon: MessagesSquare }

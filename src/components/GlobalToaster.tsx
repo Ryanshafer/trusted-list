@@ -20,6 +20,7 @@ export default function GlobalToaster() {
   return (
     <SonnerToaster
       theme={theme}
+      position="top-right"
       className="toaster group"
       toastOptions={{
         classNames: {
@@ -27,7 +28,7 @@ export default function GlobalToaster() {
             "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
           description: "group-[.toast]:text-muted-foreground",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+            "!bg-primary !text-primary-foreground",
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },

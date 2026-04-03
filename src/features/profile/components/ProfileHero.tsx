@@ -8,6 +8,7 @@ import { JobStatusIndicator } from "./JobStatusIndicator";
 import { ProfileCTAs } from "./ProfileCTAs";
 import { EditProfileDialog } from "./EditProfileDialog"
 import { AccountSettingsDialog } from "@/features/account";
+import { UserReportDialog } from "@/features/moderation/components/UserReportDialog";
 import currentUser from "../../../../data/current-user.json";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +44,7 @@ interface ProfileHeroProps {
 export function ProfileHero({ profile, isOwner, publicView = false, basePath = "/trusted-list", userEmail, connectionDegree, availableSkills, onProfileUpdate }: ProfileHeroProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const finalTierIndex = getTierIndex(profile.trustScore);
   const [currentTierIndex, setCurrentTierIndex] = useState(finalTierIndex); // TEMP: skip animation, load end state
@@ -153,14 +155,20 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {connectionDegree === "1st" && (
-                    <DropdownMenuItem className="text-destructive focus:text-destructive">
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive"
+                      onSelect={() => {
+                        sessionStorage.setItem("circle.removed", profile.name);
+                        setTimeout(() => { window.location.href = `${basePath}/profile`; }, 0);
+                      }}
+                    >
                       <UserRoundX className="h-4 w-4" />
                       Remove from circle
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem className="text-destructive focus:text-destructive">
+                  <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={() => setReportOpen(true)}>
                     <Flag className="h-4 w-4" />
-                    Report abuse
+                    Report user
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -232,6 +240,17 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
         }}
         initialNotif={currentUser.notificationSettings as any}
         initialBlockedUsers={currentUser.blockedUsers}
+      />
+
+      <UserReportDialog
+        open={reportOpen}
+        onOpenChange={setReportOpen}
+        userName={profile.name}
+        userAvatarUrl={profile.avatarUrl}
+        onSubmit={(payload) => {
+          // TODO: Implement actual report submission logic
+          console.log("User report:", { userId: profile.id, ...payload });
+        }}
       />
     </>
   );

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { ProfileHero } from "./ProfileHero";
 import { ProfileSidebar } from "./ProfileSidebar";
 import { CarouselWithCount } from "./CarouselWithCount";
@@ -37,6 +38,18 @@ export function ProfilePage({
 }: ProfilePageProps) {
   const [profile, setProfile] = useState<ProfileData>(initialProfile);
   const [ownWordsDialogOpen, setOwnWordsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const removed = sessionStorage.getItem("circle.removed");
+    if (!removed) return;
+    sessionStorage.removeItem("circle.removed");
+    toast(`${removed} removed from your circle`, {
+      action: {
+        label: "Undo",
+        onClick: () => { window.history.back(); },
+      },
+    });
+  }, []);
   const [editRecsDialogOpen, setEditRecsDialogOpen] = useState(false);
   const [hiddenRecs, setHiddenRecs] = useState<ProfileData["recommendations"]>([]);
 
