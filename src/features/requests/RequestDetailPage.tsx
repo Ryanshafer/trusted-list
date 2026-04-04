@@ -789,7 +789,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span className="text-2xl text-foreground">{resolvedStats.requests}</span>
-                    <span className="text-xs text-muted-foreground">Requests</span>
+                    <span className="text-xs text-muted-foreground">Requests made</span>
                   </div>
                 </div>
               </div>
