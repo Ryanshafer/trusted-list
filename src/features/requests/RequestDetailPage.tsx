@@ -59,6 +59,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import { TrustTierBadge, TIER_LABELS } from "@/features/profile/components/TrustTierBadge";
 
 type RequestCard = CardData & { category: string };
 type RequestDetail = {
@@ -96,6 +97,10 @@ function trustScoreToTier(score: number) {
   if (score < 900) return "Trustworthy";
   if (score < 990) return "Proven";
   return "Stellar";
+}
+
+function trustRatingToTierIndex(rating: string): number {
+  return TIER_LABELS.findIndex(tier => tier === rating);
 }
 
 const profileOwners = [currentUser as any, ...(profilesData as any[])];
@@ -746,33 +751,46 @@ export default function RequestDetailPage({ id }: { id: string }) {
 
             {/* Stats — own request: Trust Rating first, text-xl; other: peopleHelped first, text-2xl */}
             {isOwnRequest ? (
-              <div className="flex items-start justify-between font-sans">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xl text-foreground">{resolvedStats.trustRating}</span>
-                  <span className="text-xs text-muted-foreground">Trust Rating</span>
+              <div className="flex flex-col gap-4 font-sans">
+                <div className="w-full">
+                  <TrustTierBadge
+                    tierIndex={trustRatingToTierIndex(resolvedStats.trustRating)}
+                    static={true}
+                    className="w-full justify-center text-base inline-flex items-center"
+                    iconClassName="h-5 w-5"
+                  />
                 </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xl text-foreground">{resolvedStats.peopleHelped}</span>
-                  <span className="text-xs text-muted-foreground">Helped</span>
-                </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xl text-foreground">{resolvedStats.requests}</span>
-                  <span className="text-xs text-muted-foreground">Requests</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xl text-foreground">{resolvedStats.peopleHelped}</span>
+                    <span className="text-xs text-muted-foreground">Helped</span>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xl text-foreground">{resolvedStats.requests}</span>
+                    <span className="text-xs text-muted-foreground">Requests</span>
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="flex gap-7 font-sans">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-2xl text-foreground">{resolvedStats.trustRating}</span>
-                  <span className="text-xs text-muted-foreground">Trust Rating</span>
+              <div className="flex flex-col gap-4 font-sans">
+                <div className="w-full border-b border-border pb-4">
+                  <TrustTierBadge
+                    tierIndex={trustRatingToTierIndex(resolvedStats.trustRating)}
+                    static={true}
+                    className="w-full justify-left text-3xl inline-flex items-center gap-1 text-foreground"
+                    iconClassName="h-8 w-8"
+                  />
+                  <span className="text-xs text-muted-foreground">Trust Score</span>
                 </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-2xl text-foreground">{resolvedStats.peopleHelped}</span>
-                  <span className="text-xs text-muted-foreground">People helped</span>
-                </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-2xl text-foreground">{resolvedStats.requests}</span>
-                  <span className="text-xs text-muted-foreground">Requests</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-2xl text-foreground">{resolvedStats.peopleHelped}</span>
+                    <span className="text-xs text-muted-foreground">People helped</span>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-2xl text-foreground">{resolvedStats.requests}</span>
+                    <span className="text-xs text-muted-foreground">Requests</span>
+                  </div>
                 </div>
               </div>
             )}
