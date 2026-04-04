@@ -23,31 +23,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatEndDate } from "@/lib/utils";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
+import { SetReminderDialog, formatReminderTime } from "@/components/SetReminderDialog";
 
 type HelpRequestCardProps = CardData & {
   onClear?: () => void;
-  reminderLabel?: string;
   onReminderSet?: (label: string) => void;
   onReminderClear?: () => void;
 };
@@ -262,7 +247,6 @@ const IncomingRequestCardBase = ({
   primaryActionLabel,
   endDate,
   onClear,
-  reminderLabel,
   onReminderSet,
   onReminderClear,
   audience,
@@ -300,9 +284,7 @@ const IncomingRequestCardBase = ({
   }, [requestSummary, request]);
   const [celebrating, setCelebrating] = React.useState(false);
   const [remindOpen, setRemindOpen] = React.useState(false);
-  const [remindOption, setRemindOption] = React.useState("3 days");
-  const [reminderActive, setReminderActive] = React.useState(!!reminderLabel);
-  const [reminderDisplay, setReminderDisplay] = React.useState(reminderLabel ?? "");
+  const [reminderIso, setReminderIso] = React.useState<string | null>(null);
   const [isDismissing, setIsDismissing] = React.useState(false);
   const [isHidden, setIsHidden] = React.useState(false);
 
@@ -378,16 +360,16 @@ const IncomingRequestCardBase = ({
 
           {/* Actions */}
           <div className="flex items-center justify-between gap-3">
-            {reminderActive ? (
+            {reminderIso ? (
               <Button
-                onClick={() => { setReminderActive(false); setReminderDisplay(""); onReminderClear?.(); }}
+                onClick={() => { setReminderIso(null); onReminderClear?.(); }}
                 variant="outline"
                 className="rounded-full font-semibold h-10 px-5 text-sm leading-none border-lime-200 bg-lime-50 text-lime-700 hover:bg-amber-100 hover:text-amber-800 hover:border-amber-300 group/remind gap-2"
                 title="Cancel reminder"
               >
                 <BellRing className="h-4 w-4 shrink-0 mb-0.5 group-hover/remind:hidden" />
                 <X className="h-4 w-4 shrink-0 mb-0.5 hidden group-hover/remind:block" />
-                {reminderDisplay || `Reminder: ${remindOption}`}
+                {formatReminderTime(reminderIso)}
               </Button>
             ) : (
               <Button
@@ -430,14 +412,11 @@ const IncomingRequestCardBase = ({
         messagesByContactId={{ [id]: chatInitialMessage }}
       />
 
-      <RemindDialog
+      <SetReminderDialog
         open={remindOpen}
         onOpenChange={setRemindOpen}
-        selection={remindOption}
-        onSelectionChange={setRemindOption}
-        reminderActive={reminderActive}
-        onSet={() => { setReminderActive(true); setReminderDisplay(`In ${remindOption}`); setRemindOpen(false); onReminderSet?.(`In ${remindOption}`); }}
-        onCancelReminder={() => { setReminderActive(false); setReminderDisplay(""); setRemindOpen(false); onReminderClear?.(); }}
+        requesterName={name}
+        onConfirm={(iso) => { setReminderIso(iso); onReminderSet?.(formatReminderTime(iso)); }}
       />
 
       <FlagRequestDialog
@@ -463,7 +442,7 @@ const FallbackRequestCard = (props: HelpRequestCardProps) => (
     endDate={props.endDate}
     onClear={props.onClear}
     avatarUrl={props.avatarUrl}
-    reminderLabel={props.reminderLabel}
+
     onReminderSet={props.onReminderSet}
     onReminderClear={props.onReminderClear}
     audience={cardVariantToAudienceKey(props.variant)}
@@ -483,7 +462,7 @@ const DirectConnectionCard = (props: HelpRequestCardProps) => (
     primaryActionLabel={`Help ${props.name.split(" ")[0]}`}
     endDate={props.endDate}
     onClear={props.onClear}
-    reminderLabel={props.reminderLabel}
+
     onReminderSet={props.onReminderSet}
     onReminderClear={props.onReminderClear}
     audience={cardVariantToAudienceKey(props.variant)}
@@ -503,7 +482,7 @@ const NetworkConnectionCard = (props: HelpRequestCardProps) => (
     primaryActionLabel={`Help ${props.name.split(" ")[0]}`}
     endDate={props.endDate}
     onClear={props.onClear}
-    reminderLabel={props.reminderLabel}
+
     onReminderSet={props.onReminderSet}
     onReminderClear={props.onReminderClear}
     audience={cardVariantToAudienceKey(props.variant)}
@@ -523,7 +502,7 @@ const SkillsMatchCard = (props: HelpRequestCardProps) => (
     primaryActionLabel={`Help ${props.name.split(" ")[0]}`}
     endDate={props.endDate}
     onClear={props.onClear}
-    reminderLabel={props.reminderLabel}
+
     onReminderSet={props.onReminderSet}
     onReminderClear={props.onReminderClear}
     audience={cardVariantToAudienceKey(props.variant)}
@@ -534,7 +513,6 @@ const SkillsMatchCard = (props: HelpRequestCardProps) => (
 );
 
 const confettiColors = ["bg-primary", "bg-amber-400", "bg-emerald-400", "bg-rose-400", "bg-sky-400", "bg-purple-400"];
-const remindOptions = ["4 hours", "12 hours", "1 day", "3 days", "1 week", "2 weeks"];
 
 export const ConfettiBurst = () => {
   const pieces = React.useMemo(
@@ -587,65 +565,3 @@ export const ConfettiBurst = () => {
   );
 };
 
-export const RemindDialog = ({
-  open,
-  onOpenChange,
-  selection,
-  onSelectionChange,
-  reminderActive,
-  onSet,
-  onCancelReminder,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  selection: string;
-  onSelectionChange: (value: string) => void;
-  reminderActive: boolean;
-  onSet: () => void;
-  onCancelReminder: () => void;
-}) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-sm">
-      <DialogHeader>
-        <DialogTitle>{reminderActive ? "Reminder scheduled" : "Schedule a reminder"}</DialogTitle>
-        <DialogDescription>
-          {reminderActive
-            ? "You're set to get a nudge. Adjust the timing below or cancel the reminder."
-            : "Pick when you want to be nudged again."}
-        </DialogDescription>
-      </DialogHeader>
-      <div className="space-y-3">
-        <p className="text-sm font-medium text-foreground">Remind me in</p>
-        <Select value={selection} onValueChange={onSelectionChange}>
-          <SelectTrigger className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {remindOptions.map((option) => (
-              <SelectItem key={option} value={option}>{option}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      {reminderActive ? (
-        <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:gap-2">
-          <Button variant="destructive" className="w-full sm:flex-1 rounded-full font-semibold leading-none" onClick={onCancelReminder}>
-            Cancel reminder
-          </Button>
-          <Button className="w-full sm:flex-1 rounded-full font-semibold leading-none" onClick={onSet}>
-            Update reminder
-          </Button>
-        </DialogFooter>
-      ) : (
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="ghost" className="rounded-full font-semibold leading-none" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button className="rounded-full font-semibold leading-none" onClick={onSet}>
-            Set reminder
-          </Button>
-        </DialogFooter>
-      )}
-    </DialogContent>
-  </Dialog>
-);

@@ -2,6 +2,7 @@ import type { CardData } from "@/features/dashboard/types";
 import data from "../../../../data/interactions.json";
 import chats from "../../../../data/interactions-chats.json";
 import currentUser from "../../../../data/current-user.json";
+import categoriesData from "../../../../data/categories.json";
 
 export type RawMessage = {
   id: number;
@@ -47,21 +48,20 @@ type InteractionsData = {
 const parsed = data as InteractionsData;
 const chatHistory = chats as Record<string, RawMessage[]>;
 
-const categorySlugMap: Record<string, string> = {
-  "career advice": "career",
-  "career development": "career",
-  design: "design",
-  product: "product",
-  business: "business",
-  wellness: "health",
-  health: "health",
-  education: "education",
-  networking: "network",
-  network: "network",
-  "dev & tools": "tech",
-  tech: "tech",
-  other: "other",
-};
+// Generate category slug map from centralized data
+const categorySlugMap: Record<string, string> = {};
+categoriesData.categories.forEach((category) => {
+  // Add main slug
+  categorySlugMap[category.slug] = category.slug;
+  
+  // Add all aliases
+  category.aliases.forEach((alias) => {
+    categorySlugMap[alias.toLowerCase()] = category.slug;
+  });
+  
+  // Add display name lowercase
+  categorySlugMap[category.displayName.toLowerCase()] = category.slug;
+});
 
 const normalizeRequestCategory = (category?: string | null) => {
   if (!category) return undefined;

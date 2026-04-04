@@ -4,6 +4,7 @@ import requestDetailsData from "../../../data/request-details.json";
 import interactionsData from "../../../data/interactions.json";
 import dashboardData from "../../../data/dashboard-content.json";
 import profilesData from "../../../data/profiles.json";
+import categoriesData from "../../../data/categories.json";
 import type { CardData } from "@/features/dashboard/types";
 import { AppSidebar } from "@/components/app-sidebar";
 import { UserIdentityLink } from "@/components/UserIdentityLink";
@@ -32,10 +33,11 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ChatMultiHelperModal, type Message as MultiChatMessage, type CompletionFeedback } from "@/features/dashboard/components/ChatMultiHelperModal";
 import completionFeedbackData from "../../../data/interaction-completion-feedback.json";
-import { ConfettiBurst, RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
+import { ConfettiBurst } from "@/features/dashboard/components/HelpRequestCards";
+import { SetReminderDialog, formatReminderTime } from "@/components/SetReminderDialog";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { myHelpRequests, interactionChats } from "@/features/interactions/utils/data";
-import { getInitials, formatEndDate } from "@/lib/utils";
+import { formatEndDate } from "@/lib/utils";
 import { HelpRequestDialog, REQUEST_CATEGORIES, type AskMode } from "@/features/requests/components/HelpRequestDialog";
 import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
 import currentUser from "../../../data/current-user.json";
@@ -176,17 +178,26 @@ const allDetails = {
 };
 const askContacts = (dashboardData as any).askForHelpCard?.contacts ?? [];
 
-const categoryDisplayNames: Record<string, string> = {
-  career: "Career Development",
-  design: "Design",
-  product: "Product",
-  business: "Business",
-  health: "Wellness",
-  education: "Education",
-  tech: "Dev & Tools",
-  network: "Networking",
-  other: "Other",
-};
+// Generate category display names and topic mappings from centralized data
+const categoryDisplayNames: Record<string, string> = {};
+const topicToCategorySlug: Record<string, string> = {};
+const slugAlias: Record<string, string> = {};
+
+// Build mappings from categories data
+categoriesData.categories.forEach((category) => {
+  categoryDisplayNames[category.slug] = category.displayName;
+  topicToCategorySlug[category.slug] = category.slug;
+  topicToCategorySlug[category.displayName.toLowerCase()] = category.slug;
+  
+  // Add all aliases
+  category.aliases.forEach((alias) => {
+    topicToCategorySlug[alias.toLowerCase()] = category.slug;
+    // Handle slug-style aliases (with dashes)
+    if (alias.includes('-')) {
+      slugAlias[alias] = category.slug;
+    }
+  });
+});
 
 
 
@@ -253,8 +264,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
   }, [request.requestSummary, request.request]);
   const [celebrating, setCelebrating] = React.useState(false);
   const [remindOpen, setRemindOpen] = React.useState(false);
-  const [remindOption, setRemindOption] = React.useState("3 days");
-  const [reminderActive, setReminderActive] = React.useState(false);
+  const [reminderIso, setReminderIso] = React.useState<string | null>(null);
   const [flagOpen, setFlagOpen] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
@@ -461,7 +471,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
                   {/* Audience badge */}
                   <Badge variant="outline" className="rounded-full gap-1 border-blue-200 bg-blue-50 text-blue-800 font-semibold leading-4">
                     <Globe className="h-3 w-3 text-blue-700 mb-0.5 shrink-0" />
-                    {isOwnRequest ? localAudience : detail.audience} · {detail.audienceCategory}
+                    {isOwnRequest ? localAudience : detail.audience}
                   </Badge>
                   {/* Due date */}
                   {dueDate && (
@@ -502,11 +512,17 @@ export default function RequestDetailPage({ id }: { id: string }) {
               {/* Topics */}
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground tracking-widest uppercase">Topics</span>
-                {detail.topics.map((topic: string) => (
-                  <Badge key={topic} variant="secondary" className="rounded-full leading-4">
-                    {topic}
-                  </Badge>
-                ))}
+                {detail.topics.map((topic: string) => {
+                  const topicLower = topic.toLowerCase();
+                  const categorySlug = topicToCategorySlug[topicLower] || topicLower;
+                  return (
+                    <a key={topic} href={`/trusted-list/requests/${categorySlug}`}>
+                      <Badge variant="secondary" className="rounded-full leading-4 hover:bg-accent hover:text-accent-foreground transition-colors">
+                        {topic}
+                      </Badge>
+                    </a>
+                  );
+                })}
               </div>
 
               {/* Actions bar */}
@@ -551,16 +567,16 @@ export default function RequestDetailPage({ id }: { id: string }) {
                         </Button>
                         {celebrating && <ConfettiBurst />}
                       </div>
-                      {reminderActive ? (
+                      {reminderIso ? (
                         <Button
-                          onClick={() => setReminderActive(false)}
+                          onClick={() => setReminderIso(null)}
                           variant="outline"
                           className="rounded-full h-10 font-semibold px-6 text-sm leading-none shadow-none border-lime-200 bg-lime-50 text-lime-700 hover:bg-amber-100 hover:text-amber-800 hover:border-amber-300 group/remind"
                           title="Cancel reminder"
                         >
                           <BellRing className="h-4 w-4 mr-2 mb-0.5 shrink-0 group-hover/remind:hidden" />
                           <X className="h-4 w-4 mr-2 mb-0.5 shrink-0 hidden group-hover/remind:block" />
-                          Reminder: {remindOption}
+                          {formatReminderTime(reminderIso)}
                         </Button>
                       ) : (
                         <Button
@@ -814,20 +830,11 @@ export default function RequestDetailPage({ id }: { id: string }) {
       messagesByContactId={{ [id]: chatInitialMessage }}
     />
 
-    <RemindDialog
+    <SetReminderDialog
       open={remindOpen}
       onOpenChange={setRemindOpen}
-      selection={remindOption}
-      onSelectionChange={setRemindOption}
-      reminderActive={reminderActive}
-      onSet={() => {
-        setReminderActive(true);
-        setRemindOpen(false);
-      }}
-      onCancelReminder={() => {
-        setReminderActive(false);
-        setRemindOpen(false);
-      }}
+      requesterName={resolvedAuthor.name}
+      onConfirm={(iso) => setReminderIso(iso)}
     />
 
     <FlagRequestDialog

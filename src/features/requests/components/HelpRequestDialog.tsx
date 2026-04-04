@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +10,8 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ArrowRight, BicepsFlexed, Briefcase, CalendarPlus2, Check, ContactRound, Link, Loader2, Maximize2, Minimize2, Paperclip, Tag, X } from "lucide-react";
+import { BaseDialog } from "@/components/BaseDialog";
+import categoriesData from "../../../../data/categories.json";
 
 // ── Shared types ──────────────────────────────────────────────────────────────
 
@@ -72,17 +73,10 @@ export const HELP_CATEGORIES: HelpCategory[] = [
 ];
 
 /** Used by the edit flow — matches the category keys stored in request data */
-export const REQUEST_CATEGORIES: HelpCategory[] = [
-  { value: "career", label: "Career Development" },
-  { value: "design", label: "Design" },
-  { value: "product", label: "Product" },
-  { value: "business", label: "Business" },
-  { value: "health", label: "Wellness" },
-  { value: "education", label: "Education" },
-  { value: "tech", label: "Dev & Tools" },
-  { value: "network", label: "Networking" },
-  { value: "other", label: "Other" },
-];
+export const REQUEST_CATEGORIES: HelpCategory[] = categoriesData.categories.map((category) => ({
+  value: category.slug,
+  label: category.displayName
+}));
 
 export const ASK_OPTIONS: { value: AskMode; label: string; subtitle: string }[] = [
   { value: "contact", label: "My contact", subtitle: "Private requests, chosen by you" },
@@ -393,20 +387,44 @@ export function HelpRequestDialog(props: Props) {
   const summaryMaxLength = 60;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[623px] gap-0 overflow-hidden p-0 [&>button]:bg-card [&>button]:border [&>button]:border-border [&>button]:rounded-full [&>button]:shadow-sm [&>button]:h-9 [&>button]:w-9 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button]:opacity-100 [&>button]:hover:opacity-80 [&>button]:hover:bg-accent [&>button]:right-4 [&>button]:top-4">
-        <div className="flex flex-col gap-8 overflow-y-auto overflow-x-hidden px-6 pt-6 pb-8" style={{ maxHeight: "calc(90dvh - 5rem)" }}>
-
-          <DialogHeader className="space-y-2 pr-6">
-            <DialogTitle className="text-xl font-bold leading-tight">
-              {isEdit ? "Edit your request" : "What are you trying to achieve?"}
-            </DialogTitle>
-            <p className="text-base text-muted-foreground">
-              {isEdit
-                ? "Update your need, category, or timeframe."
-                : "Name your need, choose who to ask, and add a timeframe if helpful."}
-            </p>
-          </DialogHeader>
+    <BaseDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      title={isEdit ? "Edit your request" : "What are you trying to achieve?"}
+      description={isEdit
+        ? "Update your need, category, or timeframe."
+        : "Name your need, choose who to ask, and add a timeframe if helpful."}
+      size="xl"
+      footerContent={
+        <>
+          <Button
+            variant="ghost"
+            className="rounded-full font-semibold"
+            onClick={() => handleOpenChange(false)}
+            type="button"
+          >
+            Cancel
+          </Button>
+          <Button
+            className="rounded-full font-semibold"
+            onClick={handleSubmit}
+            disabled={!isEdit && sendState !== "idle"}
+            type="button"
+          >
+            {isEdit ? (
+              <>Save Changes <ArrowRight className="h-4 w-4" /></>
+            ) : sendState === "idle" ? (
+              <>Request Help <ArrowRight className="h-4 w-4" /></>
+            ) : sendState === "sending" ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
+            ) : (
+              <><Check className="h-4 w-4" /> Request Created!</>
+            )}
+          </Button>
+        </>
+      }
+    >
+        <div className="flex flex-col gap-8 overflow-x-hidden">
 
           {/* ── Who do you want to ask? ─────────────────────────── */}
           {!detailsExpanded && (
@@ -926,7 +944,7 @@ export function HelpRequestDialog(props: Props) {
             {errors.requestDetails && (
               <p className="mb-1 text-xs text-destructive">{errors.requestDetails}</p>
             )}
-            <div className="relative" style={{ height: detailsExpanded ? "calc(90dvh - 15rem)" : "7.5rem" }}>
+            <div className="relative" style={{ height: detailsExpanded ? "calc(60dvh)" : "7.5rem" }}>
               <Textarea
                 placeholder={requestCategories[0] === "help-advice" ? "Ask for help thinking through something:\n• A decision you're weighing\n• A challenge at work\n• Getting perspective on someone\n• How others have handled a similar situation" : "Share what someone needs to know to help you well."}
                 className={`h-full resize-none rounded-lg bg-background placeholder:text-muted-foreground shadow-none ${errors.requestDetails ? "border-destructive" : "border-border"}`}
@@ -1000,36 +1018,9 @@ export function HelpRequestDialog(props: Props) {
 
 
         </div>
-
-        {/* ── Footer ───────────────────────────────────────── */}
-        <div className="shrink-0 border-t border-border bg-card px-6 py-4 flex items-center justify-end gap-4">
-          <Button
-            variant="ghost"
-            className="rounded-full font-semibold leading-none"
-            onClick={() => handleOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="rounded-full font-semibold leading-none shadow-sm"
-            onClick={handleSubmit}
-            disabled={!isEdit && sendState !== "idle"}
-          >
-            {isEdit ? (
-              <>Save Changes <ArrowRight className="h-4 w-4" /></>
-            ) : sendState === "idle" ? (
-              <>Request Help <ArrowRight className="h-4 w-4" /></>
-            ) : sendState === "sending" ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
-            ) : (
-              <><Check className="h-4 w-4" /> Request Created!</>
-            )}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </BaseDialog>
+    );
+  }
 
 // Backward-compatible alias — preserves the onSendRequest prop name used by existing callers
 export const AskForHelpDialog = ({

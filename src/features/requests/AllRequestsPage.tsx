@@ -1,5 +1,6 @@
 import React from "react";
 import requestsData from "../../../data/requests.json";
+import categoriesData from "../../../data/categories.json";
 import { AppSidebar } from "@/components/app-sidebar";
 import { CarouselSectionHeader } from "@/components/CarouselSectionHeader";
 import { CardPersonRow, IncomingRequestCard, RequestCardPreview } from "@/features/dashboard/components/HelpRequestCards";
@@ -45,6 +46,7 @@ const featured = {
   helpedLikeYou: (requestsData as any[]).filter((r) => r.featured === "helpedLikeYou") as FeaturedItem[],
 };
 
+// Generate category options from centralized data
 const categoryOptions = [
   { value: "career", label: "Career development", icon: Briefcase },
   { value: "design", label: "Design", icon: PenTool },
@@ -55,7 +57,13 @@ const categoryOptions = [
   { value: "tech", label: "Dev & tools", icon: Cpu },
   { value: "network", label: "Networking", icon: Coffee },
   { value: "other", label: "Other", icon: Clapperboard },
-];
+].map(option => {
+  const category = categoriesData.categories.find(c => c.slug === option.value);
+  return {
+    ...option,
+    label: category?.displayName || option.label
+  };
+});
 
 const categoryLabelMap = new Map(categoryOptions.map(({ value, label }) => [value, label]));
 

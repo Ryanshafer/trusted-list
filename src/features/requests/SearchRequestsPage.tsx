@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChatDialog, type ChatMessage } from "@/features/dashboard/components/ChatDialog";
-import { RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
+import { SetReminderDialog } from "@/components/SetReminderDialog";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { formatEndDate } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -37,8 +37,6 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
   const [composer, setComposer] = React.useState("");
   const [flagOpen, setFlagOpen] = React.useState(false);
   const [remindOpen, setRemindOpen] = React.useState(false);
-  const [remindOption, setRemindOption] = React.useState("3 days");
-  const [reminderActive, setReminderActive] = React.useState(false);
 
   const [query, setQuery] = React.useState(initialQuery ?? "");
   React.useEffect(() => {
@@ -322,20 +320,11 @@ export default function SearchRequestsPage({ query: initialQuery }: { query?: st
           setComposer("");
         }}
       />
-      <RemindDialog
+      <SetReminderDialog
         open={remindOpen}
         onOpenChange={setRemindOpen}
-        selection={remindOption}
-        onSelectionChange={setRemindOption}
-        reminderActive={reminderActive}
-        onSet={() => {
-          setReminderActive(true);
-          setRemindOpen(false);
-        }}
-        onCancelReminder={() => {
-          setReminderActive(false);
-          setRemindOpen(false);
-        }}
+        requesterName={currentCard?.name || ""}
+        onConfirm={() => {}}
       />
       <FlagRequestDialog
         open={flagOpen}

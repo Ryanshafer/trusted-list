@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, X } from "lucide-react";
+import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BaseDialog } from "@/components/BaseDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { Recommendation } from "../types";
@@ -104,50 +104,65 @@ export function EditRecommendationsDialog({
     return 0;
   });
 
-  const footerContent = (
-    <div className="flex items-center justify-end gap-4">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-9 rounded-full px-4 text-sm font-semibold text-popover-foreground hover:bg-transparent"
-        onClick={() => onOpenChange(false)}
-      >
-        Cancel
-      </Button>
-      <Button
-        size="sm"
-        onClick={handleSave}
-        className="h-9 rounded-full px-4 text-sm font-semibold shadow-none"
-      >
-        Save recommendations
-      </Button>
-    </div>
-  );
-
   return (
-    <BaseDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Manage your recommendations"
-      description="Select the order you want your recommendations to appear in."
-      size="xl"
-      footerContent={footerContent}
-    >
-      {/* Scrollable list */}
-      <div className="w-full">
-        <div className="flex flex-col gap-3">
-          {displayItems.map((item) => (
-            <RecommendationRow
-              key={item.id}
-              item={item}
-              visibleCount={visibleCount}
-              onToggle={() => toggleVisibility(item.id)}
-              onReorder={(newOrder) => reorder(item.id, newOrder)}
-            />
-          ))}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[672px] gap-0 overflow-hidden rounded-2xl border-border bg-popover p-0 shadow-lg [&>button]:hidden">
+        {/* Header */}
+        <div className="flex w-full items-start justify-between px-6 py-4">
+          <div className="flex min-w-0 flex-1 flex-col justify-center py-0.5">
+            <h2 className="font-serif text-2xl font-normal leading-8 text-popover-foreground">
+              Manage your recommendations
+            </h2>
+            <p className="text-base text-muted-foreground">Select the order you want your recommendations to appear in.</p>
+          </div>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 rounded-full border-border bg-muted text-muted-foreground shadow-none hover:bg-muted"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </DialogClose>
         </div>
-      </div>
-    </BaseDialog>
+
+        {/* Scrollable list */}
+        <div className="w-full overflow-y-auto max-h-[calc(100vh-200px)] px-6 pb-6 pt-4 [scrollbar-color:theme(colors.zinc.300)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-300 [&::-webkit-scrollbar-track]:bg-transparent">
+          <div className="flex flex-col gap-3">
+            {displayItems.map((item) => (
+              <RecommendationRow
+                key={item.id}
+                item={item}
+                visibleCount={visibleCount}
+                onToggle={() => toggleVisibility(item.id)}
+                onReorder={(newOrder) => reorder(item.id, newOrder)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex w-full items-center justify-end gap-4 border-t border-border bg-card px-6 py-4">
+          <DialogClose asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 rounded-full px-4 text-sm font-semibold text-popover-foreground hover:bg-transparent"
+            >
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            className="h-9 rounded-full px-4 text-sm font-semibold shadow-none"
+          >
+            Save recommendations
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

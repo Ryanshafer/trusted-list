@@ -1,5 +1,6 @@
 import React from "react";
 import requestsData from "../../../data/requests.json";
+import categoriesData from "../../../data/categories.json";
 import { AppSidebar } from "@/components/app-sidebar";
 import { IncomingRequestCard } from "@/features/dashboard/components/HelpRequestCards";
 import type { CardData } from "@/features/dashboard/types";
@@ -22,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChatDialog, type ChatMessage } from "@/features/dashboard/components/ChatDialog";
-import { RemindDialog } from "@/features/dashboard/components/HelpRequestCards";
+import { SetReminderDialog, formatReminderTime } from "@/components/SetReminderDialog";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { formatEndDate } from "@/lib/utils";
 
@@ -30,31 +31,23 @@ type RequestCard = CardData & { category: string };
 
 const allRequests = requestsData as RequestCard[];
 
-const categoryOptions = [
-  { value: "career", label: "Career development" },
-  { value: "design", label: "Design" },
-  { value: "product", label: "Product thinking" },
-  { value: "business", label: "Business & finance" },
-  { value: "health", label: "Wellness & lifestyle" },
-  { value: "education", label: "Learning" },
-  { value: "tech", label: "Dev & tools" },
-  { value: "network", label: "Networking" },
-  { value: "other", label: "Other" },
-  // Legacy/alternate slugs from creation flow
-  { value: "career-advice", label: "Career development" },
-  { value: "interview-prep", label: "Career development" },
-  { value: "resume-review", label: "Design" },
-  { value: "introduction", label: "Networking" },
-  { value: "general-support", label: "Other" },
-];
+// Generate category options and slug aliases from centralized data
+const categoryOptions = categoriesData.categories.flatMap((category) => {
+  const mainOption = { value: category.slug, label: category.displayName };
+  const aliasOptions = category.aliases
+    .filter(alias => alias.includes('-')) // Only include slug-style aliases
+    .map(alias => ({ value: alias, label: category.displayName }));
+  return [mainOption, ...aliasOptions];
+});
 
-const slugAlias: Record<string, string> = {
-  "career-advice": "career",
-  "interview-prep": "career",
-  "resume-review": "design",
-  introduction: "network",
-  "general-support": "other",
-};
+const slugAlias: Record<string, string> = {};
+categoriesData.categories.forEach((category) => {
+  category.aliases.forEach((alias) => {
+    if (alias.includes('-')) {
+      slugAlias[alias] = category.slug;
+    }
+  });
+});
 
 const buildCategoryRequests = (slug: string): RequestCard[] => {
   const target = slugAlias[slug] ?? slug;
@@ -145,8 +138,6 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
   const [composer, setComposer] = React.useState("");
   const [flagOpen, setFlagOpen] = React.useState(false);
   const [remindOpen, setRemindOpen] = React.useState(false);
-  const [remindOption, setRemindOption] = React.useState("3 days");
-  const [reminderActive, setReminderActive] = React.useState(false);
   const [cardReminders, setCardReminders] = React.useState<Record<string, string>>({});
 
   const baseRequests = React.useMemo(() => buildCategoryRequests(slug), [slug]);
@@ -438,8 +429,6 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
                               delete next[card.id];
                               return next;
                             });
-                            setReminderActive(false);
-                            setRemindOption("3 days");
                           }}
                         />
                       ))}
@@ -464,22 +453,14 @@ export default function CategoryRequestsPage({ slug }: { slug: string }) {
           setComposer("");
         }}
       />
-      <RemindDialog
+      <SetReminderDialog
         open={remindOpen}
         onOpenChange={setRemindOpen}
-        selection={remindOption}
-        onSelectionChange={setRemindOption}
-        reminderActive={reminderActive}
-        onSet={() => {
-          setReminderActive(true);
+        requesterName={currentCard?.name || ""}
+        onConfirm={(reminderTime) => {
           if (currentCard) {
-            setCardReminders((prev) => ({ ...prev, [currentCard.id]: `In ${remindOption}` }));
+            setCardReminders((prev) => ({ ...prev, [currentCard.id]: formatReminderTime(reminderTime) }));
           }
-          setRemindOpen(false);
-        }}
-        onCancelReminder={() => {
-          setReminderActive(false);
-          setRemindOpen(false);
         }}
       />
       <FilterSidebar

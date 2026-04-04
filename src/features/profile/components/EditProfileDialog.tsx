@@ -1,13 +1,9 @@
 "use client";
 import { useState } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { X, MapPin, ExternalLink, Trash2, Plus, Info } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-} from "@/components/ui/dialog";
+import { MapPin, ExternalLink, Trash2, Plus, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BaseDialog } from "@/components/BaseDialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,7 +53,6 @@ function applyLinks(
   }
   return result;
 }
-
 
 interface EditProfileDialogProps {
   open: boolean;
@@ -132,213 +127,202 @@ export function EditProfileDialog({
     });
   };
 
+  const footerContent = (
+    <>
+      <Button
+        variant="ghost"
+        className="rounded-full font-semibold"
+        onClick={() => onOpenChange(false)}
+        type="button"
+      >
+        Cancel
+      </Button>
+      <Button
+        className="rounded-full font-semibold"
+        onClick={handleSave}
+        type="button"
+      >
+        Save profile
+      </Button>
+    </>
+  );
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[672px] p-0 gap-0 overflow-hidden rounded-2xl [&>button]:hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4">
-          <h2 className="font-serif text-2xl font-normal leading-8">Edit Profile</h2>
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 rounded-full border-border bg-muted font-semibold"
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Button>
-          </DialogClose>
+    <BaseDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Edit Profile"
+      size="xl"
+      footerContent={footerContent}
+    >
+      {/* Scrollable content */}
+      <div className="flex flex-col gap-8">
+        {/* First name + Last name */}
+        <div className="grid grid-cols-2 gap-10">
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">First name</Label>
+            <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">Last name</Label>
+            <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          </div>
         </div>
 
-        {/* Scrollable content */}
-        <div className="overflow-y-auto max-h-[calc(100vh-220px)] px-6 pt-4 pb-6 flex flex-col gap-8">
+        {/* Job status */}
+        <div className="flex items-center gap-1">
+          <span className="text-sm font-medium w-[120px] shrink-0">Job status:</span>
+          <Select value={jobStatus} onValueChange={setJobStatus}>
+            <SelectTrigger className="w-auto gap-2 rounded-lg border-border h-9 px-3">
+              {isJobOpen && (
+                <JobStatusDot status={jobStatus as NonNullable<JobStatus>} />
+              )}
+              <SelectValue>
+                {isJobOpen ? JOB_STATUS_CONFIG[jobStatus as NonNullable<JobStatus>].label : NOT_LOOKING_LABEL}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Not looking</SelectItem>
+              <SelectItem value="open_to_right_role">Open to talking</SelectItem>
+              <SelectItem value="actively_looking">Actively looking</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-          {/* First name + Last name */}
-          <div className="grid grid-cols-2 gap-10">
-            <div className="flex flex-col gap-1">
-              <Label className="text-sm font-medium">First name</Label>
-              <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1">
-              <Label className="text-sm font-medium">Last name</Label>
-              <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
-            </div>
-          </div>
-
-          {/* Job status */}
+        {/* Trusted for */}
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-1">
-            <span className="text-sm font-medium w-[120px] shrink-0">Job status:</span>
-            <Select value={jobStatus} onValueChange={setJobStatus}>
-              <SelectTrigger className="w-auto gap-2 rounded-lg border-border h-9 px-3">
-                {isJobOpen && (
-                  <JobStatusDot status={jobStatus as NonNullable<JobStatus>} />
-                )}
-                <SelectValue>
-                  {isJobOpen ? JOB_STATUS_CONFIG[jobStatus as NonNullable<JobStatus>].label : NOT_LOOKING_LABEL}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Not looking</SelectItem>
-                <SelectItem value="open_to_right_role">Open to talking</SelectItem>
-                <SelectItem value="actively_looking">Actively looking</SelectItem>
-              </SelectContent>
-            </Select>
+            <span className="text-sm font-medium">Trusted for</span>
+            <TooltipProvider delayDuration={150}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="What trusted skills means"
+                    className="inline-flex h-4 w-4 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                  >
+                    <Info className="h-3 w-3" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="max-w-64 overflow-visible bg-black text-muted shadow-md">
+                  <span>
+                    Trusted skills are skills that have been vouched for by a member. We
+                    limit the display to 3 skills.
+                  </span>
+                  <TooltipPrimitive.Arrow className="" />
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
-
-          {/* Trusted for */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-medium">Trusted for</span>
-              <TooltipProvider delayDuration={150}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      aria-label="What trusted skills means"
-                      className="inline-flex h-4 w-4 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-                    >
-                      <Info className="h-3 w-3" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" className="max-w-64 overflow-visible bg-black text-muted shadow-md">
-                    <span>
-                      Trusted skills are skills that have been vouched for by a member. We
-                      limit the display to 3 skills.
-                    </span>
-                    <TooltipPrimitive.Arrow className="" />
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            {([0, 1, 2] as const).map((i) => (
-              <div key={i} className="flex items-center gap-3">
-                <span className="text-sm font-medium w-[120px] shrink-0 text-secondary-foreground">
-                  Skill #{i + 1}:
-                </span>
-                <Select value={skills[i]} onValueChange={(v) => handleSkillChange(i, v)}>
-                  <SelectTrigger className="w-[196px] rounded-lg border-border h-9 px-3">
-                    <SelectValue placeholder="Select a skill" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
-                    {getFilteredOptions(i).map((skill) => (
-                      <SelectItem key={skill} value={skill}>{skill}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-          </div>
-
-          {/* Summary */}
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Summary</Label>
-              <span className="text-sm text-muted-foreground">
-                <span className="text-foreground">{bio.length}</span>/{SUMMARY_MAX}
+          {([0, 1, 2] as const).map((i) => (
+            <div key={i} className="flex items-center gap-3">
+              <span className="text-sm font-medium w-[120px] shrink-0 text-secondary-foreground">
+                Skill #{i + 1}:
               </span>
+              <Select value={skills[i]} onValueChange={(v) => handleSkillChange(i, v)}>
+                <SelectTrigger className="w-[196px] rounded-lg border-border h-9 px-3">
+                  <SelectValue placeholder="Select a skill" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  {getFilteredOptions(i).map((skill) => (
+                    <SelectItem key={skill} value={skill}>{skill}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Textarea
-              value={bio}
-              onChange={(e) => {
-                if (e.target.value.length <= SUMMARY_MAX) setBio(e.target.value);
-              }}
-              className="h-[76px] resize-none"
+          ))}
+        </div>
+
+        {/* Summary */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <Label className="text-sm font-medium">Summary</Label>
+            <span className="text-sm text-muted-foreground">
+              <span className="text-foreground">{bio.length}</span>/{SUMMARY_MAX}
+            </span>
+          </div>
+          <Textarea
+            value={bio}
+            onChange={(e) => {
+              if (e.target.value.length <= SUMMARY_MAX) setBio(e.target.value);
+            }}
+            className="h-[76px] resize-none"
+          />
+        </div>
+
+        {/* Location */}
+        <div className="flex flex-col gap-1">
+          <Label className="text-sm font-medium">Location</Label>
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <Input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="pl-9"
             />
           </div>
+        </div>
 
-          {/* Location */}
-          <div className="flex flex-col gap-1">
-            <Label className="text-sm font-medium">Location</Label>
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        {/* Links */}
+        <div className="flex flex-col gap-3">
+          <Label className="text-sm font-medium">Links</Label>
+          {links.map((link, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <Select
+                value={link.type}
+                onValueChange={(v) => handleLinkChange(i, "type", v)}
+              >
+                <SelectTrigger className="w-[120px] shrink-0 rounded-lg border-border h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LINK_TYPES.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Input
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="pl-9"
+                className="flex-1"
+                value={link.url}
+                onChange={(e) => handleLinkChange(i, "url", e.target.value)}
+                placeholder="https://"
               />
-            </div>
-          </div>
-
-          {/* Links */}
-          <div className="flex flex-col gap-3">
-            <Label className="text-sm font-medium">Links</Label>
-            {links.map((link, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <Select
-                  value={link.type}
-                  onValueChange={(v) => handleLinkChange(i, "type", v)}
-                >
-                  <SelectTrigger className="w-[120px] shrink-0 rounded-lg border-border h-9">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {LINK_TYPES.map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  className="flex-1"
-                  value={link.url}
-                  onChange={(e) => handleLinkChange(i, "url", e.target.value)}
-                  placeholder="https://"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground shrink-0"
-                  onClick={() => link.url && window.open(link.url, "_blank")}
-                  type="button"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  <span className="sr-only">Open link</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-full text-destructive hover:text-destructive shrink-0"
-                  onClick={() => handleRemoveLink(i)}
-                  type="button"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="sr-only">Remove link</span>
-                </Button>
-              </div>
-            ))}
-            <div className="flex justify-center pt-1">
               <Button
-                variant="outline"
-                className="rounded-full font-semibold h-8 px-3 text-sm gap-1.5 border-border"
-                onClick={handleAddLink}
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground shrink-0"
+                onClick={() => link.url && window.open(link.url, "_blank")}
                 type="button"
               >
-                <Plus className="h-4 w-4" />
-                Add link
+                <ExternalLink className="h-4 w-4" />
+                <span className="sr-only">Open link</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full text-destructive hover:text-destructive shrink-0"
+                onClick={() => handleRemoveLink(i)}
+                type="button"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span className="sr-only">Remove link</span>
               </Button>
             </div>
+          ))}
+          <div className="flex justify-center pt-1">
+            <Button
+              variant="outline"
+              className="rounded-full font-semibold h-8 px-3 text-sm gap-1.5 border-border"
+              onClick={handleAddLink}
+              type="button"
+            >
+              <Plus className="h-4 w-4" />
+              Add link
+            </Button>
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-end gap-4 px-6 py-4 bg-card border-t border-border">
-          <Button
-            variant="ghost"
-            className="rounded-full font-semibold"
-            onClick={() => onOpenChange(false)}
-            type="button"
-          >
-            Cancel
-          </Button>
-          <Button
-            className="rounded-full font-semibold"
-            onClick={handleSave}
-            type="button"
-          >
-            Save profile
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </BaseDialog>
   );
 }

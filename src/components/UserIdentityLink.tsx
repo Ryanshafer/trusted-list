@@ -57,13 +57,13 @@ export function UserIdentityLink({
     getAvatarBorder(),
     avatarBorderClass ?? "border-background",
     "shadow-md transition-colors",
-    groupClass === "group" ? "group-hover:border-primary" : `${groupClass}/member:hover:border-primary`
+    "group-hover:border-primary"
   );
 
   const nameClasses = cn(
     avatarSize === "sm" ? "text-base" : "text-lg",
     "font-bold text-card-foreground leading-7 transition-colors",
-    groupClass === "group" ? "group-hover:text-primary" : `${groupClass}/member:hover:text-primary`
+    "group-hover:text-primary"
   );
 
   const content = (
@@ -96,14 +96,14 @@ export function UserIdentityLink({
 
   if (href) {
     return (
-      <a href={href} className={cn("flex items-center gap-3", className, groupClass)} onClick={onClick}>
+      <a href={href} className={cn("flex items-center gap-3", className, "group", groupClass)} onClick={onClick}>
         {children || content}
       </a>
     );
   }
 
   return (
-    <div className={cn("flex items-center gap-3", className)} onClick={onClick}>
+    <div className={cn("flex items-center gap-3", className, "group", groupClass)} onClick={onClick}>
       {children || content}
     </div>
   );
