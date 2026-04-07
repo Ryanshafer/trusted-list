@@ -101,6 +101,7 @@ export interface ProfileData {
   trustTier: string;
   jobStatus: JobStatus;
   verifiedSkills: string[];
+  unvouchedSkills?: string[];
   connectionDegree?: string | null;
   about: {
     bio: string;

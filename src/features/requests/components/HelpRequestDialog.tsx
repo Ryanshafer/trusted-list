@@ -69,7 +69,7 @@ export const HELP_CATEGORIES: HelpCategory[] = [
   { value: "introduction", label: "Introduction" },
   { value: "mentorship", label: "Mentorship" },
   { value: "opportunity", label: "Opportunity" },
-  { value: "vouch", label: "Vouch" },
+  { value: "endorse", label: "Endorse" },
 ];
 
 /** Used by the edit flow — matches the category keys stored in request data */
@@ -99,6 +99,9 @@ type CreateProps = BaseProps & {
   companies?: string[];
   initialCategories?: string[];
   initialSelectedContacts?: AskContact[];
+  initialSummary?: string;
+  initialDetails?: string;
+  initialVouchType?: "myself" | "skill";
   onSubmit?: (payload: CreatePayload) => void;
 };
 
@@ -122,10 +125,10 @@ export function HelpRequestDialog(props: Props) {
   const isEdit = props.mode === "edit";
 
   const [shortDescription, setShortDescription] = React.useState(
-    isEdit ? (props as EditProps).initialSummary ?? "" : ""
+    isEdit ? (props as EditProps).initialSummary ?? "" : (props as CreateProps).initialSummary ?? ""
   );
   const [requestDetails, setRequestDetails] = React.useState(
-    isEdit ? (props as EditProps).initialDetails ?? "" : ""
+    isEdit ? (props as EditProps).initialDetails ?? "" : (props as CreateProps).initialDetails ?? ""
   );
   const [requestCategories, setRequestCategories] = React.useState<string[]>(
     isEdit
@@ -159,7 +162,7 @@ export function HelpRequestDialog(props: Props) {
   const isIntroduction = requestCategories[0] === "introduction";
   const isOpportunity = requestCategories[0] === "opportunity";
   const isMentorship = requestCategories[0] === "mentorship";
-  const isVouch = requestCategories[0] === "vouch";
+  const isVouch = requestCategories[0] === "endorse";
   const isConnect = requestCategories[0] === "connect";
   const isFeedback = requestCategories[0] === "feedback";
 
@@ -169,7 +172,7 @@ export function HelpRequestDialog(props: Props) {
   const visibleCategories = categories.filter((c) => {
     if (c.value === "introduction" && askMode !== "contact") return false;
     if (c.value === "connect" && askMode !== "contact") return false;
-    if (c.value === "vouch" && askMode === "community") return false;
+    if (c.value === "endorse" && askMode === "community") return false;
     return true;
   });
 
@@ -200,8 +203,12 @@ export function HelpRequestDialog(props: Props) {
       setAskMode(p.initialAskMode ?? "contact");
     } else {
       const p = props as CreateProps;
+      setShortDescription(p.initialSummary ?? "");
+      setRequestDetails(p.initialDetails ?? "");
       setRequestCategories(p.initialCategories ?? []);
       setSelectedContacts(p.initialSelectedContacts ?? []);
+      setVouchSkill(null);
+      setVouchType(p.initialVouchType ?? "myself");
     }
     setErrors({});
     setCategoryOpen(false);
@@ -224,6 +231,9 @@ export function HelpRequestDialog(props: Props) {
       setSelectedContacts([]);
       setRequestCategories([]);
       setRequestDetails("");
+      setVouchType("myself");
+      setVouchSkill(null);
+      setVouchSkillOpen(false);
       setSendState("idle");
       setDueDate(undefined);
       setIntroSearchTerm("");
@@ -273,7 +283,7 @@ export function HelpRequestDialog(props: Props) {
       setConnectCompanyOpen(false);
     }
     if (askMode === "community") {
-      if (requestCategories[0] === "vouch") setRequestCategories([]);
+      if (requestCategories[0] === "endorse") setRequestCategories([]);
       setVouchType("myself");
       setVouchSkill(null);
     }
@@ -297,7 +307,7 @@ export function HelpRequestDialog(props: Props) {
     if (!isMentorship) setMentorshipDuration("short-term");
   }, [isMentorship]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Reset vouch state when category changes away from vouch
+  // Reset vouch state when category changes away from endorse
   React.useEffect(() => {
     if (!isVouch) {
       setVouchType("myself");
@@ -692,10 +702,10 @@ export function HelpRequestDialog(props: Props) {
             </div>
           )}
 
-          {/* ── Vouch type + skill selector (Vouch only) ── */}
+          {/* ── Endorse type + skill selector (Endorse only) ── */}
           {!detailsExpanded && isVouch && (
             <div className="space-y-3">
-              <p className="text-base font-semibold text-foreground">What would you like vouched?</p>
+              <p className="text-base font-semibold text-foreground">What would you like endorsed?</p>
               <ToggleGroup
                 type="single"
                 value={vouchType}
@@ -915,7 +925,7 @@ export function HelpRequestDialog(props: Props) {
                     isOpportunity && opportunityIntent === "hire" ? "e.g. We're looking to hire a…" :
                     requestCategories[0] === "help-advice" ? "e.g. I'm trying to decide whether to…" :
                     isMentorship ? "e.g. I'm looking for an experienced mentor…" :
-                    isVouch ? "e.g. Would you be willing to vouch for me…" :
+                    isVouch ? "e.g. Would you be willing to endorse me…" :
                     isFeedback ? "e.g. What do you need to share?" :
                     "Enter a short descriptive title…"
                   }

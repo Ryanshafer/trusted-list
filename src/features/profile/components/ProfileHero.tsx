@@ -9,6 +9,7 @@ import { ProfileCTAs } from "./ProfileCTAs";
 import { EditProfileDialog } from "./EditProfileDialog"
 import { AccountSettingsDialog } from "@/features/account";
 import { UserReportDialog } from "@/features/moderation/components/UserReportDialog";
+import { HelpRequestDialog, HELP_CATEGORIES, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import currentUser from "../../../../data/current-user.json";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,10 +46,29 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
   const [editOpen, setEditOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [endorsementDialogOpen, setEndorsementDialogOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const finalTierIndex = getTierIndex(profile.trustScore);
   const [currentTierIndex, setCurrentTierIndex] = useState(finalTierIndex); // TEMP: skip animation, load end state
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const visibleUnvouchedSkills = profile.unvouchedSkills?.slice(0, 3) ?? [];
+  const shouldShowUnconfirmedSkills =
+    isOwner &&
+    !publicView &&
+    profile.verifiedSkills.length === 0 &&
+    visibleUnvouchedSkills.length > 0;
+  const endorsementContacts: AskContact[] = profile.circle
+    .filter((member) => !member.awaiting)
+    .map((member) => ({
+      id: member.userId,
+      name: member.name,
+      role: member.verifiedSkills?.join(", ") || "Trusted List member",
+      avatarUrl: member.avatarUrl ?? undefined,
+    }));
+
+  const handleRequestEndorsement = () => {
+    setEndorsementDialogOpen(true);
+  };
 
   useEffect(() => {
     return; // TEMP: animation disabled — remove this line to re-enable
@@ -212,6 +232,30 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
                   </div>
                 </div>
               )}
+
+              {shouldShowUnconfirmedSkills && (
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  <span className="font-semibold text-muted-foreground uppercase">Unconfirmed skills:</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {visibleUnvouchedSkills.map((skill) => (
+                      <Badge
+                        key={skill}
+                        variant="outline"
+                        className="rounded-full border-border bg-background px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                      >
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="rounded-full text-sm font-semibold text-primary"
+                    onClick={handleRequestEndorsement}
+                  >
+                    Request an endorsement
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* User Actions Container */}
@@ -250,6 +294,20 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
         onSubmit={(payload) => {
           // TODO: Implement actual report submission logic
           console.log("User report:", { userId: profile.id, ...payload });
+        }}
+      />
+
+      <HelpRequestDialog
+        mode="create"
+        open={endorsementDialogOpen}
+        onOpenChange={setEndorsementDialogOpen}
+        categories={HELP_CATEGORIES}
+        contacts={endorsementContacts}
+        userUnvouchedSkills={profile.unvouchedSkills}
+        initialCategories={["endorse"]}
+        initialVouchType="skill"
+        onSubmit={(payload) => {
+          console.log("Endorsement request submitted:", payload);
         }}
       />
     </>
