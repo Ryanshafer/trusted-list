@@ -517,20 +517,16 @@ export function HelpRequestDialog(props: Props) {
                   {selectedContacts.length > 0 && (
                     <div className="flex flex-wrap gap-3 pt-1">
                       {selectedContacts.map((contact) => (
-                        <span
+                        <button
                           key={contact.id}
-                          className="flex items-center gap-1.5 rounded-full border border-border bg-muted-25 px-3 py-1 text-sm font-semibold leading-none text-foreground"
+                          type="button"
+                          onClick={() => setSelectedContacts((prev) => prev.filter((c) => c.id !== contact.id))}
+                          aria-label={`Remove ${contact.name}`}
+                          className="flex items-center gap-1.5 rounded-full border border-border bg-muted-25 px-3 py-1 text-sm font-semibold leading-none text-foreground transition-colors hover:bg-accent hover:border-destructive/40 hover:text-destructive"
                         >
                           {contact.name}
-                          <button
-                            type="button"
-                            onClick={() => setSelectedContacts((prev) => prev.filter((c) => c.id !== contact.id))}
-                            aria-label={`Remove ${contact.name}`}
-                            className="flex h-4 w-4 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </span>
+                          <X className="h-3 w-3 opacity-50" />
+                        </button>
                       ))}
                     </div>
                   )}
