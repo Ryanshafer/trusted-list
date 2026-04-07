@@ -80,10 +80,8 @@ export const getMockMessages = (
 ) => {
   const isMyRequest =
     cardId.startsWith("request-") || cardId.startsWith("req-");
-  
-  // TODO: Import interactionChats from data
-  const interactionChats: Record<string, any> = {};
-  const preset = interactionChats[cardId];
+
+  const preset = (interactionChats as Record<string, any>)[cardId];
 
   if (preset) {
     return preset;
