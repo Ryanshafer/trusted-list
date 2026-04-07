@@ -36,6 +36,7 @@ import {
   type CompletionFeedback,
 } from "@/features/dashboard/components/ChatMultiHelperModal";
 import completionFeedbackData from "../../../../data/interaction-completion-feedback.json";
+import { interactionChats } from "@/features/interactions/utils/data";
 import { RequestCardPreview, CardPersonRow, RequestStatusBadge } from "@/features/dashboard/components/HelpRequestCards";
 import { helpCardShellClass } from "@/features/dashboard/components/HelpRequestCards";
 import { SetReminderDialog, type Reminder } from "./SetReminderDialog";
@@ -81,26 +82,23 @@ export const HelpingCard = ({
     if (autoOpen) setChatOpen(true);
   }, [autoOpen]);
 
+  const FAKE_TIMESTAMPS = [
+    "9:15 am – Mon Jan 12", "10:30 am – Mon Jan 12", "2:45 pm – Mon Jan 12",
+    "4:00 pm – Mon Jan 12", "9:00 am – Tue Jan 13", "11:20 am – Tue Jan 13",
+    "3:10 pm – Tue Jan 13", "5:00 pm – Tue Jan 13",
+  ];
+
   const multiChatMessages: MultiChatMessage[] = React.useMemo(() => {
-    // TODO: Import interactionChats from data
-    const interactionChats: Record<string, any> = {};
-    const raw =
-      interactionChats[card.id] ??
-      [
-        {
-          id: 1,
-          sender: "contact",
-          text: `${card.requestSummary || card.request.slice(0, 100)}...`,
-        },
-      ];
+    const raw = (interactionChats as Record<string, any>)[card.id] ?? [
+      { id: 1, sender: "contact", text: card.requestSummary || card.request.slice(0, 100) },
+    ];
     return raw
       .filter((m: any) => m.sender === "user" || m.sender === "contact")
-      .map((m: any) => ({
+      .map((m: any, idx: number) => ({
         id: String(m.id),
         text: m.text,
-        sender:
-          m.sender === "user" ? ("outgoing" as const) : ("incoming" as const),
-        timestamp: "",
+        sender: m.sender === "user" ? ("outgoing" as const) : ("incoming" as const),
+        timestamp: FAKE_TIMESTAMPS[idx] ?? "",
       }));
   }, [card.id, card.requestSummary, card.request]);
 

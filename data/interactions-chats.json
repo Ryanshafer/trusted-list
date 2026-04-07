@@ -132,5 +132,38 @@
     { "id": 1, "sender": "contact", "text": "I'm transitioning from product management to product design. Could you review my case study and provide feedback on how to better showcase my design thinking?" },
     { "id": 2, "sender": "user", "text": "I made a similar transition a few years ago! I'd love to help. Can you send me the case study?" },
     { "id": 3, "sender": "contact", "text": "Amazing, thank you! Just sent you the link. Any feedback would be incredibly valuable." }
+  ],
+  "req-ryan-2-jen": [
+    { "id": 1, "sender": "user", "text": "Hey Jen — my portfolio has drifted across three different roles in product marketing. I'd love a thorough pass: flag anything that would hold me back and suggest edits where you see them." },
+    { "id": 2, "sender": "contact", "text": "Absolutely, happy to help. Can you share the link? I'll go through it this week." },
+    { "id": 3, "sender": "user", "text": "Just sent the Notion link. The case study section is the part I'm most unsure about." },
+    { "id": 4, "sender": "contact", "text": "Got it — I'll focus there first. Give me a couple days." },
+    { "id": 5, "sender": "contact", "text": "Started my review. First impression: the case studies are strong but the narrative thread between them is loose. I'll leave detailed comments in the doc." },
+    { "id": 6, "sender": "user", "text": "That's exactly what I was worried about. Really appreciate you digging in." }
+  ],
+  "req-ryan-3-marcus": [
+    { "id": 1, "sender": "user", "text": "Marcus — we're hiring our first senior product designer and I want to be deliberate about it. Strong systems thinking, startup comfort, and real craft. Any referrals from your network?" },
+    { "id": 2, "sender": "contact", "text": "Good timing. I know two people who fit that exactly — both made the leap from larger orgs to early-stage recently." },
+    { "id": 3, "sender": "user", "text": "That's exactly the profile. Would love a warm intro if they're open to it." },
+    { "id": 4, "sender": "contact", "text": "Let me reach out to them first. I won't cold-intro without checking." },
+    { "id": 5, "sender": "user", "text": "Really appreciate that. Let me know what they say." },
+    { "id": 6, "sender": "contact", "text": "Both said yes. Introducing you to Anya and Kofi over email now. Anya has led a design system 0→1; Kofi comes from Figma's design team." },
+    { "id": 7, "sender": "user", "text": "These are both fantastic. Thank you so much, Marcus — this is exactly what I needed." },
+    { "id": 8, "sender": "system", "text": "Request Completed", "type": "system" }
+  ],
+  "req-ryan-3-priya": [
+    { "id": 1, "sender": "user", "text": "Priya — looking for referrals for a senior product designer hire. Early-stage team, strong systems thinking, good craft. Anyone come to mind?" },
+    { "id": 2, "sender": "contact", "text": "A few names come to mind. What's the stage of the product — 0→1 or scaling an existing system?" },
+    { "id": 3, "sender": "user", "text": "Bit of both. We have a design system that needs maturing but also a few new surfaces being built from scratch." },
+    { "id": 4, "sender": "contact", "text": "Got it. I know someone who did exactly that at her last company. Let me check if she's open to chatting." },
+    { "id": 5, "sender": "user", "text": "That would be great, no pressure on timing." },
+    { "id": 6, "sender": "contact", "text": "She's open! I'll make the intro this week. Also sending you her Figma community profile so you have context." }
+  ],
+  "req-ryan-3-devon": [
+    { "id": 1, "sender": "user", "text": "Hey — we're hiring a senior product designer for an early-stage team. Know anyone who's done 0→1 work and has the craft to go with it?" },
+    { "id": 2, "sender": "contact", "text": "Interesting. I work closely with designers on the engineering side — I can think of a few who have both the systems chops and the taste you're describing." },
+    { "id": 3, "sender": "user", "text": "That crossover engineering-design profile would actually be really valuable for us. Who do you have in mind?" },
+    { "id": 4, "sender": "contact", "text": "There's one person in particular — built the component library at her last startup and drove the design-eng handoff process. I'll reach out and see if she's looking." },
+    { "id": 5, "sender": "user", "text": "That sounds ideal. Really appreciate you thinking it through." }
   ]
 }

@@ -299,9 +299,10 @@ export function ChatMultiHelperModal({
     c.name.toLowerCase().includes(search.toLowerCase())
   );
   const selected = contacts.find((c) => c.id === selectedContactId)!;
-  const baseMessages = (messagesByContactId && selectedContactId)
-    ? (messagesByContactId[selectedContactId] ?? messages)
-    : messages;
+  const mappedMessages = messagesByContactId && selectedContactId
+    ? messagesByContactId[selectedContactId]
+    : undefined;
+  const baseMessages = mappedMessages && mappedMessages.length > 0 ? mappedMessages : messages;
   const displayMessages = selectedContactId
     ? [...baseMessages, ...(localMessages[selectedContactId] ?? [])]
     : baseMessages;

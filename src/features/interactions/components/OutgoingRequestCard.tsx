@@ -24,6 +24,7 @@ import {
 import { UserIdentityLink } from "@/components/UserIdentityLink";
 import type { CardData } from "@/features/dashboard/types";
 import type { HelperResponse, MyHelpRequest } from "@/features/interactions/utils/data";
+import { interactionChats } from "@/features/interactions/utils/data";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { formatEndDate } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -112,6 +113,8 @@ export const buildCompletionFeedback = (
 
 export const buildMultiChatMessages = (
   responses: HelperResponse[],
+  requestSummary = "",
+  requestText = "",
 ): Record<string, MultiChatMessage[]> => {
   const result: Record<string, MultiChatMessage[]> = {};
   const FAKE_TIMESTAMPS = [
@@ -124,12 +127,10 @@ export const buildMultiChatMessages = (
     "3:10 pm – Tue Jan 13",
     "5:00 pm – Tue Jan 13",
   ];
-  
+
   for (const r of responses) {
-    // TODO: Import interactionChats from data
-    const interactionChats: Record<string, any> = {};
-    const raw = interactionChats[r.chatId] ?? [];
-    result[r.id] = raw
+    const raw = (interactionChats as Record<string, any>)[r.chatId] ?? [];
+    const mapped: MultiChatMessage[] = raw
       .filter((m: any) => m.sender === "user" || m.sender === "contact")
       .map((m: any, idx: number) => ({
         id: String(m.id ?? idx),
@@ -138,6 +139,11 @@ export const buildMultiChatMessages = (
         text: m.text,
         timestamp: FAKE_TIMESTAMPS[idx] ?? "",
       }));
+
+    // Fall back to a single lead message so the chat is never blank
+    result[r.id] = mapped.length > 0
+      ? mapped
+      : [{ id: `lead-${r.id}`, sender: "outgoing", text: formatLeadMessage(requestSummary, requestText), timestamp: FAKE_TIMESTAMPS[0] }];
   }
   return result;
 };
@@ -451,7 +457,7 @@ export const OutgoingRequestCard = ({
             avatarUrl: r.avatarUrl ?? null,
             isCompleted: r.status === "Completed",
           }))}
-          messagesByContactId={buildMultiChatMessages(currentRequest.responses)}
+          messagesByContactId={buildMultiChatMessages(currentRequest.responses, currentRequest.requestSummary, currentRequest.request)}
           completionFeedbackByContactId={buildCompletionFeedback(
             currentRequest.responses,
           )}
