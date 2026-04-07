@@ -1,4 +1,4 @@
-import{c as a}from"./createLucideIcon.DUCazJgS.js";import{j as e}from"./jsx-runtime.D_zvdyIk.js";import{T as l,m as o}from"./app-sidebar.BouD3XR5.js";import{e as h}from"./dialog.DR5DMI-2.js";/**
+import{c as a}from"./createLucideIcon.DUCazJgS.js";import{j as e}from"./jsx-runtime.D_zvdyIk.js";import{T as l,m as o}from"./HelpRequestCards.h1DBa2ps.js";import{e as h}from"./dialog.CeTR141V.js";/**
  * @license lucide-react v0.552.0 - ISC
  *
  * This source code is licensed under the ISC license.
