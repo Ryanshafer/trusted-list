@@ -350,7 +350,7 @@ const [isExpanded, setIsExpanded] = useState(false);
               <div className="mb-6">
                 <h2 className="text-3xl font-serif font-normal text-neutral-600 mb-2">
                   {referrer
-                    ? `${referrer.firstName} vouched for you.`
+                    ? `${referrer.firstName} nominated you.`
                     : "Join the waitlist"}
                 </h2>
                 <p className="text-neutral-600">
