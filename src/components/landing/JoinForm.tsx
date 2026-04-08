@@ -297,10 +297,10 @@ export const JoinForm = () => {
           <Check className="h-8 w-8 text-primary-500" />
         </div>
         <h3 className="text-xl font-semibold text-neutral-600 mb-2">
-          Request Received
+          You’re on the waitlist!
         </h3>
         <p className="text-neutral-600 max-w-xs mx-auto">
-          We'll review your details and get back to you within a few days.
+          We’ll review your details and send you an invitation as soon as a spot opens. If you know a current member, ask them to nominate you to speed things up.
         </p>
       </motion.div>
     );
