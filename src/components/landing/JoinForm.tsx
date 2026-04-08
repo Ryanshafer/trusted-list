@@ -551,6 +551,7 @@ export const JoinForm = () => {
                   searchFn={searchSkills}
                   placeholder="Search skills…"
                   keepOpenOnSelect
+                  side="top"
                   onSelect={handleSkillSelect}
                 />
                 {skillError && (

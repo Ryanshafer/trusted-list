@@ -36,6 +36,8 @@ type SearchComboboxProps = {
   placeholder?: string;
   /** Keep the popover open after selection — set true for multi-select */
   keepOpenOnSelect?: boolean;
+  /** Which side the dropdown opens toward. Defaults to "bottom". */
+  side?: "top" | "bottom" | "left" | "right";
   "aria-invalid"?: boolean;
   className?: string;
 };
@@ -49,6 +51,7 @@ export function SearchCombobox({
   onSelect,
   placeholder = "Search…",
   keepOpenOnSelect = false,
+  side = "bottom",
   "aria-invalid": ariaInvalid,
   className,
 }: SearchComboboxProps) {
@@ -135,7 +138,7 @@ export function SearchCombobox({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[280px] p-0" align="start">
+      <PopoverContent className="w-[280px] p-0" align="start" side={side}>
         <Command shouldFilter={false}>
           {otherMode ? (
             <div className="p-3 flex flex-col gap-2">

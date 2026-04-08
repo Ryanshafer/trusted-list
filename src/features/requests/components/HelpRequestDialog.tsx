@@ -1138,7 +1138,7 @@ export function HelpRequestDialog(props: Props) {
             )}
             <div className="relative" style={{ height: detailsExpanded ? "calc(60dvh)" : "7.5rem" }}>
               <Textarea
-                placeholder={selectedCategory === "help-advice" ? "Ask for help thinking through something:\n• A decision you're weighing\n• A challenge at work\n• Getting perspective on someone\n• How others have handled a similar situation" : "Share what someone needs to know to help you well."}
+                placeholder={selectedCategory === "help-advice" ? "Ask for help thinking through something:\n• A decision you're weighing\n• A challenge at work\n• Getting perspective on someone\n• How others have handled a similar situation" : "Share what someone needs to know to help you."}
                 className={`h-full resize-none rounded-lg bg-background placeholder:text-muted-foreground shadow-none ${errors.requestDetails ? "border-destructive" : "border-border"}`}
                 value={requestDetails}
                 onChange={(e) => {

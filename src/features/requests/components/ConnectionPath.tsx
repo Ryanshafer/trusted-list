@@ -1,5 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { ChevronsRight } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ export interface ConnectionPathProps {
   resolveNode: (node: ConnectionPathNode) => ResolvedNode;
   basePath?: string;
   hideHeader?: boolean;
+  onConnectRequest?: (connector: ResolvedNode) => void;
 }
 
 
@@ -92,6 +94,7 @@ export function ConnectionPath({
   resolveNode,
   basePath = "/trusted-list",
   hideHeader = false,
+  onConnectRequest,
 }: ConnectionPathProps) {
   const collapsed =
     connectionDegree === "3rd+" ||
@@ -101,6 +104,11 @@ export function ConnectionPath({
   const youNode = resolveNode(connectionPath[0]);
   const lastNode = connectionPath[connectionPath.length - 1];
   const requesterNode = resolveNode(lastNode);
+
+  const connectorRawNode = connectionDegree === "2nd"
+    ? connectionPath.find((n) => n.type === "connector")
+    : undefined;
+  const connectorNode = connectorRawNode ? resolveNode(connectorRawNode) : undefined;
 
   const memberHref = (name: string) =>
     `${basePath}/members/${name.toLowerCase().replace(/\s+/g, "-")}`;
@@ -112,6 +120,7 @@ export function ConnectionPath({
       )}
       <div className="flex flex-col">
         {collapsed ? (
+
           <>
             <ConnectionNode
               name={youNode.name}
@@ -148,6 +157,16 @@ export function ConnectionPath({
           })
         )}
       </div>
+      {connectorNode && onConnectRequest && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-full font-semibold w-full"
+          onClick={() => onConnectRequest(connectorNode)}
+        >
+          Connect with {requesterNode.name.split(" ")[0]}
+        </Button>
+      )}
     </div>
   );
 }

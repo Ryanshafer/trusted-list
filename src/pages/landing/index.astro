@@ -10,10 +10,14 @@ import MemberCount from "../../components/landing/MemberCount";
 import { ScrollTypewriter } from "../../components/landing/ScrollTypewriter";
 import WaitlistCTA from "../../components/landing/WaitlistCTA";
 import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
+import logo from "../../assets/logo-light.svg?url";
+
+// Set to true to show the floating nav bar; false for a static logo link above the hero copy.
+const showFloatingBar = false;
 ---
 
 <LandingLayout title="The Trusted List - A network you can actually count on.">
-    <FloatingHeroBar client:load />
+    {showFloatingBar && <FloatingHeroBar client:load />}
 
     <section
         data-hero-section
@@ -36,16 +40,21 @@ import FloatingHeroBar from "../../components/landing/FloatingHeroBar";
             </div>
         </div>
 
-        <div class="container mx-auto mt-0 w-full px-4 md:mt-0 md:px-6 relative z-20">
+        <div class="container mx-auto mt-0 w-full p-5 md:p-0 md:mt-0 md:px-6 relative z-20">
             <div
-                class="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4 items-center"
+                class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center"
             >
                 <!-- Hero Copy -->
-                <div class="max-w-3xl lg:translate-x-[10%]">
+                <div class="ml-0 md:ml-8">
+                    {!showFloatingBar && (
+                        <a href="/trusted-list/" class="inline-block mb-8">
+                            <img src={logo} alt="The Trusted List" class="h-12 md:h-16 w-auto" />
+                        </a>
+                    )}
                     <h1
                         class="font-serif font-medium tracking-tighter text-5xl sm:text-6xl md:text-6xl/15 text-slate-900 mb-5"
                     >
-                        A network that shows up<span class="text-primary-500"><br/>
+                        A network that shows up<span class="text-primary-500">
                             when it matters most.</span
                         >
                     </h1>

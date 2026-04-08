@@ -7,9 +7,10 @@ import { TrustScoreRadarChart } from "./TrustScoreRadarChart";
 import { CircleAvatarStack } from "./CircleAvatarStack";
 import { OpenRequestCard } from "./OpenRequestCard";
 import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
+import type { ConnectionPathNode, ResolvedNode } from "@/features/requests/components/ConnectionPath";
+import { HelpRequestDialog, REQUEST_CONNECTION_CATEGORY, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import { ChatMultiHelperModal } from "@/features/dashboard/components/ChatMultiHelperModal";
 import type { ProfileData, OpenRequest, ViewerData } from "../types";
-import type { ConnectionPathNode } from "@/features/requests/components/ConnectionPath";
 
 interface ProfileSidebarProps {
   profile: ProfileData;
@@ -30,6 +31,20 @@ export function ProfileSidebar({
 }: ProfileSidebarProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeRequest, setActiveRequest] = useState<OpenRequest | null>(null);
+  const [connectDialogOpen, setConnectDialogOpen] = useState(false);
+  const [connectDialogConnector, setConnectDialogConnector] = useState<AskContact | null>(null);
+
+  function handleConnectRequest(connector: ResolvedNode) {
+    setConnectDialogConnector({
+      id: connector.name.toLowerCase().replace(/\s+/g, "-"),
+      name: connector.name,
+      role: connector.role,
+      avatarUrl: connector.avatarUrl ?? undefined,
+    });
+    setConnectDialogOpen(true);
+  }
+
+  const connectInitialSummary = `Can you introduce me to ${profile.name}?`;
   const visibleOpenRequests = profile.openRequests.filter((request) => {
     const isOpen = (request.status ?? "Open") === "Open";
     const isPromotable = ["circle", "community"].includes(request.type ?? "circle");
@@ -112,6 +127,7 @@ export function ProfileSidebar({
               resolveNode={resolveConnectionNode}
               basePath={basePath}
               hideHeader={true}
+              onConnectRequest={handleConnectRequest}
             />
           </section>
         </>
@@ -167,6 +183,20 @@ export function ProfileSidebar({
             </div>
           </section>
         </>
+      )}
+
+      {/* Connect request dialog — 2nd degree only */}
+      {connectDialogConnector && (
+        <HelpRequestDialog
+          mode="create"
+          open={connectDialogOpen}
+          onOpenChange={setConnectDialogOpen}
+          categories={[REQUEST_CONNECTION_CATEGORY]}
+          contacts={[connectDialogConnector]}
+          initialCategories={[REQUEST_CONNECTION_CATEGORY.value]}
+          initialSelectedContacts={[connectDialogConnector]}
+          initialSummary={connectInitialSummary}
+        />
       )}
 
       {/* Chat modal for "Offer to help" on cards */}
