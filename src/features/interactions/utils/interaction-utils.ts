@@ -1,5 +1,6 @@
 import React from "react";
 import type { CardData } from "@/features/dashboard/types";
+import type { MyHelpRequest } from "@/features/interactions/utils/data";
 
 export const variantToAudienceKey = (variant: string) => {
   if (variant === "contact") return "contact";
@@ -136,6 +137,213 @@ export function useSortState<K extends string>(
     }
   };
   return { sortKey, sortDir, handleSort };
+}
+
+export const isMyHelpRequestCompleted = (request: MyHelpRequest) =>
+  request.status === "Closed" ||
+  (request.type === "contact" &&
+    request.responses.some((response) => response.status === "Completed"));
+
+export const isMyHelpRequestPaused = (request: MyHelpRequest) =>
+  ["circle", "community"].includes(request.type) &&
+  request.status !== "Closed" &&
+  request.promoted === false;
+
+export const isMyHelpRequestInProgress = (request: MyHelpRequest) =>
+  !isMyHelpRequestCompleted(request) && !isMyHelpRequestPaused(request);
+
+export function filterMyHelpRequests(
+  requests: MyHelpRequest[],
+  filters: SidebarFilters,
+  search: string,
+) {
+  return requests.filter((request) => {
+    if (
+      filters.audiences.length > 0 &&
+      !filters.audiences.includes(request.type)
+    ) {
+      return false;
+    }
+
+    if (
+      filters.topics.length > 0 &&
+      (!request.category || !filters.topics.includes(request.category))
+    ) {
+      return false;
+    }
+
+    if (filters.statuses.length > 0) {
+      const matches =
+        (filters.statuses.includes("inProgress") &&
+          isMyHelpRequestInProgress(request)) ||
+        (filters.statuses.includes("paused") && isMyHelpRequestPaused(request)) ||
+        (filters.statuses.includes("completed") &&
+          isMyHelpRequestCompleted(request));
+      if (!matches) {
+        return false;
+      }
+    }
+
+    if (filters.responses.length > 0) {
+      const hasResponses = request.responses.length > 0;
+      const matches =
+        (filters.responses.includes("none") && !hasResponses) ||
+        (filters.responses.includes("has") && hasResponses);
+      if (!matches) {
+        return false;
+      }
+    }
+
+    if (
+      filters.dateFrom &&
+      request.endDate &&
+      new Date(request.endDate) < new Date(filters.dateFrom)
+    ) {
+      return false;
+    }
+
+    if (
+      filters.dateTo &&
+      request.endDate &&
+      new Date(request.endDate) > new Date(filters.dateTo)
+    ) {
+      return false;
+    }
+
+    if (search) {
+      const query = search.toLowerCase();
+      if (
+        !request.requestSummary.toLowerCase().includes(query) &&
+        !request.request.toLowerCase().includes(query)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+export function sortMyHelpRequestsForDisplay(requests: MyHelpRequest[]) {
+  return [...requests].sort((a, b) => {
+    const aCompleted = isMyHelpRequestCompleted(a);
+    const bCompleted = isMyHelpRequestCompleted(b);
+
+    if (aCompleted && !bCompleted) return 1;
+    if (!aCompleted && bCompleted) return -1;
+
+    const aHasDeadline = !!a.endDate;
+    const bHasDeadline = !!b.endDate;
+
+    if (aHasDeadline && !bHasDeadline) return -1;
+    if (!aHasDeadline && bHasDeadline) return 1;
+
+    if (aHasDeadline && bHasDeadline) {
+      return new Date(a.endDate!).getTime() - new Date(b.endDate!).getTime();
+    }
+
+    return 0;
+  });
+}
+
+export function sortMyHelpRequestsByKey(
+  requests: MyHelpRequest[],
+  key:
+    | "request"
+    | "endDate"
+    | "audience"
+    | "topic"
+    | "status"
+    | "responses"
+    | null,
+  dir: "asc" | "desc",
+) {
+  if (!key) {
+    return requests;
+  }
+
+  const direction = dir === "asc" ? 1 : -1;
+  const audienceOrder = { contact: 0, circle: 1, community: 2 };
+  const responseScore = (request: MyHelpRequest) => {
+    if (request.responses.length === 0) return 0;
+    if (request.responses.every((response) => response.status === "Completed")) {
+      return 2;
+    }
+    return 1;
+  };
+  const statusScore = (request: MyHelpRequest) => {
+    if (isMyHelpRequestCompleted(request)) return 2;
+    if (isMyHelpRequestPaused(request)) return 1;
+    return 0;
+  };
+
+  return [...requests].sort((a, b) => {
+    switch (key) {
+      case "request":
+        return direction * a.requestSummary.localeCompare(b.requestSummary);
+      case "endDate": {
+        const timeA = a.endDate ? new Date(a.endDate).getTime() : Infinity;
+        const timeB = b.endDate ? new Date(b.endDate).getTime() : Infinity;
+        return direction * (timeA - timeB);
+      }
+      case "audience":
+        return (
+          direction *
+          (audienceOrder[a.type] - audienceOrder[b.type])
+        );
+      case "topic":
+        return direction * (a.category ?? "").localeCompare(b.category ?? "");
+      case "status":
+        return direction * (statusScore(a) - statusScore(b));
+      case "responses":
+        return direction * (responseScore(a) - responseScore(b));
+      default:
+        return 0;
+    }
+  });
+}
+
+export function computeMyRequestFilterOptions(
+  requests: MyHelpRequest[],
+): AvailableFilterOptions {
+  const topics = new Set<string>();
+  let hasContact = false;
+  let hasCircle = false;
+  let hasCommunity = false;
+  let hasInProgress = false;
+  let hasPaused = false;
+  let hasCompleted = false;
+  let hasNoResponses = false;
+  let hasWithResponses = false;
+
+  for (const request of requests) {
+    if (request.category) topics.add(request.category);
+    if (request.type === "contact") hasContact = true;
+    if (request.type === "circle") hasCircle = true;
+    if (request.type === "community") hasCommunity = true;
+
+    if (isMyHelpRequestCompleted(request)) hasCompleted = true;
+    else if (isMyHelpRequestPaused(request)) hasPaused = true;
+    else hasInProgress = true;
+
+    if (request.responses.length === 0) hasNoResponses = true;
+    else hasWithResponses = true;
+  }
+
+  return {
+    topics: [...topics].sort(),
+    audience: {
+      contact: hasContact,
+      circle: hasCircle,
+      community: hasCommunity,
+    },
+    statuses: {
+      inProgress: hasInProgress,
+      paused: hasPaused,
+      completed: hasCompleted,
+    },
+    responses: { none: hasNoResponses, has: hasWithResponses },
+  };
 }
 
 export type HelpingCardSortKey = "name" | "request" | "endDate" | "audience" | "topic";

@@ -5,13 +5,30 @@ import requestsData from "../../../../data/requests.json";
 import interactionsData from "../../../../data/interactions.json";
 import profilesData from "../../../../data/profiles.json";
 import currentUser from "../../../../data/current-user.json";
+import type { CardData } from "../../../features/dashboard/types";
+import type { InteractionCard } from "../../../features/interactions/utils/data";
+import type { OpenRequest, ProfileData } from "../../../features/profile/types";
+
+type InteractionsPayload = {
+  helped: InteractionCard[];
+  inProgress: InteractionCard[];
+};
+
+type ProfileWithOpenRequests = ProfileData & {
+  openRequests?: OpenRequest[];
+};
 
 export function getStaticPaths() {
-  const reqIds = requestsData.map((r) => r.id);
-  const helpedIds = (interactionsData as any).helped.map((r: any) => r.id);
-  const inProgressIds = (interactionsData as any).inProgress.map((r: any) => r.id);
-  const profileOpenRequestIds = [currentUser as any, ...(profilesData as any[])].flatMap(
-    (profile: any) => (profile.openRequests ?? []).map((request: any) => request.requestId)
+  const requestCards = requestsData as CardData[];
+  const interactions = interactionsData as InteractionsPayload;
+  const profiles = profilesData as ProfileWithOpenRequests[];
+  const currentUserProfile = currentUser as ProfileWithOpenRequests;
+
+  const reqIds = requestCards.map((request) => request.id);
+  const helpedIds = interactions.helped.map((request) => request.id);
+  const inProgressIds = interactions.inProgress.map((request) => request.id);
+  const profileOpenRequestIds = [currentUserProfile, ...profiles].flatMap(
+    (profile) => (profile.openRequests ?? []).map((request) => request.requestId)
   );
 
   const allIds = [

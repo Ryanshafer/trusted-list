@@ -35,9 +35,12 @@ export function formatDate(date: Date | string, options?: Intl.DateTimeFormatOpt
  * @param wait - Wait time in milliseconds
  * @returns Debounced function
  */
-export function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
+export function debounce<Args extends unknown[]>(
+  func: (...args: Args) => void,
+  wait: number,
+): (...args: Args) => void {
   let timeout: ReturnType<typeof setTimeout> | null = null;
-  return function(...args: Parameters<T>): void {
+  return function(...args: Args): void {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };

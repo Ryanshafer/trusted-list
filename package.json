@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -49,6 +52,7 @@
   "devDependencies": {
     "@figma/code-connect": "^1.4.1",
     "baseline-browser-mapping": "^2.10.0",
-    "shadcn": "^4.0.0"
+    "shadcn": "^4.0.0",
+    "vitest": "^4.1.3"
   }
 }

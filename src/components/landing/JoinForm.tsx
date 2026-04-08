@@ -12,6 +12,18 @@ import { cn } from "@/lib/utils";
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Referrer = { firstName: string; lastName: string; id: string };
+type JoinFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  linkedin: string;
+  agreedToTerms: boolean;
+};
+type JoinFormErrors = Record<string, string | undefined>;
+type InviteState = {
+  referrer: Referrer;
+  formData: JoinFormData;
+};
 
 // ── Mock API ──────────────────────────────────────────────────────────────────
 
@@ -33,6 +45,60 @@ const OWN_WORDS_QUESTIONS = [
 ];
 
 const MAX_ANSWER_LENGTH = 220;
+const EMPTY_FORM: JoinFormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  linkedin: "",
+  agreedToTerms: false,
+};
+const INVITED_PREFILL: JoinFormData = {
+  firstName: "Jordan",
+  lastName: "Rivera",
+  email: "jordan.rivera@acme.com",
+  linkedin: "https://linkedin.com/in/jordanrivera",
+  agreedToTerms: false,
+};
+const EMPTY_ANSWERS = ["", "", ""];
+const EMPTY_ANSWER_ERRORS = [undefined, undefined, undefined];
+
+function parseInviteParams(search: string): InviteState | null {
+  const params = new URLSearchParams(search);
+  const refId = params.get("ref");
+  const firstName = params.get("first_name") || params.get("firstName");
+  const lastName = params.get("last_name") || params.get("lastName");
+  const fullName = params.get("name") || params.get("referrer_name");
+
+  if (!refId || !(firstName || fullName)) {
+    return null;
+  }
+
+  const inviteFirstName = firstName || fullName?.split(" ")[0] || "";
+  const inviteLastName = lastName || fullName?.split(" ").slice(1).join(" ") || "";
+
+  return {
+    referrer: { firstName: inviteFirstName, lastName: inviteLastName, id: refId },
+    formData: INVITED_PREFILL,
+  };
+}
+
+function validateStep1(formData: JoinFormData): JoinFormErrors {
+  const nextErrors: Record<string, string> = {};
+
+  if (!formData.firstName) nextErrors.firstName = "Your first name is required";
+  if (!formData.lastName) nextErrors.lastName = "Your last name is required";
+  if (!formData.email) nextErrors.email = "Your email is required";
+  if (!formData.linkedin) nextErrors.linkedin = "Your LinkedIn is required";
+  if (!formData.agreedToTerms) nextErrors.agreedToTerms = "You must agree to the terms";
+
+  return nextErrors;
+}
+
+function validateAnswers(answers: string[]) {
+  return answers.map((answer) =>
+    answer.trim() ? undefined : "This field is required",
+  );
+}
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
@@ -73,48 +139,29 @@ const stepVariants = {
 // ── JoinForm ──────────────────────────────────────────────────────────────────
 
 export const JoinForm = () => {
-  const emptyForm = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    linkedin: "",
-    agreedToTerms: false,
-  };
-
-  const invitedPrefill = {
-    firstName: "Jordan",
-    lastName: "Rivera",
-    email: "jordan.rivera@acme.com",
-    linkedin: "https://linkedin.com/in/jordanrivera",
-    agreedToTerms: false,
-  };
-
   // ── State ──────────────────────────────────────────────────────────────────
 
   const [referrer, setReferrer] = useState<Referrer | null>(null);
-const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [formData, setFormData] = useState(emptyForm);
-  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [errors, setErrors] = useState<JoinFormErrors>({});
 
   // Step 2 — skills
   const [selectedSkills, setSelectedSkills] = useState<ComboboxItem[]>([]);
   const [skillError, setSkillError] = useState<string | undefined>();
 
   // Step 3 — own words
-  const [answers, setAnswers] = useState(["", "", ""]);
+  const [answers, setAnswers] = useState(EMPTY_ANSWERS);
   const [answerErrors, setAnswerErrors] = useState<(string | undefined)[]>([
     undefined,
     undefined,
     undefined,
   ]);
 
-  const initialInviteRef = React.useRef<{
-    referrer: Referrer;
-    formData: typeof emptyForm;
-  } | null>(null);
+  const initialInviteRef = React.useRef<InviteState | null>(null);
 
   // ── Reset ──────────────────────────────────────────────────────────────────
 
@@ -122,30 +169,27 @@ const [isExpanded, setIsExpanded] = useState(false);
     setStep(1);
     setSelectedSkills([]);
     setSkillError(undefined);
-    setAnswers(["", "", ""]);
-    setAnswerErrors([undefined, undefined, undefined]);
+    setAnswers(EMPTY_ANSWERS);
+    setAnswerErrors(EMPTY_ANSWER_ERRORS);
     setIsSubmitting(false);
     setIsSuccess(false);
+  };
+
+  const applyInviteState = (invite: InviteState) => {
+    setReferrer(invite.referrer);
+    setIsExpanded(true);
+    setFormData(invite.formData);
+    setErrors({});
   };
 
   // ── URL param / event wiring ───────────────────────────────────────────────
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const refId = params.get('ref');
-    const firstName = params.get('first_name') || params.get('firstName');
-    const lastName = params.get('last_name') || params.get('lastName');
-    const fullName = params.get('name') || params.get('referrer_name');
+    const invite = parseInviteParams(window.location.search);
 
-    if (refId && (firstName || fullName)) {
-      const fName = firstName || fullName?.split(' ')[0] || '';
-      const lName = lastName || fullName?.split(' ').slice(1).join(' ') || '';
-      const invitedReferrer = { firstName: fName, lastName: lName, id: refId };
-
-      initialInviteRef.current = { referrer: invitedReferrer, formData: invitedPrefill };
-      setReferrer(invitedReferrer);
-      setIsExpanded(true);
-      setFormData(invitedPrefill);
+    if (invite) {
+      initialInviteRef.current = invite;
+      applyInviteState(invite);
     }
   }, []);
 
@@ -159,16 +203,13 @@ const [isExpanded, setIsExpanded] = useState(false);
       resetMultiStepState();
 
       if (preserveInvite && initialInvite) {
-        setReferrer(initialInvite.referrer);
-        setIsExpanded(true);
-        setFormData(initialInvite.formData);
-        setErrors({});
+        applyInviteState(initialInvite);
         return;
       }
 
       setReferrer(null);
       setIsExpanded(true);
-      setFormData(emptyForm);
+      setFormData(EMPTY_FORM);
       setErrors({});
     };
 
@@ -187,7 +228,7 @@ const [isExpanded, setIsExpanded] = useState(false);
   // ── Field helpers ──────────────────────────────────────────────────────────
 
   const handleFieldChange =
-    (field: keyof typeof emptyForm) =>
+    (field: keyof typeof EMPTY_FORM) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setFormData((current) => ({ ...current, [field]: event.target.value }));
     };
@@ -196,12 +237,7 @@ const [isExpanded, setIsExpanded] = useState(false);
 
   const handleStep1Next = (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: Record<string, string> = {};
-    if (!formData.firstName) newErrors.firstName = "Your first name is required";
-    if (!formData.lastName) newErrors.lastName = "Your last name is required";
-    if (!formData.email) newErrors.email = "Your email is required";
-    if (!formData.linkedin) newErrors.linkedin = "Your LinkedIn is required";
-    if (!formData.agreedToTerms) newErrors.agreedToTerms = "You must agree to the terms";
+    const newErrors = validateStep1(formData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -220,14 +256,12 @@ const [isExpanded, setIsExpanded] = useState(false);
   };
 
   const handleStep3Submit = async () => {
-    const newErrors = answers.map((a) =>
-      a.trim() ? undefined : "This field is required",
-    );
+    const newErrors = validateAnswers(answers);
     if (newErrors.some(Boolean)) {
       setAnswerErrors(newErrors);
       return;
     }
-    setAnswerErrors([undefined, undefined, undefined]);
+    setAnswerErrors(EMPTY_ANSWER_ERRORS);
     setIsSubmitting(true);
 
     // Simulate API call
@@ -575,11 +609,11 @@ const [isExpanded, setIsExpanded] = useState(false);
                 {OWN_WORDS_QUESTIONS.map((question, index) => {
                   const length = answers[index].length;
                   return (
-                    <div key={question} className="flex flex-col gap-1">
+                    <div key={question} className="flex flex-col gap-1.5">
                       <div className="flex items-start justify-between gap-6">
                         <Label
                           htmlFor={`own-words-${index}`}
-                          className="text-sm font-medium leading-5"
+                          className="text-base font-medium leading-5"
                         >
                           {question}
                         </Label>

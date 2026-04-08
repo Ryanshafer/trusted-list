@@ -1,11 +1,4 @@
 import React from "react";
-import requestsData from "../../../data/requests.json";
-import requestDetailsData from "../../../data/request-details.json";
-import interactionsData from "../../../data/interactions.json";
-import dashboardData from "../../../data/dashboard-content.json";
-import profilesData from "../../../data/profiles.json";
-import categoriesData from "../../../data/categories.json";
-import type { CardData } from "@/features/dashboard/types";
 import { AppSidebar } from "@/components/app-sidebar";
 import { UserIdentityLink } from "@/components/UserIdentityLink";
 import { Button } from "@/components/ui/button";
@@ -36,11 +29,10 @@ import completionFeedbackData from "../../../data/interaction-completion-feedbac
 import { ConfettiBurst } from "@/features/dashboard/components/HelpRequestCards";
 import { SetReminderDialog, formatReminderTime } from "@/components/SetReminderDialog";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
-import { myHelpRequests, interactionChats } from "@/features/interactions/utils/data";
+import { interactions, myHelpRequests, interactionChats } from "@/features/interactions/utils/data";
 import { formatEndDate } from "@/lib/utils";
 import { HelpRequestDialog, REQUEST_CATEGORIES, type AskMode } from "@/features/requests/components/HelpRequestDialog";
 import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
-import currentUser from "../../../data/current-user.json";
 import {
   BellPlus,
   BellRing,
@@ -61,143 +53,18 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import { TrustTierBadge, TIER_LABELS } from "@/features/profile/components/TrustTierBadge";
-
-type RequestCard = CardData & { category: string };
-type RequestDetail = {
-  audience: string;
-  audienceCategory: string;
-  topics: string[];
-  author: {
-    role: string;
-    company: string;
-    connectionDegree: string;
-    trustedFor: string;
-  };
-  connectionPath: Array<{
-    type: "you" | "connector" | "requester";
-    name?: string;
-    role: string;
-    avatarUrl?: string | null;
-    relationship: string | null;
-  }>;
-  about: {
-    career: string;
-    location: string;
-    trustedExpertise: string;
-  };
-  stats: {
-    peopleHelped: number;
-    requests: number;
-    trustRating: string;
-  };
-};
-
-function trustScoreToTier(score: number) {
-  if (score < 150) return "Emerging";
-  if (score < 650) return "Reliable";
-  if (score < 900) return "Trustworthy";
-  if (score < 990) return "Proven";
-  return "Stellar";
-}
-
-function trustRatingToTierIndex(rating: string): number {
-  return TIER_LABELS.findIndex(tier => tier === rating);
-}
-
-const profileOwners = [currentUser as any, ...(profilesData as any[])];
-
-const profileOpenRequests: RequestCard[] = profileOwners.flatMap((profile: any) =>
-  (profile.openRequests ?? []).map((request: any) => ({
-    id: request.requestId,
-    variant: "circle",
-    name: profile.name,
-    requestSummary: request.title,
-    request: request.description,
-    relationshipTag: profile.id === currentUser.id ? "Your Request" : (profile.connectionDegree ?? "Connection"),
-    primaryCTA: "View Details",
-    avatarUrl: profile.avatarUrl ?? null,
-    endDate: request.endDate ?? null,
-    category: request.category ?? null,
-  }))
-);
-
-// Flatten all card sources into one lookup
-const allRequests: RequestCard[] = [
-  ...(requestsData as RequestCard[]),
-  ...[...(interactionsData as any).helped, ...(interactionsData as any).inProgress].map((r: any) => ({
-    id: r.id,
-    variant: r.variant ?? "circle",
-    name: r.name,
-    requestSummary: r.requestSummary,
-    request: r.request,
-    relationshipTag: r.relationshipTag ?? "Connection",
-    primaryCTA: "Chat",
-    avatarUrl: r.avatarUrl ?? null,
-    endDate: r.endDate ?? null,
-    category: r.category ?? null,
-  })),
-  ...profileOpenRequests,
-].filter(
-  (request, index, requests) => requests.findIndex((candidate) => candidate.id === request.id) === index
-);
-
-const synthesizedProfileDetails = Object.fromEntries(
-  profileOwners.flatMap((profile: any) =>
-    (profile.openRequests ?? []).map((request: any) => [
-      request.requestId,
-      {
-        audience: profile.id === currentUser.id ? "My Circle" : "Circle",
-        audienceCategory: request.category ?? "Other",
-        topics: request.category ? [request.category] : [],
-        author: {
-          role: profile.title,
-          company: profile.company,
-          connectionDegree: profile.id === currentUser.id ? "You" : (profile.connectionDegree ?? "1st"),
-          trustedFor: (profile.verifiedSkills ?? []).slice(0, 3).join(", "),
-        },
-        connectionPath: profile.connectionPath ?? [],
-        about: {
-          career: profile.about?.bio ?? "",
-          location: profile.about?.location ?? "",
-          trustedExpertise: (profile.verifiedSkills ?? []).join(", "),
-        },
-        stats: {
-          peopleHelped: profile.peopleHelped ?? 0,
-          requests: profile.totalRequests ?? (profile.openRequests?.length ?? 0),
-          trustRating: profile.trustTier ?? trustScoreToTier(profile.trustScore ?? 0),
-        },
-      } satisfies RequestDetail,
-    ])
-  )
-);
-
-const allDetails = {
-  ...synthesizedProfileDetails,
-  ...(requestDetailsData as Record<string, RequestDetail>),
-};
-const askContacts = (dashboardData as any).askForHelpCard?.contacts ?? [];
-
-// Generate category display names and topic mappings from centralized data
-const categoryDisplayNames: Record<string, string> = {};
-const topicToCategorySlug: Record<string, string> = {};
-const slugAlias: Record<string, string> = {};
-
-// Build mappings from categories data
-categoriesData.categories.forEach((category) => {
-  categoryDisplayNames[category.slug] = category.displayName;
-  topicToCategorySlug[category.slug] = category.slug;
-  topicToCategorySlug[category.displayName.toLowerCase()] = category.slug;
-  
-  // Add all aliases
-  category.aliases.forEach((alias) => {
-    topicToCategorySlug[alias.toLowerCase()] = category.slug;
-    // Handle slug-style aliases (with dashes)
-    if (alias.includes('-')) {
-      slugAlias[alias] = category.slug;
-    }
-  });
-});
+import { TrustTierBadge } from "@/features/profile/components/TrustTierBadge";
+import {
+  allDetails,
+  allRequests,
+  askContacts,
+  categoryDisplayNames,
+  currentUserProfile,
+  slugAlias,
+  topicToCategorySlug,
+  trustRatingToTierIndex,
+  type RequestConnectionNode,
+} from "@/features/requests/utils/request-detail-data";
 
 
 
@@ -225,31 +92,41 @@ export default function RequestDetailPage({ id }: { id: string }) {
   const categoryHref = request.category ? `/trusted-list/requests/${request.category}` : null;
   const dueDate = formatEndDate(request.endDate, false);
 
-  const resolveNode = (node: { type: string; name?: string; role: string; avatarUrl?: string | null; relationship?: string | null }) => {
-    if (node.type === "you") return { ...node, name: currentUser.name, role: `${currentUser.title} · ${currentUser.company}`, avatarUrl: currentUser.avatarUrl };
-    if (node.type === "requester") return { ...node, name: request.name, avatarUrl: request.avatarUrl ?? null };
+  const resolveNode = (node: RequestConnectionNode) => {
+    if (node.type === "you") {
+      return {
+        ...node,
+        name: currentUserProfile.name,
+        role: `${currentUserProfile.title} · ${currentUserProfile.company}`,
+        avatarUrl: currentUserProfile.avatarUrl ?? null,
+      };
+    }
+    if (node.type === "requester") {
+      return { ...node, name: request.name, avatarUrl: request.avatarUrl ?? null };
+    }
     return { ...node, name: node.name ?? "", avatarUrl: node.avatarUrl ?? null };
   };
 
-  const currentUserOpenRequest = (currentUser as any).openRequests?.find((r: { requestId: string }) => r.requestId === id) ?? null;
-  const myHelpReq = myHelpRequests.find((r: any) => r.id === id) ?? null;
+  const currentUserOpenRequest =
+    currentUserProfile.openRequests?.find((request) => request.requestId === id) ??
+    null;
+  const myHelpReq = myHelpRequests.find((request) => request.id === id) ?? null;
   const isOwnRequest = !!myHelpReq || !!currentUserOpenRequest;
   const resolvedAuthor = isOwnRequest
-    ? { ...detail.author, name: currentUser.name, avatarUrl: currentUser.avatarUrl, role: `${currentUser.title} · ${currentUser.company}` }
+    ? { ...detail.author, name: currentUserProfile.name, avatarUrl: currentUserProfile.avatarUrl, role: `${currentUserProfile.title} · ${currentUserProfile.company}` }
     : { ...detail.author, name: request.name, avatarUrl: request.avatarUrl ?? null };
   const resolvedAbout = isOwnRequest
     ? {
         ...detail.about,
-        career: currentUser.about?.bio ?? detail.about.career,
-        location: currentUser.about?.location ?? detail.about.location,
-        linkedInUrl: currentUser.about?.linkedInUrl ?? detail.about.linkedInUrl,
+        career: currentUserProfile.about?.bio ?? detail.about.career,
+        location: currentUserProfile.about?.location ?? detail.about.location,
       }
     : detail.about;
   const resolvedStats = isOwnRequest
     ? {
-        trustRating: trustScoreToTier(currentUser.trustScore),
-        peopleHelped: currentUser.peopleHelped,
-        requests: currentUser.totalRequests,
+        trustRating: currentUserProfile.trustTier ?? detail.stats.trustRating,
+        peopleHelped: currentUserProfile.peopleHelped ?? detail.stats.peopleHelped,
+        requests: currentUserProfile.totalRequests ?? detail.stats.requests,
       }
     : detail.stats;
 
@@ -277,7 +154,10 @@ export default function RequestDetailPage({ id }: { id: string }) {
     if (!isOwnRequest) return "active";
     if (!myHelpReq) return "active";
     const req = myHelpReq;
-    const isComplete = req.status === "Closed" || (req.type === "contact" && req.responses.some((r: any) => r.status === "Completed"));
+    const isComplete =
+      req.status === "Closed" ||
+      (req.type === "contact" &&
+        req.responses.some((response) => response.status === "Completed"));
     if (isComplete) return "complete";
     const isPromotable = ["circle", "community"].includes(req.type);
     if (isPromotable && req.promoted === false) return "paused";
@@ -302,28 +182,28 @@ export default function RequestDetailPage({ id }: { id: string }) {
   const rawResponses = React.useMemo(() => {
     const map: Record<string, string> = {};
     for (const resp of myHelpReq?.responses ?? []) {
-      if ((resp as any).trustedFor) map[(resp as any).id] = (resp as any).trustedFor;
+      if (resp.trustedFor) map[resp.id] = resp.trustedFor;
     }
     return map;
   }, [myHelpReq]);
 
   const multiContacts = React.useMemo(
     () =>
-      myHelpReq?.responses.map((r: any) => ({
-        id: r.id,
-        name: r.name,
-        role: r.role ?? "",
-        trustedFor: rawResponses[r.id] ?? null,
-        avatarUrl: r.avatarUrl ?? null,
-        isCompleted: r.status === "Completed",
+      myHelpReq?.responses.map((response) => ({
+        id: response.id,
+        name: response.name,
+        role: response.role ?? "",
+        trustedFor: rawResponses[response.id] ?? null,
+        avatarUrl: response.avatarUrl ?? null,
+        isCompleted: response.status === "Completed",
       })) ?? [],
     [myHelpReq, rawResponses]
   );
   const multiMessages = React.useMemo(() => {
     const result: Record<string, MultiChatMessage[]> = {};
-    for (const r of myHelpReq?.responses ?? []) {
-      const raw = interactionChats[r.chatId] ?? [];
-      result[r.id] = raw
+    for (const response of myHelpReq?.responses ?? []) {
+      const raw = interactionChats[response.chatId] ?? [];
+      result[response.id] = raw
         .filter((m) => m.sender === "user" || m.sender === "contact")
         .map((m) => ({
           id: String(m.id),
@@ -338,22 +218,22 @@ export default function RequestDetailPage({ id }: { id: string }) {
   const multiFeedback = React.useMemo(() => {
     const feedbackData = completionFeedbackData as Record<string, CompletionFeedback>;
     const result: Record<string, CompletionFeedback> = {};
-    for (const r of myHelpReq?.responses ?? []) {
-      const entry = feedbackData[r.chatId];
-      if (entry) result[r.id] = entry;
+    for (const response of myHelpReq?.responses ?? []) {
+      const entry = feedbackData[response.chatId];
+      if (entry) result[response.id] = entry;
     }
     return Object.keys(result).length > 0 ? result : undefined;
   }, [myHelpReq]);
 
   // Detect if the current user is actively helping this request (helper perspective)
   const inProgressCard = React.useMemo(
-    () => (interactionsData as any).inProgress?.find((r: any) => r.id === id) ?? null,
+    () => interactions.inProgress.find((request) => request.id === id) ?? null,
     [id]
   );
   const isInProgress = !isOwnRequest && !!inProgressCard;
 
   const helpedCard = React.useMemo(
-    () => (interactionsData as any).helped?.find((r: any) => r.id === id) ?? null,
+    () => interactions.helped.find((request) => request.id === id) ?? null,
     [id]
   );
   const isHelped = !isOwnRequest && !!helpedCard;
@@ -496,7 +376,13 @@ export default function RequestDetailPage({ id }: { id: string }) {
                     avatarUrl={resolvedAuthor.avatarUrl}
                     name={resolvedAuthor.name}
                     connectionDegree={isOwnRequest || detail.author.connectionDegree !== "none" ? (isOwnRequest ? "You" : detail.author.connectionDegree) : undefined}
-                    trustedFor={isOwnRequest ? currentUser.verifiedSkills : resolvedAuthor.trustedFor}
+                    trustedFor={
+                      isOwnRequest
+                        ? (currentUserProfile.verifiedSkills ?? [])
+                        : resolvedAuthor.trustedFor
+                          ? [resolvedAuthor.trustedFor]
+                          : undefined
+                    }
                     href={authorSlug}
                     avatarSize="lg"
                     groupClass="group/member"
@@ -748,9 +634,9 @@ export default function RequestDetailPage({ id }: { id: string }) {
                   <div className="flex flex-wrap gap-1">
                     <span className="text-sm text-muted-foreground whitespace-nowrap leading-5">Trusted for:</span>
                     {(isOwnRequest
-                      ? currentUser.verifiedSkills
-                      : resolvedAbout.trustedExpertise.split(",").map((s: string) => s.trim())
-                    ).slice(0, 3).map((skill: string) => (
+                      ? (currentUserProfile.verifiedSkills ?? [])
+                      : resolvedAbout.trustedExpertise.split(",").map((skill) => skill.trim())
+                    ).slice(0, 3).map((skill) => (
                       <span
                         key={skill}
                         className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold text-muted-foreground bg-background border border-border leading-4"

@@ -40,6 +40,21 @@ export type MyHelpRequest = {
   endDate?: string;
 };
 
+type CurrentUserData = {
+  openRequests?: Array<{
+    requestId: string;
+    title: string;
+    description: string;
+    responses?: HelperResponse[];
+    status?: MyHelpRequest["status"];
+    type?: MyHelpRequest["type"];
+    category?: string;
+    createdAt?: string;
+    endDate?: string;
+    promoted?: boolean;
+  }>;
+};
+
 type InteractionsData = {
   helped: InteractionCard[];
   inProgress: InteractionCard[];
@@ -68,7 +83,7 @@ const normalizeRequestCategory = (category?: string | null) => {
   return categorySlugMap[category.trim().toLowerCase()] ?? "other";
 };
 
-const currentUserRequests = ((currentUser as any).openRequests ?? []).map((request: any) => ({
+const currentUserRequests = ((currentUser as CurrentUserData).openRequests ?? []).map((request) => ({
   id: request.requestId,
   requestSummary: request.title,
   request: request.description,

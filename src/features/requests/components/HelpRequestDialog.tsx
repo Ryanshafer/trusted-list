@@ -11,6 +11,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ArrowRight, BicepsFlexed, Briefcase, CalendarPlus2, Check, ContactRound, Link, Loader2, Maximize2, Minimize2, Paperclip, Tag, X } from "lucide-react";
 import { BaseDialog } from "@/components/BaseDialog";
+import {
+  DEFAULT_ASK_MODE,
+  SUMMARY_MAX_LENGTH,
+  filterSelectableContacts,
+  getShortDescriptionPlaceholder,
+  getVisibleCategories,
+  type DialogErrors,
+  type CreateFormState,
+  type EditFormState,
+  validateHelpRequest,
+} from "@/features/requests/utils/help-request-dialog";
 import categoriesData from "../../../../data/categories.json";
 
 // ── Shared types ──────────────────────────────────────────────────────────────
@@ -84,6 +95,333 @@ export const ASK_OPTIONS: { value: AskMode; label: string; subtitle: string }[] 
   { value: "community", label: "The Trusted List", subtitle: "Everyone in the whole community" },
 ];
 
+function ContactOption({
+  contact,
+  onSelect,
+}: {
+  contact: AskContact;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="flex w-full items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-accent"
+      onClick={onSelect}
+    >
+      <Avatar className="h-10 w-10 shrink-0 border-2 border-primary-foreground shadow-md">
+        <AvatarImage src={contact.avatarUrl} alt={contact.name} className="object-cover" />
+        <AvatarFallback className="text-sm font-semibold">
+          {contact.name[0]?.toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col">
+        <p className="text-base font-semibold text-card-foreground">{contact.name}</p>
+        <p className="text-xs text-muted-foreground">{contact.role}</p>
+      </div>
+    </button>
+  );
+}
+
+function ContactSearchResults({
+  contacts,
+  query,
+  onSelect,
+}: {
+  contacts: AskContact[];
+  query: string;
+  onSelect: (contact: AskContact) => void;
+}) {
+  if (!query || contacts.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="relative">
+      <div className="absolute left-0 right-0 z-20 max-h-48 overflow-auto rounded-xl border border-border bg-card p-3 shadow-lg">
+        <div className="flex flex-col gap-4">
+          {contacts.slice(0, 5).map((contact) => (
+            <ContactOption
+              key={contact.id}
+              contact={contact}
+              onSelect={() => onSelect(contact)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AskModeSection({
+  askMode,
+  errors,
+  searchTerm,
+  selectedContacts,
+  filteredContacts,
+  shouldAutoFocusSearch,
+  onAskModeChange,
+  onSearchChange,
+  onAddContact,
+  onRemoveContact,
+}: {
+  askMode: AskMode;
+  errors: DialogErrors;
+  searchTerm: string;
+  selectedContacts: AskContact[];
+  filteredContacts: AskContact[];
+  shouldAutoFocusSearch: boolean;
+  onAskModeChange: (mode: AskMode) => void;
+  onSearchChange: (value: string) => void;
+  onAddContact: (contact: AskContact) => void;
+  onRemoveContact: (contactId: string) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="text-base font-semibold text-foreground">Who do you want to ask?</p>
+      <div className="flex gap-3">
+        {ASK_OPTIONS.map((option) => {
+          const selected = askMode === option.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => onAskModeChange(option.value)}
+              className={`flex h-20 flex-1 flex-col justify-center overflow-hidden rounded-lg border px-3 py-4 text-left transition-colors ${
+                selected ? "border-primary bg-primary-25" : "border-border-75 bg-muted hover:bg-muted-50"
+              }`}
+            >
+              <div className="flex w-full items-start gap-2">
+                <div
+                  className={`mt-px h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
+                    selected ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
+                  }`}
+                >
+                  {selected && (
+                    <div className="m-auto mt-[3px] h-1.5 w-1.5 rounded-full bg-primary-foreground" />
+                  )}
+                </div>
+                <div className="flex min-w-0 flex-col gap-1">
+                  <span className={`text-sm font-semibold leading-tight ${selected ? "text-accent-foreground" : "text-foreground"}`}>
+                    {option.label}
+                  </span>
+                  <span className="text-xs leading-snug text-muted-foreground">
+                    {option.subtitle}
+                  </span>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {askMode === "contact" && (
+        <div className="space-y-2">
+          {errors.contacts && (
+            <p className="mb-1 text-xs text-destructive">{errors.contacts}</p>
+          )}
+          <div className="relative">
+            <ContactRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              autoFocus={shouldAutoFocusSearch}
+              placeholder="Search contacts by name or skill…"
+              className={`rounded-full bg-background pl-9 shadow-none ${errors.contacts ? "border-destructive" : "border-primary"}`}
+              value={searchTerm}
+              onChange={(event) => onSearchChange(event.target.value)}
+            />
+          </div>
+
+          <ContactSearchResults
+            contacts={filteredContacts}
+            query={searchTerm}
+            onSelect={onAddContact}
+          />
+
+          {selectedContacts.length > 0 && (
+            <div className="flex flex-wrap gap-3 pt-1">
+              {selectedContacts.map((contact) => (
+                <button
+                  key={contact.id}
+                  type="button"
+                  onClick={() => onRemoveContact(contact.id)}
+                  aria-label={`Remove ${contact.name}`}
+                  className="flex items-center gap-1.5 rounded-full border border-border bg-muted-25 px-3 py-1 text-sm font-semibold leading-none text-foreground transition-colors hover:bg-accent hover:border-destructive/40 hover:text-destructive"
+                >
+                  {contact.name}
+                  <X className="h-3 w-3 opacity-50" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CategorySection({
+  errors,
+  categoryOpen,
+  requestCategories,
+  visibleCategories,
+  categoryTriggerRef,
+  onCategoryOpenChange,
+  onCategoryChange,
+}: {
+  errors: DialogErrors;
+  categoryOpen: boolean;
+  requestCategories: string[];
+  visibleCategories: HelpCategory[];
+  categoryTriggerRef: React.RefObject<HTMLButtonElement | null>;
+  onCategoryOpenChange: (open: boolean) => void;
+  onCategoryChange: (value: string[]) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="text-base font-semibold text-foreground">What kind of help is this?</p>
+      {errors.requestCategories && (
+        <p className="mb-1 text-xs text-destructive">{errors.requestCategories}</p>
+      )}
+      <Popover open={categoryOpen} onOpenChange={onCategoryOpenChange}>
+        <PopoverTrigger asChild>
+          <button
+            ref={categoryTriggerRef}
+            type="button"
+            className={`flex h-9 w-full items-center gap-2 rounded-lg border bg-background px-3 text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${errors.requestCategories ? "border-destructive" : "border-border"}`}
+          >
+            <Tag className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className={`flex-1 text-sm ${requestCategories.length > 0 ? "text-foreground" : "text-muted-foreground"}`}>
+              {requestCategories.length > 0
+                ? visibleCategories.find((category) => category.value === requestCategories[0])?.label ?? requestCategories[0]
+                : "Select a category…"}
+            </span>
+            {requestCategories.length > 0 && (
+              <span
+                role="button"
+                aria-label="Clear category"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onCategoryChange([]);
+                }}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+              </span>
+            )}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start" side="top">
+          <Command>
+            <CommandInput placeholder="Search categories…" />
+            <CommandList>
+              <CommandEmpty>No categories found.</CommandEmpty>
+              <CommandGroup>
+                {visibleCategories.map((category) => {
+                  const selected = requestCategories[0] === category.value;
+                  return (
+                    <CommandItem
+                      key={category.value}
+                      value={category.value}
+                      onSelect={() => onCategoryChange([category.value])}
+                    >
+                      <Check className={`mr-2 h-4 w-4 ${selected ? "opacity-100" : "opacity-0"}`} />
+                      {category.label}
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+function DueDateSection({
+  dueDate,
+  dueDatePickerOpen,
+  onDueDatePickerOpenChange,
+  onDueDateChange,
+}: {
+  dueDate?: Date;
+  dueDatePickerOpen: boolean;
+  onDueDatePickerOpenChange: (open: boolean) => void;
+  onDueDateChange: (date?: Date) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-baseline gap-2">
+        <p className="text-base font-semibold text-foreground">When do you need this by?</p>
+        <p className="text-base font-normal text-muted-foreground">(Optional)</p>
+      </div>
+      <Popover open={dueDatePickerOpen} onOpenChange={onDueDatePickerOpenChange}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            className={`rounded-full font-semibold leading-none transition-colors ${
+              dueDate
+                ? "border-border bg-muted-25 text-foreground"
+                : "border-foreground bg-secondary text-foreground shadow-sm"
+            }`}
+          >
+            <CalendarPlus2 className="h-4 w-4" />
+            {dueDate
+              ? dueDate.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })
+              : "Set a timeframe"}
+            {dueDate && (
+              <span
+                role="button"
+                aria-label="Clear due date"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDueDateChange(undefined);
+                }}
+                className="ml-1 flex h-4 w-4 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+              </span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={dueDate}
+            onSelect={(date) => {
+              if (date) {
+                onDueDateChange(date);
+                onDueDatePickerOpenChange(false);
+              }
+            }}
+            className="min-w-[214px] min-h-[261px]"
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+function getCreateFormState(props: CreateProps): CreateFormState {
+  return {
+    shortDescription: props.initialSummary ?? "",
+    requestDetails: props.initialDetails ?? "",
+    requestCategories: props.initialCategories ?? [],
+    selectedContacts: props.initialSelectedContacts ?? [],
+    vouchType: props.initialVouchType ?? "myself",
+  };
+}
+
+function getEditFormState(props: EditProps): EditFormState {
+  return {
+    shortDescription: props.initialSummary ?? "",
+    requestDetails: props.initialDetails ?? "",
+    requestCategories: props.initialCategories ?? [],
+    askMode: props.initialAskMode ?? DEFAULT_ASK_MODE,
+    dueDate: props.initialDueDate,
+  };
+}
+
 // ── Component props ───────────────────────────────────────────────────────────
 
 type BaseProps = {
@@ -123,24 +461,24 @@ type Props = CreateProps | EditProps;
 export function HelpRequestDialog(props: Props) {
   const { open, onOpenChange, categories } = props;
   const isEdit = props.mode === "edit";
+  const createProps = props.mode === "create" ? props : undefined;
+  const editProps = props.mode === "edit" ? props : undefined;
 
   const [shortDescription, setShortDescription] = React.useState(
-    isEdit ? (props as EditProps).initialSummary ?? "" : (props as CreateProps).initialSummary ?? ""
+    props.initialSummary ?? ""
   );
   const [requestDetails, setRequestDetails] = React.useState(
-    isEdit ? (props as EditProps).initialDetails ?? "" : (props as CreateProps).initialDetails ?? ""
+    props.initialDetails ?? ""
   );
   const [requestCategories, setRequestCategories] = React.useState<string[]>(
-    isEdit
-      ? (props as EditProps).initialCategories ?? []
-      : (props as CreateProps).initialCategories ?? []
+    props.initialCategories ?? []
   );
   const [dueDate, setDueDate] = React.useState<Date | undefined>(
-    isEdit ? (props as EditProps).initialDueDate : undefined
+    props.mode === "edit" ? props.initialDueDate : undefined
   );
 
   const [askMode, setAskMode] = React.useState<AskMode>(
-    isEdit ? (props as EditProps).initialAskMode ?? "contact" : "contact"
+    props.mode === "edit" ? props.initialAskMode ?? DEFAULT_ASK_MODE : DEFAULT_ASK_MODE
   );
   const [searchTerm, setSearchTerm] = React.useState("");
   const [selectedContacts, setSelectedContacts] = React.useState<AskContact[]>([]);
@@ -159,61 +497,74 @@ export function HelpRequestDialog(props: Props) {
   const [feedbackLink, setFeedbackLink] = React.useState("");
   const [feedbackFile, setFeedbackFile] = React.useState<File | null>(null);
 
-  const isIntroduction = requestCategories[0] === "introduction";
-  const isOpportunity = requestCategories[0] === "opportunity";
-  const isMentorship = requestCategories[0] === "mentorship";
-  const isVouch = requestCategories[0] === "endorse";
-  const isConnect = requestCategories[0] === "connect";
-  const isFeedback = requestCategories[0] === "feedback";
+  const selectedCategory = requestCategories[0];
+  const isIntroduction = selectedCategory === "introduction";
+  const isOpportunity = selectedCategory === "opportunity";
+  const isMentorship = selectedCategory === "mentorship";
+  const isVouch = selectedCategory === "endorse";
+  const isConnect = selectedCategory === "connect";
+  const isFeedback = selectedCategory === "feedback";
 
-  const userUnvouchedSkills = !isEdit ? (props as CreateProps).userUnvouchedSkills ?? [] : [];
-  const companies = !isEdit ? (props as CreateProps).companies ?? [] : [];
+  const userUnvouchedSkills = createProps?.userUnvouchedSkills ?? [];
+  const companies = createProps?.companies ?? [];
 
-  const visibleCategories = categories.filter((c) => {
-    if (c.value === "introduction" && askMode !== "contact") return false;
-    if (c.value === "connect" && askMode !== "contact") return false;
-    if (c.value === "endorse" && askMode === "community") return false;
-    return true;
-  });
+  const visibleCategories = getVisibleCategories(categories, askMode);
 
   const [categoryOpen, setCategoryOpen] = React.useState(false);
   const [detailsExpanded, setDetailsExpanded] = React.useState(false);
   const [dueDatePickerOpen, setDueDatePickerOpen] = React.useState(false);
-  const [errors, setErrors] = React.useState<{
-    contacts?: string;
-    shortDescription?: string;
-    requestDetails?: string;
-    requestCategories?: string;
-  }>({});
+  const [errors, setErrors] = React.useState<DialogErrors>({});
 
   const categoryTriggerRef = React.useRef<HTMLButtonElement | null>(null);
-  const hasPrefilledContact =
-    !isEdit && ((props as CreateProps).initialSelectedContacts?.length ?? 0) > 0;
+  const hasPrefilledContact = (createProps?.initialSelectedContacts?.length ?? 0) > 0;
   const shouldAutoFocusSearch = !hasPrefilledContact;
+
+  const clearError = React.useCallback((key: keyof DialogErrors) => {
+    setErrors((current) => {
+      if (!current[key]) {
+        return current;
+      }
+
+      return { ...current, [key]: undefined };
+    });
+  }, []);
 
   // Re-sync initial values each time the dialog opens
   React.useEffect(() => {
     if (!open) return;
-    if (isEdit) {
-      const p = props as EditProps;
-      setShortDescription(p.initialSummary ?? "");
-      setRequestDetails(p.initialDetails ?? "");
-      setRequestCategories(p.initialCategories ?? []);
-      setDueDate(p.initialDueDate);
-      setAskMode(p.initialAskMode ?? "contact");
+    if (props.mode === "edit") {
+      const nextState = getEditFormState(props);
+      setShortDescription(nextState.shortDescription);
+      setRequestDetails(nextState.requestDetails);
+      setRequestCategories(nextState.requestCategories);
+      setDueDate(nextState.dueDate);
+      setAskMode(nextState.askMode);
     } else {
-      const p = props as CreateProps;
-      setShortDescription(p.initialSummary ?? "");
-      setRequestDetails(p.initialDetails ?? "");
-      setRequestCategories(p.initialCategories ?? []);
-      setSelectedContacts(p.initialSelectedContacts ?? []);
+      const nextState = getCreateFormState(props);
+      setShortDescription(nextState.shortDescription);
+      setRequestDetails(nextState.requestDetails);
+      setRequestCategories(nextState.requestCategories);
+      setSelectedContacts(nextState.selectedContacts);
       setVouchSkill(null);
-      setVouchType(p.initialVouchType ?? "myself");
+      setVouchType(nextState.vouchType);
     }
     setErrors({});
     setCategoryOpen(false);
     setDueDatePickerOpen(false);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    open,
+    props.mode,
+    createProps?.initialCategories,
+    createProps?.initialDetails,
+    createProps?.initialSelectedContacts,
+    createProps?.initialSummary,
+    createProps?.initialVouchType,
+    editProps?.initialAskMode,
+    editProps?.initialCategories,
+    editProps?.initialDetails,
+    editProps?.initialDueDate,
+    editProps?.initialSummary,
+  ]);
 
   React.useEffect(() => {
     if (!open || isEdit || !hasPrefilledContact) return;
@@ -226,7 +577,7 @@ export function HelpRequestDialog(props: Props) {
   const handleOpenChange = (value: boolean) => {
     if (!value && !isEdit) {
       setShortDescription("");
-      setAskMode("contact");
+      setAskMode(DEFAULT_ASK_MODE);
       setSearchTerm("");
       setSelectedContacts([]);
       setRequestCategories([]);
@@ -245,49 +596,45 @@ export function HelpRequestDialog(props: Props) {
     if (!value) {
       setErrors({});
       setCategoryOpen(false);
+      setDueDatePickerOpen(false);
     }
     onOpenChange(value);
   };
 
-  const contacts = isEdit
-    ? (props as EditProps).contacts ?? []
-    : (props as CreateProps).contacts;
+  const contacts = props.contacts ?? [];
 
   const filteredContacts = React.useMemo(() => {
-    const term = searchTerm.toLowerCase();
-    if (!term) return contacts.filter((c) => !selectedContacts.some((s) => s.id === c.id));
-    return contacts.filter(
-      (c) =>
-        (c.name.toLowerCase().includes(term) || c.role?.toLowerCase().includes(term)) &&
-        !selectedContacts.some((s) => s.id === c.id)
+    return filterSelectableContacts(
+      contacts,
+      searchTerm,
+      selectedContacts.map((contact) => contact.id),
     );
   }, [contacts, searchTerm, selectedContacts]);
 
   const filteredIntroContacts = React.useMemo(() => {
-    const term = introSearchTerm.toLowerCase();
-    return contacts.filter(
-      (c) =>
-        c.id !== selectedIntroContact?.id &&
-        (!term || c.name.toLowerCase().includes(term) || c.role?.toLowerCase().includes(term))
+    return filterSelectableContacts(
+      contacts,
+      introSearchTerm,
+      selectedIntroContact ? [selectedIntroContact.id] : [],
     );
   }, [contacts, introSearchTerm, selectedIntroContact]);
 
   // Clear contact-only / restricted categories when ask mode changes
   React.useEffect(() => {
     if (askMode !== "contact") {
-      if (requestCategories[0] === "introduction") setRequestCategories([]);
-      if (requestCategories[0] === "connect") setRequestCategories([]);
+      if (selectedCategory === "introduction") setRequestCategories([]);
+      if (selectedCategory === "connect") setRequestCategories([]);
       setSelectedIntroContact(null);
       setIntroSearchTerm("");
       setConnectCompany(null);
       setConnectCompanyOpen(false);
     }
     if (askMode === "community") {
-      if (requestCategories[0] === "endorse") setRequestCategories([]);
+      if (selectedCategory === "endorse") setRequestCategories([]);
       setVouchType("myself");
       setVouchSkill(null);
     }
-  }, [askMode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [askMode, selectedCategory]);
 
   // Reset intro target when category changes away from introduction
   React.useEffect(() => {
@@ -295,17 +642,17 @@ export function HelpRequestDialog(props: Props) {
       setSelectedIntroContact(null);
       setIntroSearchTerm("");
     }
-  }, [isIntroduction]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isIntroduction]);
 
   // Reset opportunity intent when category changes away from opportunity
   React.useEffect(() => {
     if (!isOpportunity) setOpportunityIntent("get-hired");
-  }, [isOpportunity]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isOpportunity]);
 
   // Reset mentorship duration when category changes away from mentorship
   React.useEffect(() => {
     if (!isMentorship) setMentorshipDuration("short-term");
-  }, [isMentorship]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isMentorship]);
 
   // Reset vouch state when category changes away from endorse
   React.useEffect(() => {
@@ -314,7 +661,7 @@ export function HelpRequestDialog(props: Props) {
       setVouchSkill(null);
       setVouchSkillOpen(false);
     }
-  }, [isVouch]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isVouch]);
 
   // Reset connect state when category changes away from connect
   React.useEffect(() => {
@@ -322,7 +669,7 @@ export function HelpRequestDialog(props: Props) {
       setConnectCompany(null);
       setConnectCompanyOpen(false);
     }
-  }, [isConnect]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isConnect]);
 
   // Reset feedback state when category changes away from feedback
   React.useEffect(() => {
@@ -331,29 +678,28 @@ export function HelpRequestDialog(props: Props) {
       setFeedbackLink("");
       setFeedbackFile(null);
     }
-  }, [isFeedback]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isFeedback]);
 
   const handleSubmit = () => {
     if (!isEdit && sendState !== "idle") return;
-    const newErrors: typeof errors = {};
-    if (!isEdit && askMode === "contact" && selectedContacts.length === 0)
-      newErrors.contacts = "Please add at least one contact";
-    if (!shortDescription.trim())
-      newErrors.shortDescription = "Please enter a short title";
-    else if (!isEdit && shortDescription.trim().length > 60)
-      newErrors.shortDescription = "Title must be 60 characters or less";
-    if (!requestDetails.trim())
-      newErrors.requestDetails = "Please add some context";
-    if (requestCategories.length === 0)
-      newErrors.requestCategories = "Please select at least one category";
+
+    const newErrors = validateHelpRequest({
+      isEdit,
+      askMode,
+      selectedContacts,
+      shortDescription,
+      requestDetails,
+      requestCategories,
+    });
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
     setErrors({});
 
-    if (isEdit) {
-      (props as EditProps).onSubmit?.({
+    if (props.mode === "edit") {
+      props.onSubmit?.({
         shortDescription: shortDescription.trim(),
         requestDetails: requestDetails.trim(),
         requestCategories: [...requestCategories],
@@ -363,7 +709,7 @@ export function HelpRequestDialog(props: Props) {
       handleOpenChange(false);
     } else {
       setSendState("sending");
-      (props as CreateProps).onSubmit?.({
+      props.onSubmit?.({
         shortDescription: shortDescription.trim(),
         requestDetails: requestDetails.trim(),
         requestCategories: [...requestCategories],
@@ -393,8 +739,6 @@ export function HelpRequestDialog(props: Props) {
       window.location.href = "/trusted-list/interactions?tab=my-requests#my-requests";
     }
   }, [sendState, isEdit]);
-
-  const summaryMaxLength = 60;
 
   return (
     <BaseDialog
@@ -438,180 +782,48 @@ export function HelpRequestDialog(props: Props) {
 
           {/* ── Who do you want to ask? ─────────────────────────── */}
           {!detailsExpanded && (
-            <div className="space-y-3">
-              <p className="text-base font-semibold text-foreground">Who do you want to ask?</p>
-              <div className="flex gap-3">
-                {ASK_OPTIONS.map((option) => {
-                  const selected = askMode === option.value;
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setAskMode(option.value)}
-                      className={`flex h-20 flex-1 flex-col justify-center overflow-hidden rounded-lg border px-3 py-4 text-left transition-colors ${
-                        selected ? "border-primary bg-primary-25" : "border-border-75 bg-muted hover:bg-muted-50"
-                      }`}
-                    >
-                      <div className="flex w-full items-start gap-2">
-                        <div
-                          className={`mt-px h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
-                            selected ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
-                          }`}
-                        >
-                          {selected && (
-                            <div className="m-auto mt-[3px] h-1.5 w-1.5 rounded-full bg-primary-foreground" />
-                          )}
-                        </div>
-                        <div className="flex min-w-0 flex-col gap-1">
-                          <span className={`text-sm font-semibold leading-tight ${selected ? "text-accent-foreground" : "text-foreground"}`}>
-                            {option.label}
-                          </span>
-                          <span className="text-xs leading-snug text-muted-foreground">
-                            {option.subtitle}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {askMode === "contact" && (
-                <div className="space-y-2">
-                  {errors.contacts && (
-                    <p className="mb-1 text-xs text-destructive">{errors.contacts}</p>
-                  )}
-                  <div className="relative">
-                    <ContactRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      autoFocus={shouldAutoFocusSearch}
-                      placeholder="Search contacts by name or skill…"
-                      className={`rounded-full bg-background pl-9 shadow-none ${errors.contacts ? "border-destructive" : "border-primary"}`}
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-
-                  {searchTerm && filteredContacts.length > 0 && (
-                    <div className="relative">
-                      <div className="absolute left-0 right-0 z-20 max-h-48 overflow-auto rounded-xl border border-border bg-card p-3 shadow-lg">
-                        <div className="flex flex-col gap-4">
-                          {filteredContacts.slice(0, 5).map((contact) => (
-                            <button
-                              key={contact.id}
-                              type="button"
-                              className="flex w-full items-center gap-2 rounded-lg text-left transition-colors hover:bg-accent px-2 py-1"
-                              onClick={() => {
-                                setSelectedContacts((prev) => [...prev, contact]);
-                                setSearchTerm("");
-                                if (errors.contacts) setErrors((prev) => ({ ...prev, contacts: undefined }));
-                              }}
-                            >
-                              <Avatar className="h-10 w-10 shrink-0 border-2 border-primary-foreground shadow-md">
-                                <AvatarImage src={contact.avatarUrl} alt={contact.name} className="object-cover" />
-                                <AvatarFallback className="text-sm font-semibold">
-                                  {contact.name[0]?.toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex flex-col">
-                                <p className="text-base font-semibold text-card-foreground">{contact.name}</p>
-                                <p className="text-xs text-muted-foreground">{contact.role}</p>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedContacts.length > 0 && (
-                    <div className="flex flex-wrap gap-3 pt-1">
-                      {selectedContacts.map((contact) => (
-                        <button
-                          key={contact.id}
-                          type="button"
-                          onClick={() => setSelectedContacts((prev) => prev.filter((c) => c.id !== contact.id))}
-                          aria-label={`Remove ${contact.name}`}
-                          className="flex items-center gap-1.5 rounded-full border border-border bg-muted-25 px-3 py-1 text-sm font-semibold leading-none text-foreground transition-colors hover:bg-accent hover:border-destructive/40 hover:text-destructive"
-                        >
-                          {contact.name}
-                          <X className="h-3 w-3 opacity-50" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            <AskModeSection
+              askMode={askMode}
+              errors={errors}
+              searchTerm={searchTerm}
+              selectedContacts={selectedContacts}
+              filteredContacts={filteredContacts}
+              shouldAutoFocusSearch={shouldAutoFocusSearch}
+              onAskModeChange={setAskMode}
+              onSearchChange={setSearchTerm}
+              onAddContact={(contact) => {
+                setSelectedContacts((prev) => [...prev, contact]);
+                setSearchTerm("");
+                clearError("contacts");
+              }}
+              onRemoveContact={(contactId) => {
+                setSelectedContacts((prev) =>
+                  prev.filter((contact) => contact.id !== contactId),
+                );
+              }}
+            />
           )}
 
           {/* ── What kind of help is this? ───────────────────── */}
           {!detailsExpanded && (
-            <div className="space-y-3">
-                  <p className="text-base font-semibold text-foreground">What kind of help is this?</p>
-                  {errors.requestCategories && (
-                    <p className="mb-1 text-xs text-destructive">{errors.requestCategories}</p>
-                  )}
-                  <Popover
-                    open={categoryOpen}
-                    onOpenChange={(open) => {
-                      setCategoryOpen(open);
-                      if (open && errors.requestCategories) setErrors((prev) => ({ ...prev, requestCategories: undefined }));
-                    }}
-                  >
-                    <PopoverTrigger asChild>
-                      <button
-                        ref={categoryTriggerRef}
-                        type="button"
-                        className={`flex h-9 w-full items-center gap-2 rounded-lg border bg-background px-3 text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${errors.requestCategories ? "border-destructive" : "border-border"}`}
-                      >
-                        <Tag className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        <span className={`flex-1 text-sm ${requestCategories.length > 0 ? "text-foreground" : "text-muted-foreground"}`}>
-                          {requestCategories.length > 0
-                            ? visibleCategories.find((c) => c.value === requestCategories[0])?.label ?? requestCategories[0]
-                            : "Select a category…"}
-                        </span>
-                        {requestCategories.length > 0 && (
-                          <span
-                            role="button"
-                            aria-label="Clear category"
-                            onClick={(e) => { e.stopPropagation(); setRequestCategories([]); }}
-                            className="text-muted-foreground hover:text-foreground"
-                          >
-                            <X className="h-3 w-3" />
-                          </span>
-                        )}
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start" side="top">
-                      <Command>
-                        <CommandInput placeholder="Search categories…" />
-                        <CommandList>
-                          <CommandEmpty>No categories found.</CommandEmpty>
-                          <CommandGroup>
-                            {visibleCategories.map((cat) => {
-                              const selected = requestCategories[0] === cat.value;
-                              return (
-                                <CommandItem
-                                  key={cat.value}
-                                  value={cat.value}
-                                  onSelect={() => {
-                                    setRequestCategories([cat.value]);
-                                    setCategoryOpen(false);
-                                    if (errors.requestCategories) setErrors((prev) => ({ ...prev, requestCategories: undefined }));
-                                  }}
-                                >
-                                  <Check className={`mr-2 h-4 w-4 ${selected ? "opacity-100" : "opacity-0"}`} />
-                                  {cat.label}
-                                </CommandItem>
-                              );
-                            })}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-            </div>
+            <CategorySection
+              errors={errors}
+              categoryOpen={categoryOpen}
+              requestCategories={requestCategories}
+              visibleCategories={visibleCategories}
+              categoryTriggerRef={categoryTriggerRef}
+              onCategoryOpenChange={(open) => {
+                setCategoryOpen(open);
+                if (open) clearError("requestCategories");
+              }}
+              onCategoryChange={(value) => {
+                setRequestCategories(value);
+                setCategoryOpen(false);
+                if (value.length > 0) {
+                  clearError("requestCategories");
+                }
+              }}
+            />
           )}
 
           {/* ── Who would you like to be introduced to? (Introduction only) ── */}
@@ -650,33 +862,14 @@ export function HelpRequestDialog(props: Props) {
                       onChange={(e) => setIntroSearchTerm(e.target.value)}
                     />
                   </div>
-                  {introSearchTerm && filteredIntroContacts.length > 0 && (
-                    <div className="relative">
-                      <div className="absolute left-0 right-0 z-20 max-h-48 overflow-auto rounded-xl border border-border bg-card p-3 shadow-lg">
-                        <div className="flex flex-col gap-4">
-                          {filteredIntroContacts.slice(0, 5).map((contact) => (
-                            <button
-                              key={contact.id}
-                              type="button"
-                              className="flex w-full items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-accent"
-                              onClick={() => { setSelectedIntroContact(contact); setIntroSearchTerm(""); }}
-                            >
-                              <Avatar className="h-10 w-10 shrink-0 border-2 border-primary-foreground shadow-md">
-                                <AvatarImage src={contact.avatarUrl} alt={contact.name} className="object-cover" />
-                                <AvatarFallback className="text-sm font-semibold">
-                                  {contact.name[0]?.toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex flex-col">
-                                <p className="text-base font-semibold text-card-foreground">{contact.name}</p>
-                                <p className="text-xs text-muted-foreground">{contact.role}</p>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <ContactSearchResults
+                    contacts={filteredIntroContacts}
+                    query={introSearchTerm}
+                    onSelect={(contact) => {
+                      setSelectedIntroContact(contact);
+                      setIntroSearchTerm("");
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -920,25 +1113,18 @@ export function HelpRequestDialog(props: Props) {
               <div className="flex items-center gap-2">
                 <Input
                   placeholder={
-                    isIntroduction ? "e.g. Can you introduce me to this person?" :
-                    isOpportunity && opportunityIntent === "get-hired" ? "e.g. I'm looking for a new role in…" :
-                    isOpportunity && opportunityIntent === "hire" ? "e.g. We're looking to hire a…" :
-                    requestCategories[0] === "help-advice" ? "e.g. I'm trying to decide whether to…" :
-                    isMentorship ? "e.g. I'm looking for an experienced mentor…" :
-                    isVouch ? "e.g. Would you be willing to endorse me…" :
-                    isFeedback ? "e.g. What do you need to share?" :
-                    "Enter a short descriptive title…"
+                    getShortDescriptionPlaceholder(selectedCategory, opportunityIntent)
                   }
-                  maxLength={summaryMaxLength}
+                  maxLength={SUMMARY_MAX_LENGTH}
                   className={`flex-1 rounded-lg bg-background shadow-none ${errors.shortDescription ? "border-destructive" : ""}`}
                   value={shortDescription}
                   onChange={(e) => {
                     setShortDescription(e.target.value);
-                    if (errors.shortDescription) setErrors((prev) => ({ ...prev, shortDescription: undefined }));
+                    clearError("shortDescription");
                   }}
                 />
                 <p className="shrink-0 text-xs text-muted-foreground">
-                  {shortDescription.length}/{summaryMaxLength} characters maximum
+                  {shortDescription.length}/{SUMMARY_MAX_LENGTH} characters maximum
                 </p>
               </div>
             </div>
@@ -952,12 +1138,12 @@ export function HelpRequestDialog(props: Props) {
             )}
             <div className="relative" style={{ height: detailsExpanded ? "calc(60dvh)" : "7.5rem" }}>
               <Textarea
-                placeholder={requestCategories[0] === "help-advice" ? "Ask for help thinking through something:\n• A decision you're weighing\n• A challenge at work\n• Getting perspective on someone\n• How others have handled a similar situation" : "Share what someone needs to know to help you well."}
+                placeholder={selectedCategory === "help-advice" ? "Ask for help thinking through something:\n• A decision you're weighing\n• A challenge at work\n• Getting perspective on someone\n• How others have handled a similar situation" : "Share what someone needs to know to help you well."}
                 className={`h-full resize-none rounded-lg bg-background placeholder:text-muted-foreground shadow-none ${errors.requestDetails ? "border-destructive" : "border-border"}`}
                 value={requestDetails}
                 onChange={(e) => {
                   setRequestDetails(e.target.value);
-                  if (errors.requestDetails) setErrors((prev) => ({ ...prev, requestDetails: undefined }));
+                  clearError("requestDetails");
                 }}
               />
               <button
@@ -973,53 +1159,12 @@ export function HelpRequestDialog(props: Props) {
 
           {/* ── When do you need this by? ─────────────────────── */}
           {!detailsExpanded && (
-            <div className="space-y-3">
-              <div className="flex items-baseline gap-2">
-                <p className="text-base font-semibold text-foreground">When do you need this by?</p>
-                <p className="text-base font-normal text-muted-foreground">(Optional)</p>
-              </div>
-              <Popover open={dueDatePickerOpen} onOpenChange={setDueDatePickerOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={`rounded-full font-semibold leading-none transition-colors ${
-                      dueDate
-                        ? "border-border bg-muted-25 text-foreground"
-                        : "border-foreground bg-secondary text-foreground shadow-sm"
-                    }`}
-                  >
-                    <CalendarPlus2 className="h-4 w-4" />
-                    {dueDate
-                      ? dueDate.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })
-                      : "Set a timeframe"}
-                    {dueDate && (
-                      <span
-                        role="button"
-                        aria-label="Clear due date"
-                        onClick={(e) => { e.stopPropagation(); setDueDate(undefined); }}
-                        className="ml-1 flex h-4 w-4 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
-                      >
-                        <X className="h-3 w-3" />
-                      </span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dueDate}
-                    onSelect={(date) => {
-                      if (date) {
-                        setDueDate(date);
-                        setDueDatePickerOpen(false);
-                      }
-                    }}
-                    className="min-w-[214px] min-h-[261px]"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <DueDateSection
+              dueDate={dueDate}
+              dueDatePickerOpen={dueDatePickerOpen}
+              onDueDatePickerOpenChange={setDueDatePickerOpen}
+              onDueDateChange={setDueDate}
+            />
           )}
 
 

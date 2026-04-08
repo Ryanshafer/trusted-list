@@ -7,7 +7,6 @@ import {
   EyeOff,
   Flag,
   Globe,
-  Link2,
   MoreVertical,
   Users,
   X,
@@ -32,6 +31,7 @@ import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestD
 import { SetReminderDialog, formatReminderTime } from "@/components/SetReminderDialog";
 
 type HelpRequestCardProps = CardData & {
+  reminderLabel?: string;
   onClear?: () => void;
   onReminderSet?: (label: string) => void;
   onReminderClear?: () => void;
@@ -247,6 +247,7 @@ const IncomingRequestCardBase = ({
   primaryActionLabel,
   endDate,
   onClear,
+  reminderLabel,
   onReminderSet,
   onReminderClear,
   audience,
@@ -285,12 +286,19 @@ const IncomingRequestCardBase = ({
   const [celebrating, setCelebrating] = React.useState(false);
   const [remindOpen, setRemindOpen] = React.useState(false);
   const [reminderIso, setReminderIso] = React.useState<string | null>(null);
+  const [reminderDisplayLabel, setReminderDisplayLabel] = React.useState<string | null>(
+    reminderLabel ?? null,
+  );
   const [isDismissing, setIsDismissing] = React.useState(false);
   const [isHidden, setIsHidden] = React.useState(false);
 
   const celebrationTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const chatOpenTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const dismissTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    setReminderDisplayLabel(reminderLabel ?? null);
+  }, [reminderLabel]);
 
   React.useEffect(() => {
     return () => {
@@ -360,16 +368,20 @@ const IncomingRequestCardBase = ({
 
           {/* Actions */}
           <div className="flex items-center justify-between gap-3">
-            {reminderIso ? (
+            {reminderDisplayLabel ? (
               <Button
-                onClick={() => { setReminderIso(null); onReminderClear?.(); }}
+                onClick={() => {
+                  setReminderIso(null);
+                  setReminderDisplayLabel(null);
+                  onReminderClear?.();
+                }}
                 variant="outline"
                 className="rounded-full font-semibold h-10 px-5 text-sm leading-none border-lime-200 bg-lime-50 text-lime-700 hover:bg-amber-100 hover:text-amber-800 hover:border-amber-300 group/remind gap-2"
                 title="Cancel reminder"
               >
                 <BellRing className="h-4 w-4 shrink-0 mb-0.5 group-hover/remind:hidden" />
                 <X className="h-4 w-4 shrink-0 mb-0.5 hidden group-hover/remind:block" />
-                {formatReminderTime(reminderIso)}
+                {reminderDisplayLabel}
               </Button>
             ) : (
               <Button
@@ -416,7 +428,12 @@ const IncomingRequestCardBase = ({
         open={remindOpen}
         onOpenChange={setRemindOpen}
         requesterName={name}
-        onConfirm={(iso) => { setReminderIso(iso); onReminderSet?.(formatReminderTime(iso)); }}
+        onConfirm={(iso) => {
+          const nextLabel = formatReminderTime(iso);
+          setReminderIso(iso);
+          setReminderDisplayLabel(nextLabel);
+          onReminderSet?.(nextLabel);
+        }}
       />
 
       <FlagRequestDialog
@@ -564,4 +581,3 @@ export const ConfettiBurst = () => {
     </div>
   );
 };
-

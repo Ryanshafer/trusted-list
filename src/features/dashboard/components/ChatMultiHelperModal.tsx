@@ -61,6 +61,8 @@ export interface Message {
   attachment?: Attachment;
 }
 
+type ContactMessagesMap = Record<string, Message[]>;
+
 const MOCK_CONTACTS: Contact[] = chatData.contacts as Contact[];
 const MOCK_MESSAGES: Message[] = chatData.messages as Message[];
 
@@ -237,6 +239,417 @@ function IncomingBubble({ message }: { message: Message }) {
   );
 }
 
+function ConversationSearch({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="pb-3 shrink-0">
+      <div className="flex items-center gap-2 h-9 px-3 rounded-full border border-border bg-background">
+        <Search className="h-4 w-4 shrink-0 text-muted-foreground mb-0.5" />
+        <input
+          type="text"
+          placeholder="Search"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground outline-none"
+        />
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Clear search"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ContactListPanel({
+  contacts,
+  selectedContactId,
+  reopenedContactIds,
+  sessionCompletedIds,
+  onSelectContact,
+}: {
+  contacts: Contact[];
+  selectedContactId?: string;
+  reopenedContactIds: Set<string>;
+  sessionCompletedIds: Set<string>;
+  onSelectContact: (contact: Contact) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      {contacts.map((contact) => (
+        <ContactRow
+          key={contact.id}
+          contact={contact}
+          isSelected={contact.id === selectedContactId}
+          isReopened={reopenedContactIds.has(contact.id)}
+          isCompletedInSession={sessionCompletedIds.has(contact.id)}
+          onClick={() => onSelectContact(contact)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ConversationHeader({
+  contact,
+  isCompletedContact,
+  onFlag,
+  onBlock,
+}: {
+  contact?: Contact;
+  isCompletedContact: boolean;
+  onFlag: () => void;
+  onBlock: () => void;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-3 pl-6 pr-4 py-3 border-b shrink-0 shadow-md",
+        isCompletedContact
+          ? "bg-success-700 border-emerald-900"
+          : "bg-accent border-border"
+      )}
+    >
+      <a
+        href={contact ? `/trusted-list/members/${contact.name.toLowerCase().replace(/\s+/g, "-")}` : undefined}
+        className="flex items-center gap-3 min-w-0 group/member"
+      >
+        <Avatar className={cn(
+          "h-[60px] w-[60px] shrink-0 border-2 border-primary-foreground shadow-md transition-colors",
+          isCompletedContact
+            ? "group-hover/member:border-white/50"
+            : "group-hover/member:border-primary"
+        )}>
+          {contact?.avatarUrl ? (
+            <AvatarImage
+              src={contact.avatarUrl}
+              alt={contact.name}
+              className="object-cover"
+            />
+          ) : null}
+          <AvatarFallback className="text-lg font-bold bg-accent">
+            {getInitials(contact?.name ?? "")}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className="flex flex-col flex-1 min-w-0">
+          <span
+            className={cn(
+              "text-xl font-bold leading-7 transition-colors",
+              isCompletedContact
+                ? "text-primary-foreground group-hover/member:text-primary-foreground/70"
+                : "text-foreground group-hover/member:text-primary"
+            )}
+          >
+            {contact?.name}
+          </span>
+          <span
+            className={cn(
+              "text-sm leading-6 line-clamp-2 leading-tight",
+              isCompletedContact
+                ? "text-primary-foreground/70"
+                : "text-muted-foreground"
+            )}
+          >
+            {`Trusted for ${contact?.trustedFor}`}
+          </span>
+        </div>
+      </a>
+
+      <div className="ml-auto flex items-center gap-3 shrink-0">
+        {isCompletedContact && (
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-popover shrink-0">
+            <span className="text-xs font-bold leading-4 text-success-700 whitespace-nowrap">Complete</span>
+          </div>
+        )}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-9 w-9 rounded-full shrink-0",
+                isCompletedContact ? "text-primary-foreground hover:bg-white/20 hover:text-primary-foreground" : "text-muted-foreground"
+              )}
+            >
+              <MoreVertical className="h-4 w-4" />
+              <span className="sr-only">More options</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={onFlag}
+            >
+              <Flag className="mr-2 h-4 w-4" />
+              Flag this conversation
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={onBlock}
+            >
+              <UserX className="mr-2 h-4 w-4" />
+              Block this user
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
+  );
+}
+
+function ConversationMessageThread({
+  messages,
+  isCompletedContact,
+  activeFeedback,
+  outcomeCopy,
+  requesterName,
+  onReopenContact,
+  messagesEndRef,
+}: {
+  messages: Message[];
+  isCompletedContact: boolean;
+  activeFeedback?: CompletionFeedback;
+  outcomeCopy: { emoji: string; title: string };
+  requesterName: string;
+  onReopenContact: () => void;
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <div className="flex-1 overflow-y-auto px-6 pt-6 flex flex-col gap-6 min-h-0">
+      {messages.map((message) =>
+        message.sender === "outgoing" ? (
+          <OutgoingBubble key={message.id} message={message} />
+        ) : (
+          <IncomingBubble key={message.id} message={message} />
+        )
+      )}
+
+      {isCompletedContact && activeFeedback && (
+        <ConversationCompletionCard
+          feedback={activeFeedback}
+          outcomeCopy={outcomeCopy}
+          requesterName={requesterName}
+          onReopen={onReopenContact}
+        />
+      )}
+
+      <div ref={messagesEndRef} />
+    </div>
+  );
+}
+
+function ConversationCompletionCard({
+  feedback,
+  outcomeCopy,
+  requesterName,
+  onReopen,
+}: {
+  feedback: CompletionFeedback;
+  outcomeCopy: { emoji: string; title: string };
+  requesterName: string;
+  onReopen: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-center w-full py-2 shrink-0">
+      <div className="relative bg-success-50 rounded-2xl shadow-md p-6 w-80 flex flex-col gap-7">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-2 right-2 h-8 w-8 rounded-full"
+            >
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onReopen}>
+              Reopen request
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <div className="flex flex-col gap-3 text-center">
+          <div className="flex flex-col gap-2 text-neutral-900">
+            <p className="text-4xl leading-10">{outcomeCopy.emoji}</p>
+            <p className="text-xl font-bold leading-7">
+              {requesterName} {outcomeCopy.title}
+            </p>
+          </div>
+          <p className="text-base text-neutral-600 leading-6">
+            <span className="font-semibold text-neutral-900">
+              {requesterName} said —{" "}
+            </span>
+            {feedback.text}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ActiveConversationComposer({
+  composer,
+  onComposerChange,
+  onSend,
+  onMarkComplete,
+}: {
+  composer: string;
+  onComposerChange: (value: string) => void;
+  onSend: () => void;
+  onMarkComplete: () => void;
+}) {
+  return (
+    <div className="flex flex-col gap-4 px-6 pb-6 pt-4 shrink-0">
+      <div className="flex items-center justify-center">
+        <Button
+          variant="outline"
+          className="w-full rounded-full font-semibold text-primary border-border gap-2 px-4 shadow-none"
+          onClick={onMarkComplete}
+        >
+          <CircleCheckBig className="h-4 w-4 shrink-0 mb-0.5" />
+          Mark this as completed
+        </Button>
+      </div>
+
+      <div className="relative">
+        <div className="bg-secondary border border-border rounded-2xl h-[120px] overflow-hidden px-3.5 pt-3 pb-12">
+          <textarea
+            value={composer}
+            onChange={(event) => onComposerChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                onSend();
+              }
+            }}
+            placeholder="Write a message…"
+            className="w-full h-full bg-transparent text-base leading-6 placeholder:text-muted-foreground outline-none resize-none"
+          />
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3.5 py-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 rounded-full text-muted-foreground"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            size="icon"
+            disabled={!composer.trim()}
+            onClick={onSend}
+            className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50"
+          >
+            <ArrowUp className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ClosingConversationPanel({
+  selectedFirstName,
+  outcome,
+  feedback,
+  onOutcomeChange,
+  onFeedbackChange,
+  onCancel,
+  onShareClose,
+}: {
+  selectedFirstName: string;
+  outcome: OutcomeOption;
+  feedback: string;
+  onOutcomeChange: (value: OutcomeOption) => void;
+  onFeedbackChange: (value: string) => void;
+  onCancel: () => void;
+  onShareClose: () => void;
+}) {
+  return (
+    <div className="px-6 pb-6 pt-2 shrink-0">
+      <div className="border border-primary rounded-2xl overflow-hidden">
+        <div className="bg-primary-10 p-6 flex flex-col gap-8">
+          <div className="flex flex-col gap-1">
+            <p className="font-serif text-2xl leading-8 font-bold text-foreground">
+              Close the loop
+            </p>
+            <p className="text-base leading-6 text-muted-foreground">
+              Share how it went and complete this request.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <p className="text-base font-semibold leading-6 text-foreground">
+              How did it go with {selectedFirstName}?
+            </p>
+            <div className="flex gap-3">
+              {(
+                [
+                  "worked-out",
+                  "partially",
+                  "not-quite",
+                ] as OutcomeOption[]
+              ).map((value) => (
+                <OutcomePill
+                  key={value}
+                  value={value}
+                  selected={outcome === value}
+                  onSelect={onOutcomeChange}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <p className="text-base font-semibold leading-6 text-foreground">
+              What would you like {selectedFirstName} to know?
+            </p>
+            <Textarea
+              value={feedback}
+              onChange={(event) => onFeedbackChange(event.target.value)}
+              placeholder="Share some details…"
+              className="h-[120px] resize-none"
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-4">
+            <Button
+              variant="ghost"
+              className="rounded-full font-semibold text-sm"
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="rounded-full font-semibold bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+              onClick={onShareClose}
+            >
+              Share & Close the Loop
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
@@ -298,7 +711,7 @@ export function ChatMultiHelperModal({
   const filtered = contacts.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
-  const selected = contacts.find((c) => c.id === selectedContactId)!;
+  const selected = contacts.find((c) => c.id === selectedContactId) ?? contacts[0];
   const mappedMessages = messagesByContactId && selectedContactId
     ? messagesByContactId[selectedContactId]
     : undefined;
@@ -367,6 +780,19 @@ export function ChatMultiHelperModal({
     setStatus("completed");
   };
 
+  const handleSelectContact = React.useCallback((contact: Contact) => {
+    setSelectedContactId(contact.id);
+    if (!contact.isCompleted || reopenedContactIds.has(contact.id)) {
+      setStatus("active");
+    }
+  }, [reopenedContactIds]);
+
+  const handleBlockSelectedContact = React.useCallback(() => {
+    if (selected) {
+      setBlockedIds((prev) => new Set([...prev, selected.id]));
+    }
+  }, [selected]);
+
   return (
     <>
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -383,7 +809,7 @@ export function ChatMultiHelperModal({
         >
           {/* ── Modal header ───────────────────────────────────────────── */}
           <div className="flex items-center justify-between px-4 py-4 bg-muted shrink-0">
-            <DialogPrimitive.Title className="text-xl font-bold leading-7 text-foreground">
+            <DialogPrimitive.Title className="font-serif text-2xl font-normal leading-8 text-foreground">
               {title}
             </DialogPrimitive.Title>
             <DialogPrimitive.Close asChild>
@@ -403,318 +829,66 @@ export function ChatMultiHelperModal({
 
             {/* ── Left panel ─────────────────────────────────────────── */}
             <div className="flex-1 flex flex-col px-3 py-4 border-r border-border bg-popover min-w-0 overflow-y-auto">
-              {/* Search */}
-              <div className="pb-3 shrink-0">
-                <div className="flex items-center gap-2 h-9 px-3 rounded-full border border-border bg-background">
-                  <Search className="h-4 w-4 shrink-0 text-muted-foreground mb-0.5" />
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground outline-none"
-                  />
-                </div>
-              </div>
+              <ConversationSearch
+                value={search}
+                onChange={setSearch}
+              />
 
-              {/* Contact list */}
-              <div className="flex flex-col gap-1.5">
-                {filtered.map((contact) => (
-                  <ContactRow
-                    key={contact.id}
-                    contact={contact}
-                    isSelected={contact.id === selectedContactId}
-                    isReopened={reopenedContactIds.has(contact.id)}
-                    isCompletedInSession={sessionCompletedIds.has(contact.id)}
-                    onClick={() => {
-                      setSelectedContactId(contact.id);
-                      if (!contact.isCompleted || reopenedContactIds.has(contact.id)) setStatus("active");
-                    }}
-                  />
-                ))}
-              </div>
+              <ContactListPanel
+                contacts={filtered}
+                selectedContactId={selectedContactId}
+                reopenedContactIds={reopenedContactIds}
+                sessionCompletedIds={sessionCompletedIds}
+                onSelectContact={handleSelectContact}
+              />
             </div>
 
             {/* ── Right panel ────────────────────────────────────────── */}
             <div className="w-[623px] shrink-0 flex flex-col h-full bg-popover overflow-hidden">
 
               {/* Conversation header */}
-              <div
-                className={cn(
-                  "flex items-center gap-3 pl-6 pr-4 py-3 border-b shrink-0 shadow-md",
-                  isCompletedContact
-                    ? "bg-success-700 border-emerald-900"
-                    : "bg-accent border-border"
-                )}
-              >
-                <a
-                  href={selected ? `/trusted-list/members/${selected.name.toLowerCase().replace(/\s+/g, "-")}` : undefined}
-                  className="flex items-center gap-3 min-w-0 group/member"
-                >
-                  <Avatar className={cn(
-                    "h-[60px] w-[60px] shrink-0 border-2 border-primary-foreground shadow-md transition-colors",
-                    isCompletedContact
-                      ? "group-hover/member:border-white/50"
-                      : "group-hover/member:border-primary"
-                  )}>
-                    {selected?.avatarUrl ? (
-                      <AvatarImage
-                        src={selected.avatarUrl}
-                        alt={selected.name}
-                        className="object-cover"
-                      />
-                    ) : null}
-                    <AvatarFallback className="text-lg font-bold bg-accent">
-                      {getInitials(selected?.name ?? "")}
-                    </AvatarFallback>
-                  </Avatar>
-
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <span
-                      className={cn(
-                        "text-xl font-bold leading-7 transition-colors",
-                        isCompletedContact
-                          ? "text-primary-foreground group-hover/member:text-primary-foreground/70"
-                          : "text-foreground group-hover/member:text-primary"
-                      )}
-                    >
-                      {selected?.name}
-                    </span>
-                    <span
-                      className={cn(
-                        "text-sm leading-6 line-clamp-2 leading-tight",
-                        isCompletedContact
-                          ? "text-primary-foreground/70"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      {`Trusted for ${selected?.trustedFor}`}
-                    </span>
-                  </div>
-                </a>
-
-                <div className="ml-auto flex items-center gap-3 shrink-0">
-                {isCompletedContact && (
-                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-popover shrink-0">
-                    <span className="text-xs font-bold leading-4 text-success-700 whitespace-nowrap">Complete</span>
-                  </div>
-                )}
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={cn(
-                        "h-9 w-9 rounded-full shrink-0",
-                        isCompletedContact ? "text-primary-foreground hover:bg-white/20 hover:text-primary-foreground" : "text-muted-foreground"
-                      )}
-                    >
-                      <MoreVertical className="h-4 w-4" />
-                      <span className="sr-only">More options</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      className="text-destructive focus:text-destructive"
-                      onClick={() => setFlagOpen(true)}
-                    >
-                      <Flag className="mr-2 h-4 w-4" />
-                      Flag this conversation
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="text-destructive focus:text-destructive"
-                      onClick={() => selected && setBlockedIds((prev) => new Set([...prev, selected.id]))}
-                    >
-                      <UserX className="mr-2 h-4 w-4" />
-                      Block this user
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                </div>
-              </div>
+              <ConversationHeader
+                contact={selected}
+                isCompletedContact={isCompletedContact}
+                onFlag={() => setFlagOpen(true)}
+                onBlock={handleBlockSelectedContact}
+              />
 
               {/* Chat area */}
               <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
 
                 {/* Message thread */}
-                <div className="flex-1 overflow-y-auto px-6 pt-6 flex flex-col gap-6 min-h-0">
-                  {displayMessages.map((msg) =>
-                    msg.sender === "outgoing" ? (
-                      <OutgoingBubble key={msg.id} message={msg} />
-                    ) : (
-                      <IncomingBubble key={msg.id} message={msg} />
-                    )
-                  )}
-
-                  {/* Completion card */}
-                  {isCompletedContact && activeFeedback && (
-                    <div className="flex items-center justify-center w-full py-2 shrink-0">
-                      <div className="relative bg-success-50 rounded-2xl shadow-md p-6 w-80 flex flex-col gap-7">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-2 right-2 h-8 w-8 rounded-full"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={handleReopenContact}>
-                              Reopen request
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-
-                        <div className="flex flex-col gap-3 text-center">
-                          <div className="flex flex-col gap-2 text-neutral-900">
-                            <p className="text-4xl leading-10">{outcomeCopy.emoji}</p>
-                            <p className="text-xl font-bold leading-7">
-                              {requesterName} {outcomeCopy.title}
-                            </p>
-                          </div>
-                          <p className="text-base text-neutral-600 leading-6">
-                            <span className="font-semibold text-neutral-900">
-                              {requesterName} said —{" "}
-                            </span>
-                            {activeFeedback.text}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div ref={messagesEndRef} />
-                </div>
+                <ConversationMessageThread
+                  messages={displayMessages}
+                  isCompletedContact={isCompletedContact}
+                  activeFeedback={activeFeedback}
+                  outcomeCopy={outcomeCopy}
+                  requesterName={requesterName}
+                  onReopenContact={handleReopenContact}
+                  messagesEndRef={messagesEndRef}
+                />
 
                 {/* ── Active: mark complete + composer ───────────────── */}
                 {status === "active" && (!selected?.isCompleted || isReopened) && (
-                  <div className="flex flex-col gap-4 px-6 pb-6 pt-4 shrink-0">
-                    <div className="flex items-center justify-center">
-                      <Button
-                        variant="outline"
-                        className="w-full rounded-full font-semibold text-primary border-border gap-2 px-4 shadow-none"
-                        onClick={handleMarkComplete}
-                      >
-                        <CircleCheckBig className="h-4 w-4 shrink-0 mb-0.5" />
-                        Mark this as completed
-                      </Button>
-                    </div>
-
-                    {/* Composer */}
-                    <div className="relative">
-                      <div className="bg-secondary border border-border rounded-2xl h-[120px] overflow-hidden px-3.5 pt-3 pb-12">
-                        <textarea
-                          value={composer}
-                          onChange={(e) => setComposer(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSend();
-                            }
-                          }}
-                          placeholder="Write a message…"
-                          className="w-full h-full bg-transparent text-base leading-6 placeholder:text-muted-foreground outline-none resize-none"
-                        />
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3.5 py-3">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 rounded-full text-muted-foreground"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          size="icon"
-                          disabled={!composer.trim()}
-                          onClick={handleSend}
-                          className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50"
-                        >
-                          <ArrowUp className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                  <ActiveConversationComposer
+                    composer={composer}
+                    onComposerChange={setComposer}
+                    onSend={handleSend}
+                    onMarkComplete={handleMarkComplete}
+                  />
                 )}
 
                 {/* ── Closing: close-the-loop panel ──────────────────── */}
                 {status === "closing" && (
-                  <div className="px-6 pb-6 pt-2 shrink-0">
-                    <div className="border border-primary rounded-2xl overflow-hidden">
-                      <div className="bg-primary-10 p-6 flex flex-col gap-8">
-
-                        {/* Heading */}
-                        <div className="flex flex-col gap-1">
-                          <p className="font-serif text-2xl leading-8 font-bold text-foreground">
-                            Close the loop
-                          </p>
-                          <p className="text-base leading-6 text-muted-foreground">
-                            Share how it went and complete this request.
-                          </p>
-                        </div>
-
-                        {/* Outcome selector */}
-                        <div className="flex flex-col gap-3">
-                          <p className="text-base font-semibold leading-6 text-foreground">
-                            How did it go with {selectedFirst}?
-                          </p>
-                          <div className="flex gap-3">
-                            {(
-                              [
-                                "worked-out",
-                                "partially",
-                                "not-quite",
-                              ] as OutcomeOption[]
-                            ).map((v) => (
-                              <OutcomePill
-                                key={v}
-                                value={v}
-                                selected={outcome === v}
-                                onSelect={setOutcome}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Feedback textarea */}
-                        <div className="flex flex-col gap-3">
-                          <p className="text-base font-semibold leading-6 text-foreground">
-                            What would you like {selectedFirst} to know?
-                          </p>
-                          <Textarea
-                            value={feedback}
-                            onChange={(e) => setFeedback(e.target.value)}
-                            placeholder="Share some details…"
-                            className="h-[120px] resize-none"
-                          />
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex items-center justify-end gap-4">
-                          <Button
-                            variant="ghost"
-                            className="rounded-full font-semibold text-sm"
-                            onClick={handleCancel}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            className="rounded-full font-semibold bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
-                            onClick={handleShareClose}
-                          >
-                            Share & Close the Loop
-                            <ArrowRight className="h-4 w-4 shrink-0" />
-                          </Button>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
+                  <ClosingConversationPanel
+                    selectedFirstName={selectedFirst}
+                    outcome={outcome}
+                    feedback={feedback}
+                    onOutcomeChange={setOutcome}
+                    onFeedbackChange={setFeedback}
+                    onCancel={handleCancel}
+                    onShareClose={handleShareClose}
+                  />
                 )}
               </div>
             </div>

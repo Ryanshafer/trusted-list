@@ -36,9 +36,73 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { NotificationPanel, type Notification } from "@/features/notifications/components/NotificationPanel"
+import type { NotificationActor, NotificationType } from "@/features/notifications/utils/notification-utils"
 import { AccountSettingsDialog } from "@/features/account"
+import type { AccountSettingsDialogProps } from "@/features/account/components/AccountSettingsDialog"
 import notificationsRaw from "../../data/notifications.json"
 import currentUser from "../../data/current-user.json"
+
+type CurrentUserSettings = Pick<
+  typeof currentUser,
+  "notificationSettings" | "blockedUsers"
+>
+
+type RawNotification = (typeof notificationsRaw)[number]
+type NotificationPayload = Notification["payload"]
+
+function isNotificationType(value: string): value is NotificationType {
+  return [
+    "circle_join_request",
+    "direct_help_request",
+    "skill_validated",
+    "volunteer_offer",
+    "circle_new_request",
+    "new_message",
+    "feedback_received",
+    "recommendation_outcome",
+    "content_flagged",
+    "moderation_decision",
+  ].includes(value)
+}
+
+function normalizeNotificationPayload(payload: RawNotification["payload"]): NotificationPayload {
+  return Object.fromEntries(
+    Object.entries(payload).map(([key, value]) => [key, value ?? undefined])
+  )
+}
+
+function normalizeNotificationActor(actor: RawNotification["actor"]): NotificationActor | null {
+  if (!actor) {
+    return null
+  }
+
+  return {
+    id: actor.id,
+    name: actor.name,
+    avatarUrl: actor.avatarUrl,
+    trustedFor: actor.trustedFor,
+  }
+}
+
+function normalizeNotifications(rawNotifications: RawNotification[]): Notification[] {
+  return rawNotifications.flatMap((notification) => {
+    if (!isNotificationType(notification.type)) {
+      return []
+    }
+
+    return [{
+      id: notification.id,
+      type: notification.type,
+      read: notification.read,
+      relativeTime: notification.relativeTime,
+      actor: normalizeNotificationActor(notification.actor),
+      payload: normalizeNotificationPayload(notification.payload),
+    }]
+  })
+}
+
+const currentUserSettings = currentUser as CurrentUserSettings
+const initialNotifications = normalizeNotifications(notificationsRaw)
 
 export function NavUser({
   user,
@@ -57,9 +121,7 @@ export function NavUser({
   const [theme, setTheme] = React.useState<"light" | "dark">("light")
   const [notifOpen, setNotifOpen] = React.useState(false)
   const [settingsOpen, setSettingsOpen] = React.useState(false)
-  const [notifications, setNotifications] = React.useState<Notification[]>(
-    notificationsRaw as unknown as Notification[]
-  )
+  const [notifications, setNotifications] = React.useState<Notification[]>(initialNotifications)
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
@@ -217,8 +279,8 @@ export function NavUser({
         open={settingsOpen}
         onOpenChange={setSettingsOpen}
         user={user}
-        initialNotif={currentUser.notificationSettings as any}
-        initialBlockedUsers={currentUser.blockedUsers}
+        initialNotif={currentUserSettings.notificationSettings}
+        initialBlockedUsers={currentUserSettings.blockedUsers}
       />
     </>
   )

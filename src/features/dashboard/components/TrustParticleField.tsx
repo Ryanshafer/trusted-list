@@ -137,11 +137,13 @@ function lerpConfig(current: TierConfig, target: TierConfig, t: number): TierCon
 }
 
 export const TrustParticleField = ({ tierIndex, avatarUrl, className, circular = false, contentScale = 1 }: TrustParticleFieldProps) => {
+    const clampedTierIndex = Math.min(Math.max(tierIndex, 0), TIER_CONFIGS.length - 1);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imageRef = useRef<HTMLImageElement | null>(null);
     const particlesRef = useRef<Particle[]>([]);
     const pulsesRef = useRef<Pulse[]>([]);
     const animationRef = useRef<number | null>(null);
+    const initialTierIndexRef = useRef(clampedTierIndex);
 
     // Smooth-lerped config — physics and visual params interpolate between tiers
     const currentCfgRef = useRef<TierConfig>({ ...TIER_CONFIGS[0] });
@@ -497,8 +499,8 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className, circular =
         };
 
         initializeParticles();
-        // Kick off the first transition in case tierIndex != 0 at mount
-        const initialTier = Math.min(Math.max(tierIndex, 0), TIER_CONFIGS.length - 1);
+        // Kick off the first transition in case the initial tier is not 0.
+        const initialTier = initialTierIndexRef.current;
         if (initialTier !== 0) {
             targetCfgRef.current = { ...TIER_CONFIGS[initialTier] };
         }
@@ -507,8 +509,7 @@ export const TrustParticleField = ({ tierIndex, avatarUrl, className, circular =
         return () => {
             if (animationRef.current) window.cancelAnimationFrame(animationRef.current);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [contentScale]);
 
     const maskImage = circular
         ? "radial-gradient(circle at 50% 50%, black 70%, transparent 92%)"

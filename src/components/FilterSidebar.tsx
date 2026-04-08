@@ -73,7 +73,7 @@ export function FilterSidebar<T extends BaseFilters>({
 
   React.useEffect(() => {
     if (open) setPending(appliedFilters)
-  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [appliedFilters, open])
 
   const toggle = (field: string, value: string) => {
     setPending((prev) => ({

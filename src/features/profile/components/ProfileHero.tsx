@@ -20,8 +20,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ProfileData } from "../types";
+import type { AccountSettingsDialogProps } from "@/features/account/components/AccountSettingsDialog";
 
 const TIER_STEP_MS = 800;
+type CurrentUserSettings = {
+  notificationSettings?: AccountSettingsDialogProps["initialNotif"];
+  blockedUsers?: AccountSettingsDialogProps["initialBlockedUsers"];
+};
+
+const currentUserSettings = currentUser as CurrentUserSettings;
 
 function getTierIndex(score: number): number {
   if (score >= 900) return 4;
@@ -282,8 +289,8 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
           email: userEmail ?? "",
           avatar: profile.avatarUrl ?? "",
         }}
-        initialNotif={currentUser.notificationSettings as any}
-        initialBlockedUsers={currentUser.blockedUsers}
+        initialNotif={currentUserSettings.notificationSettings}
+        initialBlockedUsers={currentUserSettings.blockedUsers}
       />
 
       <UserReportDialog

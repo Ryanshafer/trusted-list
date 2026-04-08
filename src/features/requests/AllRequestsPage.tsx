@@ -39,11 +39,14 @@ type FeaturedItem = {
   countdownHours?: number | null;
   avatarUrl?: string | null;
 };
+type FeaturedRequestCard = RequestCard & {
+  featured?: "helpNow" | "helpedLikeYou";
+};
 
-const allRequests = requestsData as RequestCard[];
+const allRequests = requestsData as FeaturedRequestCard[];
 const featured = {
-  helpNow: (requestsData as any[]).filter((r) => r.featured === "helpNow") as FeaturedItem[],
-  helpedLikeYou: (requestsData as any[]).filter((r) => r.featured === "helpedLikeYou") as FeaturedItem[],
+  helpNow: allRequests.filter((request) => request.featured === "helpNow") as FeaturedItem[],
+  helpedLikeYou: allRequests.filter((request) => request.featured === "helpedLikeYou") as FeaturedItem[],
 };
 
 // Generate category options from centralized data

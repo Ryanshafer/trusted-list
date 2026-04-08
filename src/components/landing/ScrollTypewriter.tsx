@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
 
 const mainParagraph = "Most professional networks reward visibility, not credibility. The Trusted List is different. It’s built for people with real experience, real stakes, and real reputations, where trust is earned through action, not attention. When you need help, you don’t post. You ask, and you get connected to people who’ve been there.";
@@ -60,7 +60,7 @@ const Word = ({
     targetColor = "#0f172a"
 }: {
     children: string,
-    progress: any,
+    progress: MotionValue<number>,
     range: [number, number],
     targetColor?: string
 }) => {

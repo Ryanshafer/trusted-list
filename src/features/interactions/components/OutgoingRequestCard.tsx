@@ -23,7 +23,7 @@ import {
 } from "@/features/dashboard/components/HelpRequestCards";
 import { UserIdentityLink } from "@/components/UserIdentityLink";
 import type { CardData } from "@/features/dashboard/types";
-import type { HelperResponse, MyHelpRequest } from "@/features/interactions/utils/data";
+import type { HelperResponse, MyHelpRequest, RawMessage } from "@/features/interactions/utils/data";
 import { interactionChats } from "@/features/interactions/utils/data";
 import { FlagRequestDialog } from "@/features/moderation/components/FlagRequestDialog";
 import { formatEndDate } from "@/lib/utils";
@@ -81,7 +81,7 @@ export const getMockMessages = (
   const isMyRequest =
     cardId.startsWith("request-") || cardId.startsWith("req-");
 
-  const preset = (interactionChats as Record<string, any>)[cardId];
+  const preset = (interactionChats as Record<string, RawMessage[]>)[cardId];
 
   if (preset) {
     return preset;
@@ -127,14 +127,14 @@ export const buildMultiChatMessages = (
   ];
 
   for (const r of responses) {
-    const raw = (interactionChats as Record<string, any>)[r.chatId] ?? [];
+    const raw = (interactionChats as Record<string, RawMessage[]>)[r.chatId] ?? [];
     const mapped: MultiChatMessage[] = raw
-      .filter((m: any) => m.sender === "user" || m.sender === "contact")
-      .map((m: any, idx: number) => ({
-        id: String(m.id ?? idx),
+      .filter((message) => message.sender === "user" || message.sender === "contact")
+      .map((message, idx: number) => ({
+        id: String(message.id ?? idx),
         sender:
-          m.sender === "user" ? ("outgoing" as const) : ("incoming" as const),
-        text: m.text,
+          message.sender === "user" ? ("outgoing" as const) : ("incoming" as const),
+        text: message.text,
         timestamp: FAKE_TIMESTAMPS[idx] ?? "",
       }));
 

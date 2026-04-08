@@ -36,7 +36,7 @@ import {
   type CompletionFeedback,
 } from "@/features/dashboard/components/ChatMultiHelperModal";
 import completionFeedbackData from "../../../../data/interaction-completion-feedback.json";
-import { interactionChats } from "@/features/interactions/utils/data";
+import { interactionChats, type RawMessage } from "@/features/interactions/utils/data";
 import { RequestCardPreview, CardPersonRow, RequestStatusBadge } from "@/features/dashboard/components/HelpRequestCards";
 import { helpCardShellClass } from "@/features/dashboard/components/HelpRequestCards";
 import { SetReminderDialog, type Reminder } from "./SetReminderDialog";
@@ -89,15 +89,15 @@ export const HelpingCard = ({
   ];
 
   const multiChatMessages: MultiChatMessage[] = React.useMemo(() => {
-    const raw = (interactionChats as Record<string, any>)[card.id] ?? [
+    const raw = (interactionChats as Record<string, RawMessage[]>)[card.id] ?? [
       { id: 1, sender: "contact", text: card.requestSummary || card.request.slice(0, 100) },
     ];
     return raw
-      .filter((m: any) => m.sender === "user" || m.sender === "contact")
-      .map((m: any, idx: number) => ({
-        id: String(m.id),
-        text: m.text,
-        sender: m.sender === "user" ? ("outgoing" as const) : ("incoming" as const),
+      .filter((message) => message.sender === "user" || message.sender === "contact")
+      .map((message, idx: number) => ({
+        id: String(message.id),
+        text: message.text,
+        sender: message.sender === "user" ? ("outgoing" as const) : ("incoming" as const),
         timestamp: FAKE_TIMESTAMPS[idx] ?? "",
       }));
   }, [card.id, card.requestSummary, card.request]);

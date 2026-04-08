@@ -112,6 +112,27 @@ const NAV_ITEMS = [
 ] as const
 
 type Section = typeof NAV_ITEMS[number]["id"]
+type SettingsUser = AccountSettingsDialogProps["user"]
+type ToggleChannel = "inApp" | "email"
+
+type ProfileSectionProps = {
+  firstName: string
+  lastName: string
+  email: string
+  avatar: string
+  onFirstNameChange: (value: string) => void
+  onLastNameChange: (value: string) => void
+  onEmailChange: (value: string) => void
+}
+
+type SecuritySectionProps = {
+  currentPw: string
+  newPw: string
+  confirmPw: string
+  onCurrentChange: (value: string) => void
+  onNewChange: (value: string) => void
+  onConfirmChange: (value: string) => void
+}
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -168,80 +189,125 @@ export function AccountSettingsDialog({
           orientation="vertical"
           className="flex flex-1 min-h-0"
         >
-          {/* ── Left nav ── */}
-          <div className="w-52 shrink-0 flex flex-col py-5 px-2 border-r border-border bg-muted/30">
-            <p className="text-sm font-semibold text-muted-foreground px-3 pb-2 mb-3 select-none border-b border-border/60">
-              Settings
-            </p>
-            <TabsList className="flex flex-col h-auto gap-0.5 bg-transparent p-0 justify-start items-stretch">
-              {NAV_ITEMS.map(({ id, label, Icon }) => (
-                <TabsTrigger
-                  key={id}
-                  value={id}
-                  className={cn(
-                    "flex items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm transition-colors justify-start",
-                    "font-normal text-muted-foreground hover:bg-background/50 hover:text-foreground",
-                    "data-[state=active]:border data-[state=active]:border-border/60",
-                    "data-[state=active]:bg-background data-[state=active]:font-medium",
-                    "data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-                  )}
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  {label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+          <SettingsTabsNav />
 
-          {/* ── Right content ── */}
-          <div className="flex-1 overflow-y-auto">
-            <TabsContent value="profile" className="mt-0 h-full">
-              <ProfileSection
-                firstName={firstName}
-                lastName={lastName}
-                email={email}
-                avatar={user.avatar}
-                onFirstNameChange={setFirstName}
-                onLastNameChange={setLastName}
-                onEmailChange={setEmail}
-              />
-            </TabsContent>
-
-            <TabsContent value="notifications" className="mt-0 h-full">
-              <NotificationsSection notif={notif} onToggle={toggleNotif} />
-            </TabsContent>
-
-            <TabsContent value="blocked" className="mt-0 h-full">
-              <BlockedSection
-                users={blockedUsers}
-                onUnblock={(id) =>
-                  setBlockedUsers((prev) => prev.filter((u) => u.id !== id))
-                }
-              />
-            </TabsContent>
-
-            <TabsContent value="security" className="mt-0 h-full">
-              <SecuritySection
-                currentPw={currentPw}
-                newPw={newPw}
-                confirmPw={confirmPw}
-                onCurrentChange={setCurrentPw}
-                onNewChange={setNewPw}
-                onConfirmChange={setConfirmPw}
-              />
-            </TabsContent>
-
-            <TabsContent value="subscription" className="mt-0 h-full">
-              <SubscriptionSection />
-            </TabsContent>
-
-            <TabsContent value="account" className="mt-0 h-full">
-              <AccountSection />
-            </TabsContent>
-          </div>
+          <SettingsTabsContent
+            user={user}
+            profile={{
+              firstName,
+              lastName,
+              email,
+              avatar: user.avatar,
+              onFirstNameChange: setFirstName,
+              onLastNameChange: setLastName,
+              onEmailChange: setEmail,
+            }}
+            notifications={notif}
+            onToggleNotification={toggleNotif}
+            blockedUsers={blockedUsers}
+            onUnblockUser={(id) =>
+              setBlockedUsers((prev) => prev.filter((blockedUser) => blockedUser.id !== id))
+            }
+            security={{
+              currentPw,
+              newPw,
+              confirmPw,
+              onCurrentChange: setCurrentPw,
+              onNewChange: setNewPw,
+              onConfirmChange: setConfirmPw,
+            }}
+          />
         </Tabs>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function SettingsTabsNav() {
+  return (
+    <div className="w-52 shrink-0 flex flex-col py-5 px-2 border-r border-border bg-muted/30">
+      <p className="text-sm font-semibold text-muted-foreground px-3 pb-2 mb-3 select-none border-b border-border/60">
+        Settings
+      </p>
+      <TabsList className="flex flex-col h-auto gap-0.5 bg-transparent p-0 justify-start items-stretch">
+        {NAV_ITEMS.map(({ id, label, Icon }) => (
+          <TabsTrigger
+            key={id}
+            value={id}
+            className={cn(
+              "flex items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm transition-colors justify-start",
+              "font-normal text-muted-foreground hover:bg-background/50 hover:text-foreground",
+              "data-[state=active]:border data-[state=active]:border-border/60",
+              "data-[state=active]:bg-background data-[state=active]:font-medium",
+              "data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+            )}
+          >
+            <Icon className="h-4 w-4 shrink-0" />
+            {label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </div>
+  )
+}
+
+function SettingsTabsContent({
+  user,
+  profile,
+  notifications,
+  onToggleNotification,
+  blockedUsers,
+  onUnblockUser,
+  security,
+}: {
+  user: SettingsUser
+  profile: ProfileSectionProps
+  notifications: NotifSettings
+  onToggleNotification: (key: NotifGroupKey, channel: ToggleChannel) => void
+  blockedUsers: BlockedUser[]
+  onUnblockUser: (id: string) => void
+  security: SecuritySectionProps
+}) {
+  return (
+    <div className="flex-1 overflow-y-auto">
+      <SettingsTabPanel value="profile">
+        <ProfileSection {...profile} avatar={user.avatar} />
+      </SettingsTabPanel>
+
+      <SettingsTabPanel value="notifications">
+        <NotificationsSection notif={notifications} onToggle={onToggleNotification} />
+      </SettingsTabPanel>
+
+      <SettingsTabPanel value="blocked">
+        <BlockedSection users={blockedUsers} onUnblock={onUnblockUser} />
+      </SettingsTabPanel>
+
+      <SettingsTabPanel value="security">
+        <SecuritySection {...security} />
+      </SettingsTabPanel>
+
+      <SettingsTabPanel value="subscription">
+        <SubscriptionSection />
+      </SettingsTabPanel>
+
+      <SettingsTabPanel value="account">
+        <AccountSection />
+      </SettingsTabPanel>
+    </div>
+  )
+}
+
+function SettingsTabPanel({
+  value,
+  children,
+}: {
+  value: Section
+  children: React.ReactNode
+}) {
+  return (
+    <TabsContent value={value} className="mt-0 h-full">
+      {children}
+    </TabsContent>
   )
 }
 
@@ -255,15 +321,7 @@ function ProfileSection({
   onFirstNameChange,
   onLastNameChange,
   onEmailChange,
-}: {
-  firstName: string
-  lastName: string
-  email: string
-  avatar: string
-  onFirstNameChange: (v: string) => void
-  onLastNameChange: (v: string) => void
-  onEmailChange: (v: string) => void
-}) {
+}: ProfileSectionProps) {
   const initials = [firstName[0], lastName[0]].filter(Boolean).join("").toUpperCase()
 
   return (
@@ -334,7 +392,7 @@ function NotificationsSection({
   onToggle,
 }: {
   notif: NotifSettings
-  onToggle: (key: NotifGroupKey, channel: "inApp" | "email") => void
+  onToggle: (key: NotifGroupKey, channel: ToggleChannel) => void
 }) {
   const anyEnabled = (channels: NotifChannels) => channels.inApp || channels.email
 
@@ -363,60 +421,82 @@ function NotificationsSection({
           const channels = notif[group.key]
           const active = anyEnabled(channels)
           return (
-            <div
+            <NotificationGroupCard
               key={group.key}
-              className={cn(
-                "flex items-start gap-4 rounded-xl border px-5 py-4 transition-colors",
-                active ? "border-border/60 bg-card" : "border-border/40 bg-muted/20"
-              )}
+              group={group}
+              channels={channels}
+              active={active}
+              onToggle={onToggle}
             >
-              <div className="flex min-w-0 flex-1 flex-col gap-2">
-                <div className="flex flex-col gap-0.5">
-                  <span className={cn("text-sm font-medium", active ? "text-foreground" : "text-muted-foreground")}>
-                    {group.label}
-                  </span>
-                  <span className={cn("text-xs text-muted-foreground", active ? "text-muted-foreground" : "text-muted-foreground/50")}>
-                    {group.description}
-                  </span>
-                </div>
-                <ul className="flex flex-col gap-0.5">
-                  {group.items.map((item) => (
-                    <li
-                      key={item}
-                      className={cn(
-                        "text-xs flex items-center gap-1.5",
-                        active ? "text-muted-foreground" : "text-muted-foreground/40"
-                      )}
-                    >
-                      <span className="h-1 w-1 rounded-full bg-current shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex shrink-0 items-center pt-0.5">
-                <div className="flex w-[72px] justify-center">
-                  {group.noInApp ? (
-                    <span className="text-xs text-muted-foreground/30 select-none">—</span>
-                  ) : (
-                    <Switch
-                      checked={channels.inApp}
-                      onCheckedChange={() => onToggle(group.key, "inApp")}
-                      aria-label={`In-app: ${group.label}`}
-                    />
-                  )}
-                </div>
-                <div className="flex w-[72px] justify-center">
-                  <Switch
-                    checked={channels.email}
-                    onCheckedChange={() => onToggle(group.key, "email")}
-                    aria-label={`Email: ${group.label}`}
-                  />
-                </div>
-              </div>
-            </div>
+            </NotificationGroupCard>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+function NotificationGroupCard({
+  group,
+  channels,
+  active,
+  onToggle,
+}: {
+  group: typeof NOTIF_GROUPS[number]
+  channels: NotifChannels
+  active: boolean
+  onToggle: (key: NotifGroupKey, channel: ToggleChannel) => void
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-4 rounded-xl border px-5 py-4 transition-colors",
+        active ? "border-border/60 bg-card" : "border-border/40 bg-muted/20"
+      )}
+    >
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-0.5">
+          <span className={cn("text-sm font-medium", active ? "text-foreground" : "text-muted-foreground")}>
+            {group.label}
+          </span>
+          <span className={cn("text-xs text-muted-foreground", active ? "text-muted-foreground" : "text-muted-foreground/50")}>
+            {group.description}
+          </span>
+        </div>
+        <ul className="flex flex-col gap-0.5">
+          {group.items.map((item) => (
+            <li
+              key={item}
+              className={cn(
+                "text-xs flex items-center gap-1.5",
+                active ? "text-muted-foreground" : "text-muted-foreground/40"
+              )}
+            >
+              <span className="h-1 w-1 rounded-full bg-current shrink-0" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="flex shrink-0 items-center pt-0.5">
+        <div className="flex w-[72px] justify-center">
+          {group.noInApp ? (
+            <span className="text-xs text-muted-foreground/30 select-none">—</span>
+          ) : (
+            <Switch
+              checked={channels.inApp}
+              onCheckedChange={() => onToggle(group.key, "inApp")}
+              aria-label={`In-app: ${group.label}`}
+            />
+          )}
+        </div>
+        <div className="flex w-[72px] justify-center">
+          <Switch
+            checked={channels.email}
+            onCheckedChange={() => onToggle(group.key, "email")}
+            aria-label={`Email: ${group.label}`}
+          />
+        </div>
       </div>
     </div>
   )
@@ -447,38 +527,50 @@ function BlockedSection({
         </div>
       ) : (
         <div className="flex flex-col rounded-xl border border-border/60 divide-y divide-border/50 overflow-hidden">
-          {users.map((u) => {
-            const fallback = u.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase()
-            return (
-              <div
-                key={u.id}
-                className="flex items-center justify-between gap-4 bg-card px-4 py-3.5"
-              >
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-8 w-8 shrink-0 border-2 border-primary-foreground shadow-md">
-                    <AvatarImage src={u.avatar} />
-                    <AvatarFallback className="text-xs">{fallback}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm font-medium text-foreground">{u.name}</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full font-semibold text-xs"
-                  onClick={() => onUnblock(u.id)}
-                >
-                  Unblock
-                </Button>
-              </div>
-            )
-          })}
+          {users.map((user) => (
+            <BlockedUserRow
+              key={user.id}
+              user={user}
+              onUnblock={onUnblock}
+            />
+          ))}
         </div>
       )}
+    </div>
+  )
+}
+
+function BlockedUserRow({
+  user,
+  onUnblock,
+}: {
+  user: BlockedUser
+  onUnblock: (id: string) => void
+}) {
+  const fallback = user.name
+    .split(" ")
+    .map((namePart) => namePart[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase()
+
+  return (
+    <div className="flex items-center justify-between gap-4 bg-card px-4 py-3.5">
+      <div className="flex items-center gap-3">
+        <Avatar className="h-8 w-8 shrink-0 border-2 border-primary-foreground shadow-md">
+          <AvatarImage src={user.avatar} />
+          <AvatarFallback className="text-xs">{fallback}</AvatarFallback>
+        </Avatar>
+        <span className="text-sm font-medium text-foreground">{user.name}</span>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-full font-semibold text-xs"
+        onClick={() => onUnblock(user.id)}
+      >
+        Unblock
+      </Button>
     </div>
   )
 }
@@ -492,14 +584,7 @@ function SecuritySection({
   onCurrentChange,
   onNewChange,
   onConfirmChange,
-}: {
-  currentPw: string
-  newPw: string
-  confirmPw: string
-  onCurrentChange: (v: string) => void
-  onNewChange: (v: string) => void
-  onConfirmChange: (v: string) => void
-}) {
+}: SecuritySectionProps) {
   const mismatch =
     newPw.length > 0 && confirmPw.length > 0 && newPw !== confirmPw
 
@@ -597,37 +682,51 @@ function AccountSection() {
       />
 
       {/* Deactivate */}
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-foreground">Deactivate account</span>
-          <span className="text-sm text-muted-foreground">
-            Pauses your presence on the platform. Your profile and history are preserved and
-            you can reactivate at any time.
-          </span>
-        </div>
-        <div>
-          <Button variant="outline" className="rounded-full font-semibold px-6">
-            Deactivate account
-          </Button>
-        </div>
-      </div>
+      <DestructiveActionBlock
+        title="Deactivate account"
+        description="Pauses your presence on the platform. Your profile and history are preserved and you can reactivate at any time."
+        buttonLabel="Deactivate account"
+        buttonVariant="outline"
+      />
 
       <Separator />
 
-      {/* Delete */}
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-destructive">Delete account</span>
-          <span className="text-sm text-muted-foreground">
-            Permanently removes your account, profile, and all data. Accounts with active
-            help interactions cannot be deleted. This action cannot be undone.
-          </span>
-        </div>
-        <div>
-          <Button variant="destructive" className="rounded-full font-semibold px-6">
-            Delete account
-          </Button>
-        </div>
+      <DestructiveActionBlock
+        title="Delete account"
+        description="Permanently removes your account, profile, and all data. Accounts with active help interactions cannot be deleted. This action cannot be undone."
+        buttonLabel="Delete account"
+        buttonVariant="destructive"
+        titleClassName="text-destructive"
+      />
+    </div>
+  )
+}
+
+function DestructiveActionBlock({
+  title,
+  description,
+  buttonLabel,
+  buttonVariant,
+  titleClassName,
+}: {
+  title: string
+  description: string
+  buttonLabel: string
+  buttonVariant: React.ComponentProps<typeof Button>["variant"]
+  titleClassName?: string
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <span className={cn("text-sm font-semibold text-foreground", titleClassName)}>
+          {title}
+        </span>
+        <span className="text-sm text-muted-foreground">{description}</span>
+      </div>
+      <div>
+        <Button variant={buttonVariant} className="rounded-full font-semibold px-6">
+          {buttonLabel}
+        </Button>
       </div>
     </div>
   )

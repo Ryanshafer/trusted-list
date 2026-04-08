@@ -22,7 +22,7 @@ import { HELP_CATEGORIES } from "@/features/requests/components/HelpRequestDialo
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { AskForHelpDialog, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import { InviteDialog } from "@/features/invites/components/InviteDialog";
-import { interactions } from "@/features/interactions/utils/data";
+import { interactions, type InteractionCard } from "@/features/interactions/utils/data";
 import { RotateWords } from "@/components/anim/rotate-words";
 import { AnimatePresence, motion } from "framer-motion";
 import { TrustParticleField } from "./TrustParticleField";
@@ -50,6 +50,15 @@ type AskForHelpCard = {
 type DashboardContent = {
   askForHelpCard: AskForHelpCard;
 };
+
+type CurrentUserDashboardData = {
+  firstName: string;
+  avatarUrl: string | null;
+  trustScore: number;
+  unvouchedSkills?: string[];
+};
+
+const dashboardUser = currentUser as CurrentUserDashboardData;
 
 const content = dashboardData as DashboardContent;
 const askForHelpCard = content.askForHelpCard;
@@ -178,7 +187,7 @@ const AppShell = () => {
         open={askDialogOpen}
         onOpenChange={setAskDialogOpen}
         contacts={askForHelpCard.contacts}
-        userUnvouchedSkills={(currentUser as any).unvouchedSkills}
+        userUnvouchedSkills={dashboardUser.unvouchedSkills}
         companies={askForHelpCard.companies}
         initialCategories={selectedCategory ? [selectedCategory] : undefined}
       />
@@ -290,7 +299,7 @@ const TRUST_TIERS = [
 // ── TrustScoreSection ─────────────────────────────────────────────────────────
 
 const TrustScoreSection = () => {
-  const actualTierIndex = React.useMemo(() => getInitialTierIndex(currentUser.trustScore), []);
+  const actualTierIndex = React.useMemo(() => getInitialTierIndex(dashboardUser.trustScore), []);
   const [displayTierIndex, setDisplayTierIndex] = React.useState(0);
   const pendingTimeoutsRef = React.useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -316,7 +325,7 @@ const TrustScoreSection = () => {
       <div className="grid grid-cols-3 min-h-[275px]">
         {/* Col 1: Particle field visualization */}
         <div className="bg-primary/10 relative overflow-hidden rounded-l-lg">
-          <TrustParticleField tierIndex={displayTierIndex} avatarUrl={currentUser.avatarUrl} />
+          <TrustParticleField tierIndex={displayTierIndex} avatarUrl={dashboardUser.avatarUrl ?? ""} />
         </div>
 
         {/* Col 2: Score module */}
@@ -376,13 +385,13 @@ const TrustScoreSection = () => {
             </p>
           </div>
           <div className="flex flex-col gap-2 flex-1">
-            {interactions.inProgress.map((item) => (
+            {interactions.inProgress.map((item: InteractionCard) => (
               <TrustTierCard
                 key={item.id}
                 id={item.id}
                 name={item.name}
-                requestSummary={(item as any).requestSummary}
-                avatarUrl={(item as any).avatarUrl}
+                requestSummary={item.requestSummary ?? undefined}
+                avatarUrl={item.avatarUrl ?? undefined}
                 href={`/trusted-list/interactions?tab=in-progress&open=${item.id}`}
               />
             ))}

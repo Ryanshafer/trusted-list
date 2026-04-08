@@ -4,7 +4,11 @@ import { ProfilePage } from "../features/profile/components/ProfilePage";
 import currentUser from "../../data/current-user.json";
 import type { ProfileData, ViewerData } from "../features/profile/types";
 
-const profile = currentUser as unknown as ProfileData;
+type CurrentUserProfile = ProfileData & {
+  email: string;
+};
+
+const profile = currentUser as CurrentUserProfile;
 
 const viewerData: ViewerData = {
   userId: profile.id,
@@ -27,7 +31,7 @@ const viewerData: ViewerData = {
     viewerData={viewerData}
     isOwner={true}
     publicView={false}
-    userEmail={(currentUser as any).email}
+    userEmail={profile.email}
     connectionDegree={null}
     availableSkills={profile.verifiedSkills}
     basePath="/trusted-list"

@@ -5,7 +5,12 @@ import requestsData from "../../../data/requests.json";
 import requestDetailsData from "../../../data/request-details.json";
 import profilesData from "../../../data/profiles.json";
 import currentUserData from "../../../data/current-user.json";
+import type { CardData } from "../../features/dashboard/types";
 import type { ProfileData, ViewerData } from "../../features/profile/types";
+import type {
+  RequestConnectionNode,
+  RequestDetail,
+} from "../../features/requests/utils/request-detail-data";
 
 type PersonStub = {
   name: string;
@@ -14,22 +19,41 @@ type PersonStub = {
   trustedFor?: string | null;
 };
 
+type StaticRequestCard = CardData;
+
+type StaticRequestDetail = RequestDetail & {
+  author: RequestDetail["author"] & {
+    name?: string;
+    avatarUrl?: string | null;
+  };
+  connectionPath: RequestConnectionNode[];
+};
+
+type CurrentUserProfile = ProfileData & {
+  email: string;
+};
+
 export function getStaticPaths() {
+  const requestCards = requestsData as StaticRequestCard[];
+  const requestDetails = requestDetailsData as Record<string, StaticRequestDetail>;
+  const profileList = profilesData as ProfileData[];
+  const currentUserProfile = currentUserData as CurrentUserProfile;
+
   // Build a map of all known people (for stub fallback)
   const people = new Map<string, PersonStub>();
 
-  for (const r of requestsData) {
-    if (!people.has(r.name)) {
-      people.set(r.name, {
-        name: r.name,
-        avatarUrl: r.avatarUrl ?? null,
-        subtitle: (r as any).subtitle ?? null,
-        trustedFor: (r as any).trustedFor ?? null,
+  for (const request of requestCards) {
+    if (!people.has(request.name)) {
+      people.set(request.name, {
+        name: request.name,
+        avatarUrl: request.avatarUrl ?? null,
+        subtitle: request.subtitle ?? null,
+        trustedFor: request.trustedFor ?? null,
       });
     }
   }
 
-  for (const detail of Object.values(requestDetailsData as Record<string, any>)) {
+  for (const detail of Object.values(requestDetails)) {
     const author = detail.author;
     if (author?.name && author.name !== "You" && !people.has(author.name)) {
       people.set(author.name, {
@@ -52,25 +76,24 @@ export function getStaticPaths() {
   }
 
   // Also add all people from profiles.json
-  for (const p of profilesData as unknown as ProfileData[]) {
-    if (!people.has(p.name)) {
-      people.set(p.name, {
-        name: p.name,
-        avatarUrl: p.avatarUrl ?? null,
-        subtitle: `${p.title} · ${p.company}`,
-        trustedFor: p.verifiedSkills?.join(", ") ?? null,
+  for (const profile of profileList) {
+    if (!people.has(profile.name)) {
+      people.set(profile.name, {
+        name: profile.name,
+        avatarUrl: profile.avatarUrl ?? null,
+        subtitle: `${profile.title} · ${profile.company}`,
+        trustedFor: profile.verifiedSkills?.join(", ") ?? null,
       });
     }
   }
 
   // Also include the current user so /members/<their-slug> resolves
-  const cu = currentUserData as any;
-  if (!people.has(cu.name)) {
-    people.set(cu.name, {
-      name: cu.name,
-      avatarUrl: cu.avatarUrl ?? null,
-      subtitle: `${cu.title} · ${cu.company}`,
-      trustedFor: cu.verifiedSkills?.join(", ") ?? null,
+  if (!people.has(currentUserProfile.name)) {
+    people.set(currentUserProfile.name, {
+      name: currentUserProfile.name,
+      avatarUrl: currentUserProfile.avatarUrl ?? null,
+      subtitle: `${currentUserProfile.title} · ${currentUserProfile.company}`,
+      trustedFor: currentUserProfile.verifiedSkills?.join(", ") ?? null,
     });
   }
 
@@ -81,24 +104,28 @@ export function getStaticPaths() {
 }
 
 const { person } = Astro.props;
+const requestCards = requestsData as StaticRequestCard[];
+const requestDetails = requestDetailsData as Record<string, StaticRequestDetail>;
+const profileList = profilesData as ProfileData[];
+const currentUserProfile = currentUserData as CurrentUserProfile;
 
 // Check if a rich profile exists — profiles.json first, then current-user.json
 const allProfiles = [
-  ...(profilesData as unknown as ProfileData[]),
-  currentUserData as unknown as ProfileData,
+  ...profileList,
+  currentUserProfile,
 ];
 const richProfile = allProfiles.find(
   (p) => p.name.toLowerCase() === person.name.toLowerCase()
 );
 
 // Viewer data = current logged-in user
-const viewer = currentUserData as unknown as ProfileData;
+const viewer = currentUserProfile;
 const viewerData: ViewerData = {
   name: viewer.name,
   firstName: viewer.firstName,
   avatarUrl: viewer.avatarUrl,
   role: `${viewer.title} · ${viewer.company}`,
-  sharedConnectionIds: viewer.circle?.map((m: any) => m.userId) ?? [],
+  sharedConnectionIds: viewer.circle?.map((member) => member.userId) ?? [],
 };
 
 const isOwner = richProfile?.id === viewer.id;

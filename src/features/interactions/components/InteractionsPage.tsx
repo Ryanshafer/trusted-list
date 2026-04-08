@@ -51,6 +51,10 @@ import {
   useSortState,
   type HelpingCardSortKey,
   sortHelpingCards,
+  filterMyHelpRequests,
+  sortMyHelpRequestsForDisplay,
+  sortMyHelpRequestsByKey,
+  computeMyRequestFilterOptions,
 } from "@/features/interactions/utils/interaction-utils";
 
 function buildFilterExtraSections(options: AvailableFilterOptions) {
@@ -243,23 +247,25 @@ export default function InteractionsPage() {
     React.useState<SidebarFilters>(defaultSidebarFilters);
 
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
-  const [myRequestsData, setMyRequestsData] = React.useState(myHelpRequests);
+  const [myRequestsData, setMyRequestsData] = React.useState<MyHelpRequest[]>(
+    myHelpRequests,
+  );
   const [myRequestsSearch, setMyRequestsSearch] = React.useState("");
   const [helpedSearchQuery, setHelpedSearchQuery] = React.useState("");
   const [inProgressSearchQuery, setInProgressSearchQuery] = React.useState("");
 
   const handleDeleteRequest = (id: string) => {
-    setMyRequestsData((prev: any[]) => {
-      const index = prev.findIndex((item: any) => item.id === id);
+    setMyRequestsData((prev) => {
+      const index = prev.findIndex((item) => item.id === id);
       const item = prev[index];
       if (!item) return prev;
-      const next = prev.filter((i: any) => i.id !== id);
+      const next = prev.filter((request) => request.id !== id);
       toast("Request deleted", {
         description: item.requestSummary,
         action: {
           label: "Undo",
           onClick: () =>
-            setMyRequestsData((current: any[]) => {
+            setMyRequestsData((current) => {
               const restored = [...current];
               restored.splice(Math.min(index, current.length), 0, item);
               return restored;
@@ -384,7 +390,7 @@ export default function InteractionsPage() {
         endDate: payload.dueDate ? payload.dueDate.toISOString() : undefined,
       };
 
-      setMyRequestsData((prev: any[]) => [newRequest, ...prev]);
+      setMyRequestsData((prev) => [newRequest, ...prev]);
       setActiveTab("my-requests");
       const params = new URLSearchParams(window.location.search);
       params.set("tab", "my-requests");
@@ -394,196 +400,17 @@ export default function InteractionsPage() {
   );
 
   const filteredRequests = React.useMemo(() => {
-    return myRequestsData
-      .filter((request: any) => {
-        const isCompleted =
-          request.status === "Closed" ||
-          (request.type === "contact" &&
-            request.responses.some((r: any) => r.status === "Completed"));
-        const isPromotable =
-          ["circle", "community"].includes(request.type) &&
-          request.status !== "Closed";
-        const isPaused = isPromotable && request.promoted === false;
-        const isInProgress = !isCompleted && !isPaused;
-
-        // Audience filter
-        if (
-          sidebarFilters.audiences.length > 0 &&
-          !sidebarFilters.audiences.includes(request.type)
-        )
-          return false;
-
-        // Topic filter
-        if (sidebarFilters.topics.length > 0) {
-          if (
-            !request.category ||
-            !sidebarFilters.topics.includes(request.category)
-          )
-            return false;
-        }
-
-        // Status filter
-        if (sidebarFilters.statuses.length > 0) {
-          const matches =
-            (sidebarFilters.statuses.includes("inProgress") && isInProgress) ||
-            (sidebarFilters.statuses.includes("paused") && isPaused) ||
-            (sidebarFilters.statuses.includes("completed") && isCompleted);
-          if (!matches) return false;
-        }
-
-        // Responses filter
-        if (sidebarFilters.responses.length > 0) {
-          const hasResponses = request.responses.length > 0;
-          const matches =
-            (sidebarFilters.responses.includes("none") && !hasResponses) ||
-            (sidebarFilters.responses.includes("has") && hasResponses);
-          if (!matches) return false;
-        }
-
-        // Date range filter (applied to endDate)
-        if (sidebarFilters.dateFrom && request.endDate) {
-          if (new Date(request.endDate) < new Date(sidebarFilters.dateFrom))
-            return false;
-        }
-        if (sidebarFilters.dateTo && request.endDate) {
-          if (new Date(request.endDate) > new Date(sidebarFilters.dateTo))
-            return false;
-        }
-
-        // Search filter
-        if (myRequestsSearch) {
-          const q = myRequestsSearch.toLowerCase();
-          if (
-            !request.requestSummary.toLowerCase().includes(q) &&
-            !request.request.toLowerCase().includes(q)
-          )
-            return false;
-        }
-
-        return true;
-      })
-      .sort((a: any, b: any) => {
-        const aIsCompleted =
-          a.status === "Closed" ||
-          (a.type === "contact" &&
-            a.responses.some((r: any) => r.status === "Completed"));
-        const bIsCompleted =
-          b.status === "Closed" ||
-          (b.type === "contact" &&
-            b.responses.some((r: any) => r.status === "Completed"));
-
-        if (aIsCompleted && !bIsCompleted) return 1;
-        if (!aIsCompleted && bIsCompleted) return -1;
-
-        const aHasDeadline = !!a.endDate;
-        const bHasDeadline = !!b.endDate;
-
-        if (aHasDeadline && !bHasDeadline) return -1;
-        if (!aHasDeadline && bHasDeadline) return 1;
-
-        if (aHasDeadline && bHasDeadline) {
-          return (
-            new Date(a.endDate!).getTime() - new Date(b.endDate!).getTime()
-          );
-        }
-
-        return 0;
-      });
+    return sortMyHelpRequestsForDisplay(
+      filterMyHelpRequests(myRequestsData, sidebarFilters, myRequestsSearch),
+    );
   }, [myRequestsData, sidebarFilters, myRequestsSearch]);
 
   const sortedRequests = React.useMemo(() => {
-    if (!sortKey) return filteredRequests;
-    const dir = sortDir === "asc" ? 1 : -1;
-    const audienceOrder = { contact: 0, circle: 1, community: 2 };
-    const responseScore = (r: MyHelpRequest) => {
-      if (r.responses.length === 0) return 0;
-      if (r.responses.every((x) => x.status === "Completed")) return 2;
-      return 1;
-    };
-    const statusScore = (r: MyHelpRequest) => {
-      const done =
-        r.status === "Closed" ||
-        (r.type === "contact" &&
-          r.responses.some((x) => x.status === "Completed"));
-      if (done) return 2;
-      const paused =
-        ["circle", "community"].includes(r.type) && r.promoted === false;
-      return paused ? 1 : 0;
-    };
-    return [...filteredRequests].sort((a, b) => {
-      switch (sortKey) {
-        case "request":
-          return dir * a.requestSummary.localeCompare(b.requestSummary);
-        case "endDate": {
-          const ta = a.endDate ? new Date(a.endDate).getTime() : Infinity;
-          const tb = b.endDate ? new Date(b.endDate).getTime() : Infinity;
-          return dir * (ta - tb);
-        }
-        case "audience":
-          return (
-            dir *
-            (audienceOrder[a.type as keyof typeof audienceOrder] -
-              audienceOrder[b.type as keyof typeof audienceOrder])
-          );
-        case "topic":
-          return dir * (a.category ?? "").localeCompare(b.category ?? "");
-        case "status":
-          return dir * (statusScore(a) - statusScore(b));
-        case "responses":
-          return dir * (responseScore(a) - responseScore(b));
-        default:
-          return 0;
-      }
-    });
+    return sortMyHelpRequestsByKey(filteredRequests, sortKey, sortDir);
   }, [filteredRequests, sortKey, sortDir]);
 
   const availableFilterOptions = React.useMemo((): AvailableFilterOptions => {
-    const topics = new Set<string>();
-    let hasContact = false,
-      hasCircle = false,
-      hasCommunity = false;
-    let hasInProgress = false,
-      hasPaused = false,
-      hasCompleted = false;
-    let hasNoResponses = false,
-      hasWithResponses = false;
-
-    for (const r of myRequestsData) {
-      if (r.category) topics.add(r.category);
-      if (r.type === "contact") hasContact = true;
-      if (r.type === "circle") hasCircle = true;
-      if (r.type === "community") hasCommunity = true;
-
-      const isCompleted =
-        r.status === "Closed" ||
-        (r.type === "contact" &&
-          r.responses.some((resp: any) => resp.status === "Completed"));
-      const isPromotable =
-        ["circle", "community"].includes(r.type) && r.status !== "Closed";
-      const isPaused = isPromotable && r.promoted === false;
-
-      if (isCompleted) hasCompleted = true;
-      else if (isPaused) hasPaused = true;
-      else hasInProgress = true;
-
-      if (r.responses.length === 0) hasNoResponses = true;
-      else hasWithResponses = true;
-    }
-
-    return {
-      topics: [...topics].sort(),
-      audience: {
-        contact: hasContact,
-        circle: hasCircle,
-        community: hasCommunity,
-      },
-      statuses: {
-        inProgress: hasInProgress,
-        paused: hasPaused,
-        completed: hasCompleted,
-      },
-      responses: { none: hasNoResponses, has: hasWithResponses },
-    };
+    return computeMyRequestFilterOptions(myRequestsData);
   }, [myRequestsData]);
 
   const activeFilterCount = countActiveFilters(sidebarFilters);
@@ -658,7 +485,7 @@ export default function InteractionsPage() {
               <header className="mb-10 flex items-center justify-between gap-4">
                 <div className="flex flex-col gap-1">
                   <h1 className="font-serif text-5xl font-normal leading-none">
-                    My Help Activity
+                    Help Activity
                   </h1>
                   <p className="text-lg text-muted-foreground">
                     All the ways you help and get help — in one place.
@@ -1009,16 +836,16 @@ export default function InteractionsPage() {
                             onSort={handleSort}
                           />
                           <TableBody className="[&_tr]:bg-card">
-                            {sortedRequests.map((request: any) => (
+                            {sortedRequests.map((request) => (
                               <OutgoingRequestCard
                                 key={request.id}
                                 request={request}
                                 hideUnpromoted={false}
                                 contacts={askContacts}
                                 onDelete={handleDeleteRequest}
-                                onUpdate={(updated: any) =>
-                                  setMyRequestsData((prev: any[]) =>
-                                    prev.map((item: any) =>
+                                onUpdate={(updated) =>
+                                  setMyRequestsData((prev) =>
+                                    prev.map((item) =>
                                       item.id === updated.id ? updated : item,
                                     ),
                                   )
@@ -1031,16 +858,16 @@ export default function InteractionsPage() {
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {filteredRequests.map((request: any) => (
+                        {filteredRequests.map((request) => (
                           <OutgoingRequestCard
                             key={request.id}
                             request={request}
                             hideUnpromoted={false}
                             contacts={askContacts}
                             onDelete={handleDeleteRequest}
-                            onUpdate={(updated: any) =>
-                              setMyRequestsData((prev: any[]) =>
-                                prev.map((item: any) =>
+                            onUpdate={(updated) =>
+                              setMyRequestsData((prev) =>
+                                prev.map((item) =>
                                   item.id === updated.id ? updated : item,
                                 ),
                               )

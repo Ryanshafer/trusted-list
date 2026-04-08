@@ -113,10 +113,10 @@ export default function WaitlistCTA() {
                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-amber-50/40 via-stone-50/20 to-stone-100/10" />
                     <div className="relative z-10 flex flex-col items-center text-center">
                         <div className="space-y-4 max-w-3xl">
-                            <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-none">
+                            <h3 className="font-serif text-4xl md:text-6xl tracking-tight text-slate-900 leading-tighter font-medium">
                                 Curious about a  <br className="hidden md:block" /> better kind of network?
                             </h3>
-                            <p className="text-lg md:text-2xl text-slate-600 leading-relaxed">
+                            <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
                                 {isInvited ? (
                                     <>
                                         {inviterFirstName} vouched for you.
