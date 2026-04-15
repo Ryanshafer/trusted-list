@@ -1,0 +1,1 @@
+import{t as s}from"./index.aCt9RqiN.js";const r={position:"bottom-right"},i={success:(o,t)=>s.success(o,{...r,...t}),error:(o,t)=>s.error(o,{...r,...t}),info:(o,t)=>s.info(o,{...r,...t}),warning:(o,t)=>s.warning(o,{...r,...t})};export{i as t};
