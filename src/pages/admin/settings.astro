@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InviteSettingsPage from "../../features/admin/components/InviteSettingsPage";
+---
+
+<BaseLayout
+  title="Invite Settings — Admin"
+  description="Configure invite quotas, renewal periods, and approval rules."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <InviteSettingsPage client:load slot="main" />
+</BaseLayout>

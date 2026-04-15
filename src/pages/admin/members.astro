@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MembersPage from "../../features/admin/components/MembersPage";
+---
+
+<BaseLayout
+  title="Members — Admin"
+  description="Manage Trusted List members."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <MembersPage client:load slot="main" />
+</BaseLayout>

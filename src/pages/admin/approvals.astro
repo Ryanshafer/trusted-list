@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ApprovalQueuePage from "../../features/admin/components/ApprovalQueuePage";
+---
+
+<BaseLayout
+  title="Approval Queue — Admin"
+  description="Review and action pending member applications."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <ApprovalQueuePage client:load slot="main" />
+</BaseLayout>

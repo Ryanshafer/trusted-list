@@ -36,10 +36,16 @@ export function InviteDialog({
   open,
   onOpenChange,
   onSubmit,
+  title = "Nominate someone for The Trusted List",
+  description = "Great nominations start with great contact details.",
+  submitLabel,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit?: (payload: InvitePayload) => void;
+  title?: string;
+  description?: string;
+  submitLabel?: string;
 }) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -116,7 +122,7 @@ export function InviteDialog({
         onClick={handleSubmit}
         type="button"
       >
-        {name ? `Nominate ${name}` : "Nominate"}
+        {submitLabel ?? (name ? `Nominate ${name}` : "Nominate")}
       </Button>
     </div>
   );
@@ -125,8 +131,8 @@ export function InviteDialog({
     <BaseDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Nominate someone for The Trusted List"
-      description="Great nominations start with great contact details."
+      title={title}
+      description={description}
       size="xl"
       footerContent={footerContent}
     >

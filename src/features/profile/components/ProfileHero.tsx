@@ -231,7 +231,7 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
                       <Badge
                         key={skill}
                         variant="outline"
-                        className="rounded-full border-border bg-background text-xs font-medium text-muted-foreground px-2 py-0.5"
+                        className="rounded-full border-primary/50 bg-background text-xs font-medium text-muted-foreground px-2 py-0.5"
                       >
                         {skill}
                       </Badge>

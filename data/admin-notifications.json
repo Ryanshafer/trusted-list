@@ -1,0 +1,88 @@
+[
+  {
+    "id": "an-1",
+    "type": "member_application",
+    "read": false,
+    "relativeTime": "2m ago",
+    "actor": {
+      "id": "u-101",
+      "name": "Jordan Lee",
+      "avatarUrl": null,
+      "trustedFor": ["Product Design", "UX Research"]
+    },
+    "payload": {}
+  },
+  {
+    "id": "an-2",
+    "type": "payment_failed",
+    "read": false,
+    "relativeTime": "18m ago",
+    "actor": {
+      "id": "u-202",
+      "name": "Marcus Webb",
+      "avatarUrl": null,
+      "trustedFor": ["Frontend Engineering"]
+    },
+    "payload": { "amount": "$49.00" }
+  },
+  {
+    "id": "an-3",
+    "type": "member_application",
+    "read": false,
+    "relativeTime": "45m ago",
+    "actor": {
+      "id": "u-103",
+      "name": "Priya Nair",
+      "avatarUrl": null,
+      "trustedFor": ["Brand Strategy", "B2B SaaS"]
+    },
+    "payload": {}
+  },
+  {
+    "id": "an-4",
+    "type": "content_flagged",
+    "read": false,
+    "relativeTime": "1h ago",
+    "actor": null,
+    "payload": { "requestTitle": "Looking for a React performance consultant" }
+  },
+  {
+    "id": "an-5",
+    "type": "subscription_expiring",
+    "read": true,
+    "relativeTime": "3h ago",
+    "actor": {
+      "id": "u-305",
+      "name": "Aisha Okonkwo",
+      "avatarUrl": null,
+      "trustedFor": ["Executive Leadership"]
+    },
+    "payload": { "expiresOn": "Apr 18, 2026" }
+  },
+  {
+    "id": "an-6",
+    "type": "payment_failed",
+    "read": true,
+    "relativeTime": "5h ago",
+    "actor": {
+      "id": "u-406",
+      "name": "Daniel Cho",
+      "avatarUrl": null,
+      "trustedFor": ["AI / ML", "Backend Engineering"]
+    },
+    "payload": { "amount": "$49.00" }
+  },
+  {
+    "id": "an-7",
+    "type": "member_application",
+    "read": true,
+    "relativeTime": "Yesterday",
+    "actor": {
+      "id": "u-507",
+      "name": "Sofia Reyes",
+      "avatarUrl": null,
+      "trustedFor": ["Growth", "Community Building"]
+    },
+    "payload": {}
+  }
+]

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import gemUrl from "../../assets/gem.svg?url";
 
 interface Particle {
     id: number;
@@ -62,6 +63,7 @@ interface AutoClumpVectorFieldProps {
     activateOnVisible?: boolean;
     pulseDelayMs?: number;
     onPrimarySequenceComplete?: () => void;
+    quiet?: boolean;
 }
 
 const DEFAULT_PARTICLE_RGB = "0, 163, 173";
@@ -73,6 +75,7 @@ const LARGE_NODE_IMAGE =
     "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&h=150&auto=format&fit=crop";
 const SMALL_NODE_IMAGE =
     "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=150&h=150&auto=format&fit=crop";
+const GEM_DRAW_SIZE = 72;
 const LARGE_NODE_BASE_SCALE = 0.8;
 const LARGE_NODE_GROWTH_TARGET = 3;
 const SMALL_NODE_GROWTH_TARGET = 0.55;
@@ -167,6 +170,7 @@ export const AutoClumpVectorField = ({
     activateOnVisible = false,
     pulseDelayMs = 2200,
     onPrimarySequenceComplete,
+    quiet = false,
 }: AutoClumpVectorFieldProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
@@ -188,9 +192,14 @@ export const AutoClumpVectorField = ({
         small: null,
         large: null,
     });
+    const gemNodeIdRef = useRef<number | null>(null);
     const onPrimarySequenceCompleteRef = useRef(onPrimarySequenceComplete);
 
-    const [config, setConfig] = useState<VectorFieldConfig>(DEFAULT_CONFIG);
+    const [config, setConfig] = useState<VectorFieldConfig>(
+        quiet
+            ? { ...DEFAULT_CONFIG, desktopParticleCount: 30, mobileParticleCount: 15, nodeMinSize: 6, nodeMaxSize: 40, pulseSpawnChance: 0.00008 }
+            : DEFAULT_CONFIG
+    );
     const configRef = useRef(config);
     const [isControlsOpen, setIsControlsOpen] = useState(false);
     const [isActive, setIsActive] = useState(!activateOnVisible);
@@ -240,7 +249,8 @@ export const AutoClumpVectorField = ({
 
         loadImage(SMALL_NODE_IMAGE, "small");
         loadImage(LARGE_NODE_IMAGE, "large");
-    }, []);
+
+    }, [quiet]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -381,6 +391,25 @@ export const AutoClumpVectorField = ({
             roleNodeRef.current.smallId = smallNode?.id ?? null;
             roleNodeRef.current.largeId = largeNode?.id ?? null;
 
+            if (quiet) {
+                const gemId = particlesRef.current.length;
+                gemNodeIdRef.current = gemId;
+                particlesRef.current.push({
+                    id: gemId,
+                    x: clusterCenter.x,
+                    y: clusterCenter.y,
+                    vx: 0,
+                    vy: 0,
+                    size: GEM_DRAW_SIZE / 2,
+                    alpha: 1,
+                    boost: 0,
+                    targetBoost: 0,
+                    settledBoost: 0,
+                });
+            } else {
+                gemNodeIdRef.current = null;
+            }
+
             hasEventPulseFiredRef.current = false;
             eventPulseTargetAtRef.current = performance.now() + pulseDelayMs;
             pendingSmallBoostRef.current = { nodeId: null, fireAt: 0 };
@@ -444,6 +473,15 @@ export const AutoClumpVectorField = ({
             const crowdedFlags = new Array<boolean>(particlesRef.current.length).fill(false);
 
             particlesRef.current.forEach((p) => {
+                // Gem node stays pinned to center
+                if (quiet && p.id === gemNodeIdRef.current) {
+                    p.x = clusterCenter.x;
+                    p.y = clusterCenter.y;
+                    p.vx = 0;
+                    p.vy = 0;
+                    return;
+                }
+
                 const dxCenter = clusterCenter.x - p.x;
                 const dyCenter = clusterCenter.y - p.y;
                 const distCenter = Math.sqrt(dxCenter * dxCenter + dyCenter * dyCenter) || 1;
@@ -566,13 +604,13 @@ export const AutoClumpVectorField = ({
                         (p1.id === roleNodeRef.current.smallId && p2.id === roleNodeRef.current.largeId) ||
                         (p1.id === roleNodeRef.current.largeId && p2.id === roleNodeRef.current.smallId);
                     const shouldDrawLink =
-                        dist < linkDistance || isImagePair;
+                        dist < linkDistance || (!quiet && isImagePair);
                     if (!shouldDrawLink) continue;
 
                     ctx.beginPath();
                     ctx.moveTo(p1.x, p1.y);
                     ctx.lineTo(p2.x, p2.y);
-                    if (isImagePair) {
+                    if (!quiet && isImagePair) {
                         ctx.strokeStyle = `rgba(${DEFAULT_LINK_RGB}, 0.62)`;
                         ctx.lineWidth = 1;
                     } else {
@@ -580,6 +618,18 @@ export const AutoClumpVectorField = ({
                         ctx.lineWidth = 1;
                     }
                     ctx.stroke();
+
+                    // In quiet mode, randomly spawn pulses between any connected pair
+                    if (quiet && dist >= cfg.pulseMinLinkDistance && pulsesRef.current.length < cfg.maxActivePulses) {
+                        const alreadyActive = pulsesRef.current.some(
+                            (pulse) => (pulse.fromId === p1.id && pulse.toId === p2.id) ||
+                                       (pulse.fromId === p2.id && pulse.toId === p1.id)
+                        );
+                        if (!alreadyActive && Math.random() < cfg.pulseSpawnChance) {
+                            const [from, to] = Math.random() < 0.5 ? [p1, p2] : [p2, p1];
+                            pulsesRef.current.push({ fromId: from.id, toId: to.id, progress: 0 });
+                        }
+                    }
                 }
             }
 
@@ -612,13 +662,15 @@ export const AutoClumpVectorField = ({
                 pulse.progress += cfg.pulseSpeed;
 
                 if (pulse.progress >= dist) {
-                    // Stagger growth: large node pops first, then small node follows.
-                    to.settledBoost = Math.max(to.settledBoost, cfg.imagePersistentGrowth);
-                    to.targetBoost = Math.max(to.targetBoost, LARGE_NODE_GROWTH_TARGET);
-                    pendingSmallBoostRef.current = {
-                        nodeId: from.id,
-                        fireAt: performance.now() + 800,
-                    };
+                    if (!quiet) {
+                        // Stagger growth: large node pops first, then small node follows.
+                        to.settledBoost = Math.max(to.settledBoost, cfg.imagePersistentGrowth);
+                        to.targetBoost = Math.max(to.targetBoost, LARGE_NODE_GROWTH_TARGET);
+                        pendingSmallBoostRef.current = {
+                            nodeId: from.id,
+                            fireAt: performance.now() + 800,
+                        };
+                    }
                     pulsesRef.current.splice(i, 1);
                     continue;
                 }
@@ -688,11 +740,25 @@ export const AutoClumpVectorField = ({
                 const isSmall = p.id === roleNodeRef.current.smallId;
                 const isLarge = p.id === roleNodeRef.current.largeId;
 
-                if (isSmall && imageRef.current.small) {
+                if (quiet && p.id === gemNodeIdRef.current) {
+                    const r = GEM_DRAW_SIZE / 2;
+                    const bgR = r + 20;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, bgR, 0, Math.PI * 2);
+                    ctx.fillStyle = "white";
+                    ctx.shadowColor = "rgba(0,0,0,0.1)";
+                    ctx.shadowBlur = 12;
+                    ctx.fill();
+                    ctx.restore();
+                    return;
+                }
+
+                if (!quiet && isSmall && imageRef.current.small) {
                     drawImageNode(p, imageRef.current.small);
                     return;
                 }
-                if (isLarge && imageRef.current.large) {
+                if (!quiet && isLarge && imageRef.current.large) {
                     drawImageNode(p, imageRef.current.large, LARGE_NODE_BASE_SCALE);
                     return;
                 }
@@ -719,7 +785,7 @@ export const AutoClumpVectorField = ({
             window.removeEventListener("resize", handleResize);
             if (animationRef.current) window.cancelAnimationFrame(animationRef.current);
         };
-    }, [isActive, pulseDelayMs]);
+    }, [isActive, pulseDelayMs, quiet]);
 
     const shouldRenderControls = isControlsOpen;
 
@@ -728,8 +794,37 @@ export const AutoClumpVectorField = ({
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 h-full w-full"
-                style={{ width: "100%", height: "100%" }}
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    ...(quiet && isActive && {
+                        opacity: 1,
+                        animation: "quietFadeIn 4s ease-out forwards",
+                    }),
+                    ...(quiet && !isActive && { opacity: 0.1 }),
+                }}
             />
+            {quiet && (
+                <img
+                    src={gemUrl}
+                    width={GEM_DRAW_SIZE}
+                    height={GEM_DRAW_SIZE}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%-2px)]"
+                    style={{
+                        opacity: isActive ? 1 : 0.1,
+                        ...(isActive && { animation: "quietFadeIn 4s ease-out forwards" }),
+                    }}
+                />
+            )}
+            {quiet && (
+                <style>{`
+                    @keyframes quietFadeIn {
+                        from { opacity: 0.1; }
+                        to   { opacity: 1; }
+                    }
+                `}</style>
+            )}
 
             {shouldRenderControls && (
                 <div className="absolute right-3 top-3 z-40 pointer-events-auto md:right-5 md:top-5">

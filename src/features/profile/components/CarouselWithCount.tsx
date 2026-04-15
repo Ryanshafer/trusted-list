@@ -8,7 +8,13 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, SquarePen } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ChevronLeft, ChevronRight, Info, SquarePen } from "lucide-react";
 
 interface CarouselWithCountProps {
   title: string;
@@ -18,6 +24,7 @@ interface CarouselWithCountProps {
   filterSkills?: string[];
   actionLabel?: string;
   onActionClick?: () => void;
+  infoTooltip?: string;
   items: ReactNode[];
   itemBasis?: string;
   showWhenEmpty?: boolean;
@@ -31,6 +38,7 @@ export function CarouselWithCount({
   filterSkills = [],
   actionLabel,
   onActionClick,
+  infoTooltip,
   items,
   itemBasis = "basis-[340px]",
   showWhenEmpty = false,
@@ -75,6 +83,25 @@ export function CarouselWithCount({
             <span className="text-xs font-semibold uppercase text-muted-foreground">
               {filterLabel}
             </span>
+            {infoTooltip && (
+              <TooltipProvider delayDuration={150}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5 rounded-full text-muted-foreground hover:text-foreground"
+                      aria-label="More info"
+                    >
+                      <Info className="h-3.5 w-3.5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-64 text-xs leading-snug">
+                    {infoTooltip}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
             {filterSkills.map((skill) => (
               <Badge
                 key={skill}

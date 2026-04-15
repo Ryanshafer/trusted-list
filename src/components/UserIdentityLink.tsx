@@ -32,6 +32,12 @@ export function UserIdentityLink({
   children,
   onClick,
 }: UserIdentityLinkProps) {
+  // Add validation for connectionDegree
+  const validConnectionDegrees = ["1st", "2nd"];
+  const validatedConnectionDegree = validConnectionDegrees.includes(connectionDegree || "")
+    ? connectionDegree
+    : undefined;
+
   const getAvatarSize = () => {
     switch (avatarSize) {
       case "sm": return "h-10 w-10";
@@ -79,9 +85,9 @@ export function UserIdentityLink({
           <span className={nameClasses}>
             {name}
           </span>
-          {connectionDegree && (
+          {validatedConnectionDegree && (
             <Badge className="rounded-full border border-neutral-200 bg-neutral-100 hover:bg-neutral-100 px-2 py-0.5 text-xs font-semibold leading-4 text-neutral-800">
-              {connectionDegree}
+              {validatedConnectionDegree}
             </Badge>
           )}
         </div>
@@ -108,3 +114,4 @@ export function UserIdentityLink({
     </div>
   );
 }
+

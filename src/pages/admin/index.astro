@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AdminShell from "../../features/admin/components/AdminShell";
+---
+
+<BaseLayout
+  title="Admin — Trusted List"
+  description="Admin dashboard for The Trusted List."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <AdminShell client:load slot="main" />
+</BaseLayout>

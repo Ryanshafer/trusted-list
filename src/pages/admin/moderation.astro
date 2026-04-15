@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ModerationQueuePage from "../../features/admin/components/ModerationQueuePage";
+---
+
+<BaseLayout
+  title="Moderation Queue — Admin"
+  description="Review and resolve reported content in the moderation queue."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <ModerationQueuePage client:load slot="main" />
+</BaseLayout>

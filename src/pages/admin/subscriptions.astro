@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SubscriptionsPage from "../../features/admin/components/SubscriptionsPage";
+---
+
+<BaseLayout
+  title="Subscriptions — Admin"
+  description="Manage active member subscriptions."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <SubscriptionsPage client:load slot="main" />
+</BaseLayout>

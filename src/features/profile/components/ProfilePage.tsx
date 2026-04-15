@@ -108,8 +108,9 @@ export function ProfilePage({
                     title={`${profile.firstName}'s contributions`}
                     totalCount={profile.contributions.items.length}
                     countLabel="Contributions"
-                    filterLabel="Skills in action"
+                    filterLabel="Proven skills"
                     filterSkills={profile.contributions.skillsInAction}
+                    infoTooltip="Proven by your help contributions and feedback received when closing the loop."
                     items={contributionCards}
                     itemBasis="basis-96"
                   />

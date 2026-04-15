@@ -639,7 +639,7 @@ export default function RequestDetailPage({ id }: { id: string }) {
                     ).slice(0, 3).map((skill) => (
                       <span
                         key={skill}
-                        className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold text-muted-foreground bg-background border border-border leading-4"
+                        className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold text-muted-foreground bg-background border border-primary/50 leading-4"
                       >
                         {skill}
                       </span>

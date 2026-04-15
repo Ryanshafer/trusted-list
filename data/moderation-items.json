@@ -1,0 +1,86 @@
+[
+  {
+    "id": "mod-001",
+    "requestId": "req-product-1",
+    "reason": "Spam or scam",
+    "complaintText": "This member has been posting repeated promotional links inside help requests, directing community members to an external cryptocurrency investment platform. The links appear to be phishing attempts designed to harvest personal and financial information from trusted members.",
+    "reportedAt": "2026-04-14T09:15:00Z",
+    "reporter": {
+      "name": "Jordan Lee",
+      "email": "jordan@startup.io",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop"
+    }
+  },
+  {
+    "id": "mod-002",
+    "requestId": "req-career-1",
+    "reason": "Harassment or bullying",
+    "complaintText": "A member has been sending targeted, hostile messages to several junior community members. The messages include personal attacks and deliberate attempts to discourage them from posting help requests or participating in discussions. At least four members have filed independent reports.",
+    "reportedAt": "2026-04-13T16:42:00Z",
+    "reporter": {
+      "name": "Alex Morgan",
+      "email": "alex@company.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop"
+    }
+  },
+  {
+    "id": "mod-003",
+    "requestId": "req-business-1",
+    "reason": "Misinformation",
+    "complaintText": "This member's response in the Finance & Legal category contained factually incorrect legal advice, presented as authoritative guidance. At least two members have already acted on the advice. The content should be reviewed and removed to prevent further harm.",
+    "reportedAt": "2026-04-12T11:30:00Z",
+    "reporter": {
+      "name": "Sam Rivera",
+      "email": "srivera@corp.net",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop"
+    }
+  },
+  {
+    "id": "mod-004",
+    "requestId": "req-career-2",
+    "reason": "Violence or threats",
+    "complaintText": "Following a disagreement over a help request outcome, this member posted a response containing explicit threats directed at the original requester. Screenshots have been preserved by the reporting member. The threatening language was specific and personal in nature.",
+    "reportedAt": "2026-04-11T08:05:00Z",
+    "reporter": {
+      "name": "Taylor Kim",
+      "email": "tkim@design.co",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=120&h=120&fit=crop"
+    }
+  },
+  {
+    "id": "mod-005",
+    "requestId": "req-product-3",
+    "reason": "Illegal activity",
+    "complaintText": "A member appears to be using the platform to solicit others for activities that violate financial regulations. They are offering unregistered investment advice and collecting off-platform fees in exchange for guaranteed returns — a pattern consistent with securities fraud.",
+    "reportedAt": "2026-04-10T14:20:00Z",
+    "reporter": {
+      "name": "Casey Chen",
+      "email": "c.chen@enterprise.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=120&h=120&fit=crop"
+    }
+  },
+  {
+    "id": "mod-006",
+    "requestId": "req-design-1",
+    "reason": "Hate or hateful conduct",
+    "complaintText": "This member's profile bio and several help responses contain language that is derogatory toward a specific ethnic group. The content was independently reported by three separate members, each noting it created a hostile and unwelcoming environment.",
+    "reportedAt": "2026-04-09T19:00:00Z",
+    "reporter": {
+      "name": "Priya Nair",
+      "email": "p.nair@northwind.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop"
+    }
+  },
+  {
+    "id": "mod-007",
+    "requestId": "req-career-3",
+    "reason": "Other",
+    "complaintText": "A member appears to be operating multiple accounts under different names and using them to cross-vouch in order to artificially inflate Trust Scores. The accounts share IP addresses and the vouch patterns are highly irregular when compared to organic trust-building behavior.",
+    "reportedAt": "2026-04-08T10:45:00Z",
+    "reporter": {
+      "name": "Marcus Bell",
+      "email": "m.bell@relay.co",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop"
+    }
+  }
+]

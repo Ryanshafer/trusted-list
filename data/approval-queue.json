@@ -1,0 +1,156 @@
+[
+  {
+    "id": "aq-001",
+    "applicant": {
+      "id": "user-devon-hart",
+      "name": "Devon Hart",
+      "email": "devon.hart@strataworks.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop",
+      "title": "Engineering Manager",
+      "company": "StrataWorks",
+      "location": "Seattle, WA",
+      "linkedInUrl": "https://www.linkedin.com/in/devonhart-eng"
+    },
+    "inviter": {
+      "id": "user-marcus-bell",
+      "name": "Marcus Bell",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+      "title": "VP of Product",
+      "company": "Relay"
+    },
+    "recommendationText": "Devon is one of the most thoughtful EMs I've worked with. She runs a high-trust team and has a rare ability to translate ambiguous product goals into clear engineering roadmaps. I'd vouch for her ability to help people navigate complex organisational dynamics.",
+    "appliedAt": "2024-08-15T09:32:00Z",
+    "requiresVote": true,
+    "votes": [],
+    "status": "Pending"
+  },
+  {
+    "id": "aq-002",
+    "applicant": {
+      "id": "user-taylor-kim",
+      "name": "Taylor Kim",
+      "email": "tkim@designco.studio",
+      "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=120&h=120&fit=crop",
+      "title": "Brand Strategist",
+      "company": "Design Co.",
+      "location": "Los Angeles, CA",
+      "linkedInUrl": "https://www.linkedin.com/in/taylorkim-brand"
+    },
+    "inviter": {
+      "id": "user-jen-wu",
+      "name": "Jen Wu",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+      "title": "Design Director",
+      "company": "Acme Corp"
+    },
+    "recommendationText": "Taylor is exceptional at turning brand chaos into coherent identity systems. I've watched her take three competing stakeholder visions and create something everyone actually rallied around. Her empathy for both the business and the end user is genuine.",
+    "appliedAt": "2024-09-03T14:18:00Z",
+    "requiresVote": true,
+    "votes": [
+      { "adminId": "user-monica-jonas", "adminName": "Monica Jonas", "votedAt": "2024-09-04T10:00:00Z", "decision": "approve" }
+    ],
+    "status": "Pending"
+  },
+  {
+    "id": "aq-003",
+    "applicant": {
+      "id": "user-felix-andrade",
+      "name": "Felix Andrade",
+      "email": "felix@helix.co",
+      "avatarUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&h=120&fit=crop",
+      "title": "Product Designer",
+      "company": "Helix",
+      "location": "Miami, FL",
+      "linkedInUrl": "https://www.linkedin.com/in/felixandrade-design"
+    },
+    "inviter": {
+      "id": "user-priya-nair",
+      "name": "Priya Nair",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop",
+      "title": "Principal Product Designer",
+      "company": "Northwind Systems"
+    },
+    "recommendationText": "Felix has one of the sharpest eyes for interaction detail I've encountered in a junior designer. He instinctively questions every assumption, ships polished work, and never lets the craft slip even under pressure. He'll level up anyone he works with.",
+    "appliedAt": "2024-10-18T11:45:00Z",
+    "requiresVote": true,
+    "votes": [],
+    "status": "Pending"
+  },
+  {
+    "id": "aq-004",
+    "applicant": {
+      "id": "user-morgan-oakes",
+      "name": "Morgan Oakes",
+      "email": "morgan@pivotlabs.io",
+      "avatarUrl": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=120&h=120&fit=crop",
+      "title": "Product Manager",
+      "company": "Pivot Labs",
+      "location": "Denver, CO",
+      "linkedInUrl": "https://www.linkedin.com/in/morganoakes"
+    },
+    "inviter": {
+      "id": "user-sam-smith",
+      "name": "Sam Smith",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+      "title": "Head of Product",
+      "company": "Fieldwork"
+    },
+    "recommendationText": "Morgan is the PM I wish I'd had earlier in my career. She builds bridges between engineering and design that most people burn down. She is deeply user-focused, never lets process become a substitute for thinking, and is quietly one of the best at running discovery I've seen.",
+    "appliedAt": "2024-07-20T16:05:00Z",
+    "requiresVote": true,
+    "votes": [],
+    "status": "Pending"
+  },
+  {
+    "id": "aq-005",
+    "applicant": {
+      "id": "user-casey-chen",
+      "name": "Casey Chen",
+      "email": "c.chen@enterprise.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=120&h=120&fit=crop",
+      "title": "Director of Operations",
+      "company": "EnterpriseOS",
+      "location": "San Jose, CA",
+      "linkedInUrl": "https://www.linkedin.com/in/caseychen-ops"
+    },
+    "inviter": {
+      "id": "user-alex-rivera",
+      "name": "Alex Rivera",
+      "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&h=120&fit=crop",
+      "title": "VP of Growth",
+      "company": "Lumio"
+    },
+    "recommendationText": "Casey runs operations the way great product leaders run product. She is obsessed with the underlying systems, always measuring outcomes over activity, and has an uncanny ability to find the one process change that unlocks ten downstream improvements.",
+    "appliedAt": "2024-06-11T08:20:00Z",
+    "requiresVote": true,
+    "votes": [
+      { "adminId": "user-jen-wu", "adminName": "Jen Wu", "votedAt": "2024-06-12T14:30:00Z", "decision": "approve" }
+    ],
+    "status": "Pending"
+  },
+  {
+    "id": "aq-006",
+    "applicant": {
+      "id": "user-cole-huang",
+      "name": "Cole Huang",
+      "email": "cole@strikezone.io",
+      "avatarUrl": "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=120&h=120&fit=crop",
+      "title": "GTM Lead",
+      "company": "StrikeZone",
+      "location": "San Francisco, CA",
+      "linkedInUrl": "https://www.linkedin.com/in/colehuang-gtm"
+    },
+    "inviter": {
+      "id": "user-benedict-cumberbatch",
+      "name": "Benedict Cumberbatch",
+      "avatarUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&h=120&fit=crop",
+      "title": "Director of Infrastructure",
+      "company": "PulseGrid"
+    },
+    "recommendationText": "Cole has helped three B2B startups I know build GTM motions that actually stuck. He combines deep market intuition with the ability to run fast, low-ego experiments. He is the kind of person who makes everyone around him sharper about how they think about go-to-market.",
+    "appliedAt": "2024-05-07T13:00:00Z",
+    "requiresVote": true,
+    "votes": [],
+    "status": "Pending"
+  }
+]

@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import gemUrl from "../../../assets/gem.svg?url";
+import handsUrl from "../../../assets/images/hands.svg?url";
 
 import dashboardData from "../../../../data/dashboard-content.json";
 import dashboardLayout from "../../../../data/dashboard-layout.json";
@@ -93,6 +95,11 @@ const AppShell = () => {
     }
   );
 
+  const [altState] = React.useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return new URLSearchParams(window.location.search).get("altState");
+  });
+
   const [askDialogOpen, setAskDialogOpen] = React.useState(false);
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [inviteDialogOpen, setInviteDialogOpen] = React.useState(false);
@@ -145,19 +152,32 @@ const AppShell = () => {
                     How can you help today?
                   </h3>
                 </div>
-                <span className="inline-flex items-center gap-1 text-base text-muted-foreground sm:text-lg">
-                  You've got 
-                <a
-                  href={`#${firstSectionAnchorId}`}
-                  className="text-base sm:text-lg text-primary hover:text-primary-75 transition-colors bg-primary-10 px-1 rounded-xs"
-                >
-                  {introRequestCount} new requests 
-                </a>
-                for help from your inner circle.
-                </span>
+                {altState === "no-requests" ? (
+                  <span className="text-base text-muted-foreground sm:text-lg">
+                    Your inner circle is all caught up.{" "}
+                    <a
+                      href="/trusted-list/requests"
+                      className="text-base sm:text-lg text-primary hover:text-primary-75 transition-colors bg-primary-10 px-1 rounded-xs"
+                    >
+                      Browse the community
+                    </a>{" "}
+                    and be someone's next big help.
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-base text-muted-foreground sm:text-lg">
+                    You've got{" "}
+                    <a
+                      href={`#${firstSectionAnchorId}`}
+                      className="text-base sm:text-lg text-primary hover:text-primary-75 transition-colors bg-primary-10 px-1 rounded-xs"
+                    >
+                      {introRequestCount} new requests
+                    </a>{" "}
+                    for help from your inner circle.
+                  </span>
+                )}
               </header>
 
-              <TrustScoreSection />
+              <TrustScoreSection emptyOpportunities={altState === "no-opportunities"} />
               <div className="flex gap-6 lg:gap-8">
                 <HelpRequestStartModule
                   selectedCategory={selectedCategory}
@@ -168,7 +188,7 @@ const AppShell = () => {
               </div>
 
               <main className="space-y-10 mt-6">
-                {sectionOrder.map((key, idx) => (
+                {(altState === "no-requests" ? sectionOrder.filter((k) => k === "community") : sectionOrder).map((key, idx) => (
                   <HelpSection
                     key={key}
                     section={key}
@@ -298,7 +318,7 @@ const TRUST_TIERS = [
 
 // ── TrustScoreSection ─────────────────────────────────────────────────────────
 
-const TrustScoreSection = () => {
+const TrustScoreSection = ({ emptyOpportunities = false }: { emptyOpportunities?: boolean }) => {
   const actualTierIndex = React.useMemo(() => getInitialTierIndex(dashboardUser.trustScore), []);
   const [displayTierIndex, setDisplayTierIndex] = React.useState(0);
   const pendingTimeoutsRef = React.useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -377,36 +397,65 @@ const TrustScoreSection = () => {
           </AnimatePresence>
         </div>
 
-        {/* Col 3: Opportunities list */}
+        {/* Col 3: Opportunities list / promo */}
         <div className="flex flex-col pl-3 py-1.5 gap-2">
-          <div className="px-2 py-1">
-            <p className="font-serif text-xl text-card-foreground leading-7">
-              Your opportunities to follow through:
-            </p>
-          </div>
-          <div className="flex flex-col gap-2 flex-1">
-            {interactions.inProgress.map((item: InteractionCard) => (
-              <TrustTierCard
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                requestSummary={item.requestSummary ?? undefined}
-                avatarUrl={item.avatarUrl ?? undefined}
-                href={`/trusted-list/interactions?tab=in-progress&open=${item.id}`}
-              />
-            ))}
-          </div>
-          <div className="flex justify-end pr-2 pb-1">
-            <Button
-              variant="ghost"
-              className="rounded-full font-medium text-sm text-card-foreground hover:text-primary hover:bg-primary/10 h-auto px-4 py-2 leading-none gap-2 transition-colors"
-              asChild
-            >
-              <a href="/trusted-list/interactions?tab=in-progress">
-                See all opportunities <ChevronRight className="h-4 w-4" />
-              </a>
-            </Button>
-          </div>
+          {emptyOpportunities ? (
+            <>
+              <div className="px-2 py-1">
+                <img src={handsUrl} alt="" aria-hidden="true" className="h-25 w-25 bg-primary/10 rounded-full border-3 border-primary-foreground shadow-md" />
+              </div>
+              <div className="flex flex-col items-left justify-center gap-4 flex-1 px-3 pb-2">
+                <p className="font-serif text-2xl text-card-foreground">
+                  Someone could use your help
+                </p>
+                <p className="text-sm leading-relaxed">
+                  You have no active help in progress. There are open requests that match your skills. Find one worth your time.
+                </p>
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    className="rounded-full font-medium text-sm text-card-foreground hover:text-primary hover:bg-primary/10 h-auto px-4 py-2 leading-none gap-2 transition-colors"
+                    asChild
+                  >
+                    <a href="/trusted-list/requests">
+                      Browse requests <ChevronRight className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="px-2 py-1">
+                <p className="font-serif text-2xl text-card-foreground leading-7 mb-3">
+                  Don’t forget to follow up on these:
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 flex-1">
+                {interactions.inProgress.map((item: InteractionCard) => (
+                  <TrustTierCard
+                    key={item.id}
+                    id={item.id}
+                    name={item.name}
+                    requestSummary={item.requestSummary ?? undefined}
+                    avatarUrl={item.avatarUrl ?? undefined}
+                    href={`/trusted-list/interactions?tab=in-progress&open=${item.id}`}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-end pr-2 pb-1">
+                <Button
+                  variant="ghost"
+                  className="rounded-full font-medium text-sm text-card-foreground hover:text-primary hover:bg-primary/10 h-auto px-4 py-2 leading-none gap-2 transition-colors"
+                  asChild
+                >
+                  <a href="/trusted-list/interactions?tab=in-progress">
+                    See all opportunities <ChevronRight className="h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </article>

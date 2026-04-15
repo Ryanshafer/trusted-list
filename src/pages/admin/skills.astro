@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SkillsPage from "../../features/admin/components/SkillsPage";
+---
+
+<BaseLayout
+  title="Skills — Admin"
+  description="Manage the global list of platform skills."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <SkillsPage client:load slot="main" />
+</BaseLayout>

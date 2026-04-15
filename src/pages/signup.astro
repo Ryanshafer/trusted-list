@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SignupForm } from "../components/signup-form";
+---
+
+<BaseLayout
+  title="Sign up"
+  description="Create your account."
+  bodyClass="bg-primary/20"
+  showHeader={false}
+  showFooter={false}
+>
+  <div slot="main" class="flex min-h-dvh items-center justify-center p-6 md:p-10">
+    <div class="w-full max-w-sm md:max-w-5xl">
+      <SignupForm client:load />
+    </div>
+  </div>
+</BaseLayout>

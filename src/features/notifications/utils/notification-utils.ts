@@ -1,5 +1,6 @@
 import {
   BadgeCheck,
+  CreditCard,
   Flag,
   HandHelping,
   MessageSquare,
@@ -8,6 +9,7 @@ import {
   Star,
   UserCheck,
   UserPlus,
+  Clock,
 } from "lucide-react";
 import type * as React from "react";
 
@@ -21,7 +23,11 @@ export type NotificationType =
   | "feedback_received"
   | "recommendation_outcome"
   | "content_flagged"
-  | "moderation_decision";
+  | "moderation_decision"
+  // Admin-only types
+  | "member_application"
+  | "payment_failed"
+  | "subscription_expiring";
 
 export interface NotificationActor {
   id: string;
@@ -45,11 +51,17 @@ export const REQUESTS_TYPES: NotificationType[] = [
   "circle_new_request",
   "new_message",
   "feedback_received",
+  // Admin
+  "member_application",
+  "payment_failed",
 ];
 
 export const CIRCLE_TYPES: NotificationType[] = [
   "circle_join_request",
   "skill_validated",
+  // Admin
+  "subscription_expiring",
+  "content_flagged",
 ];
 
 export const ACTIONABLE_TYPES: NotificationType[] = [
@@ -126,6 +138,24 @@ export const TYPE_CONFIG: Record<
     systemIconColor: "text-primary",
     label: "Moderation",
   },
+  member_application: {
+    icon: UserPlus,
+    systemBg: "bg-primary/10",
+    systemIconColor: "text-primary",
+    label: "Application",
+  },
+  payment_failed: {
+    icon: CreditCard,
+    systemBg: "bg-destructive/10",
+    systemIconColor: "text-destructive",
+    label: "Payment failed",
+  },
+  subscription_expiring: {
+    icon: Clock,
+    systemBg: "bg-amber-50",
+    systemIconColor: "text-amber-500",
+    label: "Expiring soon",
+  },
 };
 
 export function memberHref(name: string) {
@@ -169,6 +199,12 @@ export function getNotificationBody(notification: Notification): string {
         decisionMap[notification.payload.decision ?? ""] ?? "has been reviewed"
       }`;
     }
+    case "member_application":
+      return "applied to join The Trusted List and is awaiting approval";
+    case "payment_failed":
+      return `Payment of ${notification.payload.amount ?? "—"} failed — subscription has been paused`;
+    case "subscription_expiring":
+      return `Subscription expires on ${notification.payload.expiresOn ?? "—"} — renewal may be needed`;
     default:
       return "";
   }

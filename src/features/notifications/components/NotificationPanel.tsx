@@ -559,7 +559,7 @@ export function NotificationPanel({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="p-0 flex flex-col sm:max-w-[440px] gap-0 [&>button]:hidden"
+        className="p-0 flex flex-col w-full sm:max-w-[440px] gap-0 [&>button]:hidden"
         onOpenAutoFocus={(e) => {
           e.preventDefault();
           closeButtonRef.current?.focus();
