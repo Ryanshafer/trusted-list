@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import { Subscription } from "../types"
+import type { Subscription } from "../types"
 
 interface EditRenewalDialogProps {
   subscription: Subscription | null

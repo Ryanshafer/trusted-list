@@ -31,9 +31,10 @@ async function searchSkills(query: string): Promise<ComboboxItem[]> {
   await new Promise((r) => setTimeout(r, 280));
   const { default: all } = await import("../../../data/skills.json");
   const q = query.toLowerCase();
-  return (all as ComboboxItem[])
-    .filter((s) => s.label.toLowerCase().includes(q))
-    .slice(0, 10);
+  return (all as string[])
+    .filter((s) => s.toLowerCase().includes(q))
+    .slice(0, 10)
+    .map((s) => ({ value: s, label: s }));
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────

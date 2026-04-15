@@ -15,7 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import { Subscription } from "../types"
+import type { Subscription } from "../types"
 
 interface CancelSubscriptionDialogProps {
   subscription: Subscription | null

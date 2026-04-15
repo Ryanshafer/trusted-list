@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge"
-import { Plan, SubStatus } from "./types"
+import type { Plan, SubStatus } from "./types"
 
 export const PLAN_CONFIG: Record<Plan, string> = {
   Pro:   "border-primary/30 bg-primary/10 text-primary",

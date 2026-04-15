@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Subscription, RowAction } from "./types"
+import type { Subscription, RowAction, SubStatus } from "./types"
 import { formatAmount, formatDate, memberInitials } from "./helpers"
 import { PlanBadge, StatusBadge } from "./badges"
 

@@ -15,7 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import { Subscription } from "../types"
+import type { Subscription } from "../types"
 import { formatAmount } from "../helpers"
 
 interface ProcessRefundDialogProps {
