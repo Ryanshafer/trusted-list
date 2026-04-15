@@ -19,7 +19,7 @@
       "company": "Relay"
     },
     "recommendationText": "Devon is one of the most thoughtful EMs I've worked with. She runs a high-trust team and has a rare ability to translate ambiguous product goals into clear engineering roadmaps. I'd vouch for her ability to help people navigate complex organisational dynamics.",
-    "appliedAt": "2024-08-15T09:32:00Z",
+    "appliedAt": "2026-04-12T09:32:00Z",
     "requiresVote": true,
     "votes": [],
     "status": "Pending"
@@ -44,10 +44,10 @@
       "company": "Acme Corp"
     },
     "recommendationText": "Taylor is exceptional at turning brand chaos into coherent identity systems. I've watched her take three competing stakeholder visions and create something everyone actually rallied around. Her empathy for both the business and the end user is genuine.",
-    "appliedAt": "2024-09-03T14:18:00Z",
+    "appliedAt": "2026-04-12T14:18:00Z",
     "requiresVote": true,
     "votes": [
-      { "adminId": "user-monica-jonas", "adminName": "Monica Jonas", "votedAt": "2024-09-04T10:00:00Z", "decision": "approve" }
+      { "adminId": "user-monica-jonas", "adminName": "Monica Jonas", "votedAt": "2026-04-12T10:00:00Z", "decision": "approve" }
     ],
     "status": "Pending"
   },
@@ -71,7 +71,7 @@
       "company": "Northwind Systems"
     },
     "recommendationText": "Felix has one of the sharpest eyes for interaction detail I've encountered in a junior designer. He instinctively questions every assumption, ships polished work, and never lets the craft slip even under pressure. He'll level up anyone he works with.",
-    "appliedAt": "2024-10-18T11:45:00Z",
+    "appliedAt": "2026-04-12T11:45:00Z",
     "requiresVote": true,
     "votes": [],
     "status": "Pending"
@@ -96,7 +96,7 @@
       "company": "Fieldwork"
     },
     "recommendationText": "Morgan is the PM I wish I'd had earlier in my career. She builds bridges between engineering and design that most people burn down. She is deeply user-focused, never lets process become a substitute for thinking, and is quietly one of the best at running discovery I've seen.",
-    "appliedAt": "2024-07-20T16:05:00Z",
+    "appliedAt": "2026-04-12T16:05:00Z",
     "requiresVote": true,
     "votes": [],
     "status": "Pending"
@@ -121,10 +121,10 @@
       "company": "Lumio"
     },
     "recommendationText": "Casey runs operations the way great product leaders run product. She is obsessed with the underlying systems, always measuring outcomes over activity, and has an uncanny ability to find the one process change that unlocks ten downstream improvements.",
-    "appliedAt": "2024-06-11T08:20:00Z",
+    "appliedAt": "2026-04-12T08:20:00Z",
     "requiresVote": true,
     "votes": [
-      { "adminId": "user-jen-wu", "adminName": "Jen Wu", "votedAt": "2024-06-12T14:30:00Z", "decision": "approve" }
+      { "adminId": "user-jen-wu", "adminName": "Jen Wu", "votedAt": "2026-04-12T14:30:00Z", "decision": "approve" }
     ],
     "status": "Pending"
   },
@@ -148,7 +148,7 @@
       "company": "PulseGrid"
     },
     "recommendationText": "Cole has helped three B2B startups I know build GTM motions that actually stuck. He combines deep market intuition with the ability to run fast, low-ego experiments. He is the kind of person who makes everyone around him sharper about how they think about go-to-market.",
-    "appliedAt": "2024-05-07T13:00:00Z",
+    "appliedAt": "2026-04-12T13:00:00Z",
     "requiresVote": true,
     "votes": [],
     "status": "Pending"

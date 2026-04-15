@@ -62,6 +62,7 @@ import {
 } from "@/components/ui/tooltip"
 import currentUserData from "../../../../data/current-user.json"
 import adminNotificationsRaw from "../../../../data/admin-notifications.json"
+import approvalQueueData from "../../../../data/approval-queue.json"
 import { useModerationCount } from "@/features/admin/hooks/useModerationStore"
 import { useApprovalQueueCount } from "@/features/admin/hooks/useApprovalQueueStore"
 import { NotificationPanel, type Notification } from "@/features/notifications/components/NotificationPanel"
@@ -71,6 +72,7 @@ import { NotificationPanel, type Notification } from "@/features/notifications/c
 const base = import.meta.env.BASE_URL ?? "/"
 
 const NAV_ITEMS = [
+  { title: "Dashboard",      url: `${base}admin`,               icon: LayoutDashboard, badge: null as number | null, destructiveBadge: false },
   { title: "Members",        url: `${base}admin/members`,       icon: Users,         badge: null as number | null, destructiveBadge: false },
   { title: "Approval Queue", url: `${base}admin/approvals`,     icon: ClipboardList, badge: null as number | null, destructiveBadge: false },
   { title: "Moderation",     url: `${base}admin/moderation`,    icon: ShieldAlert,   badge: null as number | null, destructiveBadge: true  },
@@ -524,13 +526,30 @@ function DashboardContent() {
     },
   ]
 
-  const queueRows = [
-    { name: "Alex Morgan",   email: "alex@company.com",     type: "New Member",     time: "2m ago"  },
-    { name: "Jordan Lee",    email: "jordan@startup.io",    type: "Profile Update", time: "14m ago" },
-    { name: "Sam Rivera",    email: "srivera@corp.net",     type: "New Member",     time: "31m ago" },
-    { name: "Taylor Kim",    email: "tkim@design.co",       type: "Role Change",    time: "1h ago"  },
-    { name: "Casey Chen",    email: "cchen@enterprise.com", type: "New Member",     time: "2h ago"  },
-  ]
+  // Transform approval queue data to match QueueRow format
+  const queueRows = approvalQueueData.map((item) => {
+    const appliedDate = new Date(item.appliedAt)
+    const now = new Date()
+    const diffMinutes = Math.floor((now - appliedDate) / (1000 * 60))
+
+    let timeAgo
+    if (diffMinutes < 60) {
+      timeAgo = `${diffMinutes}m ago`
+    } else if (diffMinutes < 1440) {
+      const hours = Math.floor(diffMinutes / 60)
+      timeAgo = `${hours}h ago`
+    } else {
+      const days = Math.floor(diffMinutes / 1440)
+      timeAgo = `${days}d ago`
+    }
+
+    return {
+      name: item.applicant.name,
+      email: item.applicant.email,
+      type: "New Member", // All items in approval queue are new members
+      time: timeAgo
+    }
+  }).slice(0, 5) // Show only first 5 items
 
   const activity = [
     {
