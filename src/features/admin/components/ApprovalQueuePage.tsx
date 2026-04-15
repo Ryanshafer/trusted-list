@@ -54,6 +54,25 @@ export default function ApprovalQueuePage() {
     return true
   })
 
+  // Handle URL hash navigation to scroll to specific user
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.substring(1) // Remove the #
+      if (hash) {
+        const element = document.getElementById(hash)
+        if (element) {
+          // Use smooth scrolling
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          // Add a highlight effect
+          element.classList.add('ring-2', 'ring-primary', 'ring-offset-2')
+          setTimeout(() => {
+            element.classList.remove('ring-2', 'ring-primary', 'ring-offset-2')
+          }, 3000)
+        }
+      }
+    }
+  }, [entries])
+
   return (
     <AdminPageLayout>
       <div className="flex flex-col gap-6">

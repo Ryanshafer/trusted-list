@@ -52,7 +52,7 @@ export function ApprovalCard({
 
   return (
     <TooltipProvider delayDuration={150}>
-      <Card className="rounded-xl overflow-hidden transition-shadow hover:shadow-md">
+      <Card id={entry.applicant.id} className="rounded-xl overflow-hidden transition-shadow hover:shadow-md">
         {/* Card header */}
         <div className="flex items-start gap-4 p-5">
           <Avatar className="h-11 w-11 shrink-0 rounded-full border border-border">
