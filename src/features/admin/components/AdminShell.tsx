@@ -530,7 +530,7 @@ function DashboardContent() {
   const queueRows = approvalQueueData.map((item) => {
     const appliedDate = new Date(item.appliedAt)
     const now = new Date()
-    const diffMinutes = Math.floor((now - appliedDate) / (1000 * 60))
+    const diffMinutes = Math.floor((now.getTime() - appliedDate.getTime()) / (1000 * 60))
 
     let timeAgo
     if (diffMinutes < 60) {
