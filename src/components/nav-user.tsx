@@ -13,6 +13,7 @@ import {
   Sparkles,
   Sun,
   UserRound,
+  Shield,
 } from "lucide-react"
 
 import {
@@ -106,6 +107,7 @@ const initialNotifications = normalizeNotifications(notificationsRaw)
 
 export function NavUser({
   user,
+  isAdmin = false,
 }: {
   user: {
     firstName: string
@@ -113,6 +115,7 @@ export function NavUser({
     email: string
     avatar: string
   }
+  isAdmin?: boolean
 }) {
   const { isMobile } = useSidebar()
   const fullName = `${user.firstName} ${user.lastName}`
@@ -220,6 +223,14 @@ export function NavUser({
                     My Profile
                   </a>
                 </DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <a href="/trusted-list/admin">
+                      <Shield />
+                      Admin
+                    </a>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
 
               <DropdownMenuSeparator />

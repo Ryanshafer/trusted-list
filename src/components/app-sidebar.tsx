@@ -8,6 +8,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { SearchCommandPalette } from "@/features/search/components/SearchCommandPalette"
 import currentUserData from "../../data/current-user.json"
+import type { CurrentUser } from "../../data/current-user-types"
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +30,8 @@ const user = {
   email: currentUserData.email,
   avatar: currentUserData.avatarUrl,
 }
+
+const isAdmin = currentUserData.isAdmin ?? false
 
 const base = import.meta.env.BASE_URL ?? "/"
 const logoLight = `${base}logo-light.svg`
@@ -140,7 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={navLinks} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} isAdmin={isAdmin} />
       </SidebarFooter>
       <CollapseButton />
       <SearchCommandPalette open={searchOpen} onOpenChange={setSearchOpen} />

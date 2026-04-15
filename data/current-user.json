@@ -5,6 +5,7 @@
   "lastName": "Shafer",
   "email": "ryan.shafer@email.com",
   "avatarUrl": "/trusted-list/ryan-shafer.jpg",
+  "isAdmin": true,
 
   "title": "Head of Design",
   "company": "The Trusted List",

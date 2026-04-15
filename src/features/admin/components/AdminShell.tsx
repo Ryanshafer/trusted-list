@@ -23,6 +23,7 @@ import {
   LayoutDashboard,
   Lightbulb,
   ShieldAlert,
+  RotateCcw,
 } from "lucide-react"
 import {
   Sidebar,
@@ -209,7 +210,7 @@ function AdminSidebarFooter() {
             className="text-[13px] text-muted-foreground hover:text-foreground"
           >
             <a href={`${base}`}>
-              <LayoutDashboard className="h-4 w-4 shrink-0" />
+              <RotateCcw className="h-4 w-4 shrink-0" />
               {!isCollapsed && <span>Back to app</span>}
             </a>
           </SidebarMenuButton>
