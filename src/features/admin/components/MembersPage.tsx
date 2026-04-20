@@ -292,7 +292,7 @@ export default function MembersPage() {
               </FilterAccordionSection>
               <FilterAccordionSection title="Member Status">
                 <div className="flex flex-col gap-3">
-                  {ALL_STATUSES.map((s) => (
+                  {ALL_STATUSES.filter(status => status !== "On Hold").map((s) => (
                     <div key={s} className="flex items-center gap-3">
                       <Checkbox
                         id={`filter-status-${s}`}

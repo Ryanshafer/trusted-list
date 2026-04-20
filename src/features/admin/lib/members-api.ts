@@ -29,7 +29,7 @@ export type ApiResponse = {
 // In production replace getBaseMembers with a real fetch.
 async function getBaseMembers(): Promise<TableMember[]> {
   return getMembersSnapshot().filter(
-    (member) => member.status !== ("Pending" as MemberStatus) && member.status !== ("Waitlisted" as MemberStatus)
+    (member) => member.status !== ("Pending" as MemberStatus) && member.status !== ("Waitlisted" as MemberStatus) && member.status !== ("On Hold" as MemberStatus)
   )
 }
 
