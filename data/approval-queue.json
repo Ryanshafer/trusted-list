@@ -5,9 +5,7 @@
       "id": "user-devon-hart",
       "name": "Devon Hart",
       "email": "devon.hart@strataworks.com",
-      "title": "Engineering Manager",
       "company": "StrataWorks",
-      "location": "Seattle, WA",
       "linkedInUrl": "https://www.linkedin.com/in/devonhart-eng"
     },
     "inviter": {
@@ -19,6 +17,7 @@
     "recommendationText": "Devon is one of the most thoughtful EMs I've worked with. She runs a high-trust team and has a rare ability to translate ambiguous product goals into clear engineering roadmaps. I'd vouch for her ability to help people navigate complex organisational dynamics.",
     "appliedAt": "2026-04-12T09:32:00Z",
     "requiresVote": true,
+    "applicationType": "invited",
     "votes": [],
     "status": "Pending"
   },
@@ -28,9 +27,7 @@
       "id": "user-taylor-kim",
       "name": "Taylor Kim",
       "email": "tkim@designco.studio",
-      "title": "Brand Strategist",
       "company": "Design Co.",
-      "location": "Los Angeles, CA",
       "linkedInUrl": "https://www.linkedin.com/in/taylorkim-brand"
     },
     "inviter": {
@@ -42,6 +39,7 @@
     "recommendationText": "Taylor is exceptional at turning brand chaos into coherent identity systems. I've watched her take three competing stakeholder visions and create something everyone actually rallied around. Her empathy for both the business and the end user is genuine.",
     "appliedAt": "2026-04-12T14:18:00Z",
     "requiresVote": true,
+    "applicationType": "invited",
     "votes": [
       { "adminId": "user-monica-jonas", "adminName": "Monica Jonas", "votedAt": "2026-04-12T10:00:00Z", "decision": "approve" }
     ],
@@ -53,9 +51,7 @@
       "id": "user-felix-andrade",
       "name": "Felix Andrade",
       "email": "felix@helix.co",
-      "title": "Product Designer",
       "company": "Helix",
-      "location": "Miami, FL",
       "linkedInUrl": "https://www.linkedin.com/in/felixandrade-design"
     },
     "inviter": {
@@ -67,6 +63,7 @@
     "recommendationText": "Felix has one of the sharpest eyes for interaction detail I've encountered in a junior designer. He instinctively questions every assumption, ships polished work, and never lets the craft slip even under pressure. He'll level up anyone he works with.",
     "appliedAt": "2026-04-12T11:45:00Z",
     "requiresVote": true,
+    "applicationType": "waitlist",
     "votes": [],
     "status": "Pending"
   },
@@ -76,9 +73,7 @@
       "id": "user-morgan-oakes",
       "name": "Morgan Oakes",
       "email": "morgan@pivotlabs.io",
-      "title": "Product Manager",
       "company": "Pivot Labs",
-      "location": "Denver, CO",
       "linkedInUrl": "https://www.linkedin.com/in/morganoakes"
     },
     "inviter": {
@@ -90,6 +85,7 @@
     "recommendationText": "Morgan is the PM I wish I'd had earlier in my career. She builds bridges between engineering and design that most people burn down. She is deeply user-focused, never lets process become a substitute for thinking, and is quietly one of the best at running discovery I've seen.",
     "appliedAt": "2026-04-12T16:05:00Z",
     "requiresVote": true,
+    "applicationType": "invited",
     "votes": [],
     "status": "Pending"
   },
@@ -99,9 +95,7 @@
       "id": "user-casey-chen",
       "name": "Casey Chen",
       "email": "c.chen@enterprise.com",
-      "title": "Director of Operations",
       "company": "EnterpriseOS",
-      "location": "San Jose, CA",
       "linkedInUrl": "https://www.linkedin.com/in/caseychen-ops"
     },
     "inviter": {
@@ -113,6 +107,7 @@
     "recommendationText": "Casey runs operations the way great product leaders run product. She is obsessed with the underlying systems, always measuring outcomes over activity, and has an uncanny ability to find the one process change that unlocks ten downstream improvements.",
     "appliedAt": "2026-04-12T08:20:00Z",
     "requiresVote": true,
+    "applicationType": "invited",
     "votes": [
       { "adminId": "user-jen-wu", "adminName": "Jen Wu", "votedAt": "2026-04-12T14:30:00Z", "decision": "approve" }
     ],
@@ -124,9 +119,7 @@
       "id": "user-cole-huang",
       "name": "Cole Huang",
       "email": "cole@strikezone.io",
-      "title": "GTM Lead",
       "company": "StrikeZone",
-      "location": "San Francisco, CA",
       "linkedInUrl": "https://www.linkedin.com/in/colehuang-gtm"
     },
     "inviter": {
@@ -138,6 +131,7 @@
     "recommendationText": "Cole has helped three B2B startups I know build GTM motions that actually stuck. He combines deep market intuition with the ability to run fast, low-ego experiments. He is the kind of person who makes everyone around him sharper about how they think about go-to-market.",
     "appliedAt": "2026-04-12T13:00:00Z",
     "requiresVote": true,
+    "applicationType": "waitlist",
     "votes": [],
     "status": "Pending"
   }

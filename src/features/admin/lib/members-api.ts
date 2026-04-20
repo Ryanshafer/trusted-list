@@ -1,4 +1,5 @@
-import type { MemberStatus, SubscriptionStatus, TableMember } from "./members-config"
+import type { MemberStatus, TableMember } from "./members-config"
+import { getMembersSnapshot } from "./members-store"
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -8,6 +9,7 @@ export type ApiParams = {
   sortBy?: string
   sortOrder?: "asc" | "desc"
   search?: string
+  types?: string[]
   statuses?: string[]
   subscriptionStatuses?: string[]
   dateFrom?: string
@@ -25,20 +27,10 @@ export type ApiResponse = {
 
 // Parsed and normalized once, reused on every subsequent call.
 // In production replace getBaseMembers with a real fetch.
-let _membersCache: TableMember[] | null = null
-
 async function getBaseMembers(): Promise<TableMember[]> {
-  if (_membersCache) return _membersCache
-  const response = await import("../../../../data/members.json")
-  _membersCache = response.default
-    .filter((m: any) => m.status !== "Pending")
-    .map((m: any) => ({
-      ...m,
-      subscriptionRenewalDate: new Date(m.subscriptionRenewalDate),
-      status: m.status as MemberStatus,
-      subscriptionStatus: m.subscriptionStatus as SubscriptionStatus,
-    }))
-  return _membersCache
+  return getMembersSnapshot().filter(
+    (member) => member.status !== ("Pending" as MemberStatus) && member.status !== ("Waitlisted" as MemberStatus)
+  )
 }
 
 // ── Column id → data key mapping ──────────────────────────────────────────────
@@ -65,6 +57,10 @@ export async function fetchMembers(params: ApiParams): Promise<ApiResponse> {
         m.email.toLowerCase().includes(q) ||
         m.company.toLowerCase().includes(q)
     )
+  }
+
+  if (params.types?.length) {
+    filtered = filtered.filter((m) => params.types!.includes(m.applicationType))
   }
 
   if (params.statuses?.length) {

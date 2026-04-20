@@ -15,7 +15,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_abc123"
+    "stripe_customer_id": "cus_abc123",
+    "applicationType": "invited"
   },
   {
     "id": "user-marcus-bell",
@@ -33,7 +34,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_def456"
+    "stripe_customer_id": "cus_def456",
+    "applicationType": "invited"
   },
   {
     "id": "user-anika-osei",
@@ -51,7 +53,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_ghi789"
+    "stripe_customer_id": "cus_ghi789",
+    "applicationType": "invited"
   },
   {
     "id": "user-priya-nair",
@@ -68,7 +71,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-benedict-cumberbatch",
@@ -86,7 +90,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_jkl012"
+    "stripe_customer_id": "cus_jkl012",
+    "applicationType": "invited"
   },
   {
     "id": "user-sam-smith",
@@ -97,13 +102,14 @@
     "company": "Fieldwork",
     "location": "Chicago, IL",
     "linkedInUrl": "https://www.linkedin.com/in/samsmith-product",
-    "status": "Active",
-    "joinDate": "2022-11-30",
-    "subscriptionStatus": "Trial",
+    "status": "On Hold",
+    "joinDate": null,
+    "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
-    "subscriptionEnabled": true,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionEnabled": false,
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "invited"
   },
   {
     "id": "user-alex-rivera",
@@ -121,7 +127,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_mno345"
+    "stripe_customer_id": "cus_mno345",
+    "applicationType": "invited"
   },
   {
     "id": "user-devon-hart",
@@ -138,7 +145,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-taylor-kim",
@@ -155,7 +163,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-morgan-oakes",
@@ -172,7 +181,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-casey-chen",
@@ -189,7 +199,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-jordan-lee",
@@ -207,7 +218,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_pqr678"
+    "stripe_customer_id": "cus_pqr678",
+    "applicationType": "invited"
   },
   {
     "id": "user-riley-foster",
@@ -219,13 +231,14 @@
     "location": "Boston, MA",
     "linkedInUrl": "https://www.linkedin.com/in/rileyfoster-vc",
     "status": "Banned",
-    "joinDate": "2023-05-19",
-    "subscriptionStatus": "Cancelled",
+    "joinDate": null,
+    "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_stu901"
+    "stripe_customer_id": null,
+    "applicationType": "waitlist"
   },
   {
     "id": "user-avery-patel",
@@ -236,13 +249,14 @@
     "company": "Clarendon",
     "location": "Atlanta, GA",
     "linkedInUrl": "https://www.linkedin.com/in/averypatel-cs",
-    "status": "Active",
-    "joinDate": "2023-07-04",
-    "subscriptionStatus": "Free",
+    "status": "On Hold",
+    "joinDate": null,
+    "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-quinn-walsh",
@@ -253,13 +267,14 @@
     "company": "Bridgeline Tech",
     "location": "Austin, TX",
     "linkedInUrl": "https://www.linkedin.com/in/quinnwalsh-eng",
-    "status": "Active",
-    "joinDate": "2023-08-13",
-    "subscriptionStatus": "Trial",
+    "status": "On Hold",
+    "joinDate": null,
+    "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
-    "subscriptionEnabled": true,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionEnabled": false,
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "invited"
   },
   {
     "id": "user-hayden-cross",
@@ -276,7 +291,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-skylar-reeves",
@@ -287,13 +303,14 @@
     "company": "Orbit Media",
     "location": "Portland, OR",
     "linkedInUrl": "https://www.linkedin.com/in/skylarreeves",
-    "status": "Waitlisted",
-    "joinDate": "2024-02-22",
+    "status": "On Hold",
+    "joinDate": null,
     "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-elliot-vance",
@@ -311,7 +328,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_abc890"
+    "stripe_customer_id": "cus_abc890",
+    "applicationType": "invited"
   },
   {
     "id": "user-nadia-okoye",
@@ -329,7 +347,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_vwx234"
+    "stripe_customer_id": "cus_vwx234",
+    "applicationType": "invited"
   },
   {
     "id": "user-felix-andrade",
@@ -341,13 +360,14 @@
     "location": "Miami, FL",
     "linkedInUrl": "https://www.linkedin.com/in/felixandrade-design",
     "status": "Banned",
-    "joinDate": "2024-10-18",
-    "subscriptionStatus": "Cancelled",
+    "joinDate": null,
+    "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_yz567"
+    "stripe_customer_id": null,
+    "applicationType": "waitlist"
   },
   {
     "id": "user-imogen-shaw",
@@ -364,7 +384,8 @@
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-cole-huang",
@@ -375,13 +396,14 @@
     "company": "StrikeZone",
     "location": "San Francisco, CA",
     "linkedInUrl": "https://www.linkedin.com/in/colehuang-gtm",
-    "status": "Waitlisted",
-    "joinDate": "2024-05-07",
+    "status": "On Hold",
+    "joinDate": null,
     "subscriptionStatus": "None",
     "inviteQuota": 5,
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": false,
-    "subscriptionRenewalDate": "2026-05-14"
+    "subscriptionRenewalDate": "2026-05-14",
+    "applicationType": "waitlist"
   },
   {
     "id": "user-petra-novak",
@@ -399,7 +421,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_def123"
+    "stripe_customer_id": "cus_def123",
+    "applicationType": "invited"
   },
   {
     "id": "user-priya-desai",
@@ -417,7 +440,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_priya123"
+    "stripe_customer_id": "cus_priya123",
+    "applicationType": "invited"
   },
   {
     "id": "user-aisha-patel",
@@ -435,7 +459,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_aisha456"
+    "stripe_customer_id": "cus_aisha456",
+    "applicationType": "invited"
   },
   {
     "id": "user-sarah-chen",
@@ -453,7 +478,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_sarah789"
+    "stripe_customer_id": "cus_sarah789",
+    "applicationType": "invited"
   },
   {
     "id": "user-marcus-wright",
@@ -471,7 +497,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_marcus012"
+    "stripe_customer_id": "cus_marcus012",
+    "applicationType": "invited"
   },
   {
     "id": "user-kenji-ito",
@@ -489,7 +516,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_kenji345"
+    "stripe_customer_id": "cus_kenji345",
+    "applicationType": "invited"
   },
   {
     "id": "user-jenna-morales",
@@ -507,7 +535,8 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_jenna678"
+    "stripe_customer_id": "cus_jenna678",
+    "applicationType": "invited"
   },
   {
     "id": "user-tanya-reed",
@@ -525,6 +554,64 @@
     "hasUnlimitedInvites": false,
     "subscriptionEnabled": true,
     "subscriptionRenewalDate": "2026-05-14",
-    "stripe_customer_id": "cus_tanya901"
+    "stripe_customer_id": "cus_tanya901",
+    "applicationType": "invited"
+  },
+  {
+    "id": "user-derek-moss",
+    "name": "Derek Moss",
+    "email": "derek.moss@kineticdata.com",
+    "avatarUrl": null,
+    "title": "Data Engineer",
+    "company": "Kinetic Data",
+    "location": "Denver, CO",
+    "linkedInUrl": "https://www.linkedin.com/in/derekmoss-data",
+    "status": "Banned",
+    "joinDate": "2023-09-11",
+    "subscriptionStatus": "Cancelled",
+    "inviteQuota": 5,
+    "hasUnlimitedInvites": false,
+    "subscriptionEnabled": false,
+    "subscriptionRenewalDate": "2026-05-14",
+    "stripe_customer_id": "cus_derek101",
+    "applicationType": "invited"
+  },
+  {
+    "id": "user-paula-grant",
+    "name": "Paula Grant",
+    "email": "pgrant@vertexmedia.co",
+    "avatarUrl": null,
+    "title": "Media Strategist",
+    "company": "Vertex Media",
+    "location": "Chicago, IL",
+    "linkedInUrl": "https://www.linkedin.com/in/paulagrant-media",
+    "status": "Banned",
+    "joinDate": null,
+    "subscriptionStatus": "None",
+    "inviteQuota": 0,
+    "hasUnlimitedInvites": false,
+    "subscriptionEnabled": false,
+    "subscriptionRenewalDate": "2026-05-14",
+    "stripe_customer_id": null,
+    "applicationType": "waitlist"
+  },
+  {
+    "id": "user-sean-omalley",
+    "name": "Sean O'Malley",
+    "email": "sean@driftlabs.io",
+    "avatarUrl": null,
+    "title": "Growth Lead",
+    "company": "Drift Labs",
+    "location": "Seattle, WA",
+    "linkedInUrl": "https://www.linkedin.com/in/seanomalley-growth",
+    "status": "Banned",
+    "joinDate": "2023-11-04",
+    "subscriptionStatus": "Cancelled",
+    "inviteQuota": 5,
+    "hasUnlimitedInvites": false,
+    "subscriptionEnabled": false,
+    "subscriptionRenewalDate": "2026-05-14",
+    "stripe_customer_id": "cus_sean202",
+    "applicationType": "invited"
   }
 ]

@@ -13,6 +13,8 @@ skills/
 docs/
 tokens/
 figma-plugin/
+.agents/
+skills-lock.json
 
 # logs
 npm-debug.log*

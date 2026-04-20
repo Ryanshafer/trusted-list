@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CheckCircle2, Trash2, ExternalLink } from "lucide-react"
+import { CheckCircle2, Ban, ExternalLink } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -24,6 +24,7 @@ import {
 import { toast } from "@/features/admin/lib/toast"
 import requestsData from "../../../../data/requests.json"
 import membersData from "../../../../data/members.json"
+import { AnimatedRemoval } from "./shared/AnimatedRemoval"
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -145,16 +146,15 @@ function navigateToMember(name: string) {
   }
 }
 
-function ModerationCard({ item }: { item: ModerationItem }) {
-  const handleDismiss = () => {
-    removeModerationItem(item.id)
-    toast.success("Complaint dismissed.")
-  }
-
-  const handleDelete = () => {
-    removeModerationItem(item.id)
-    toast.success("Content removed from platform.")
-  }
+function ModerationCard({
+  item,
+  onDismiss,
+  onDelete,
+}: {
+  item: ModerationItem
+  onDismiss: (id: string) => void
+  onDelete: (id: string) => void
+}) {
 
   const requestDetails = getRequestDetails(item.requestId)
 
@@ -184,12 +184,15 @@ function ModerationCard({ item }: { item: ModerationItem }) {
               {initials(item.reporter.name)}
             </AvatarFallback>
           </Avatar>
-          <button
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
             onClick={() => navigateToMember(item.reporter.name)}
-            className="text-xs font-medium text-foreground hover:text-primary hover:underline"
+            className="h-auto p-0 text-xs font-medium text-foreground hover:text-primary"
           >
             {item.reporter.name}
-          </button>
+          </Button>
           <span className="text-xs text-muted-foreground/60">·</span>
           <a
             href={`mailto:${item.reporter.email}`}
@@ -236,12 +239,15 @@ function ModerationCard({ item }: { item: ModerationItem }) {
               </a>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Request by 
-                <button
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
                   onClick={() => navigateToMember(requestDetails.name)}
-                  className="text-primary hover:underline font-medium"
+                  className="h-auto p-0 font-medium text-primary"
                 >
                   {requestDetails.name}
-                </button>
+                </Button>
               </p>
             </div>
           </div>
@@ -266,7 +272,7 @@ function ModerationCard({ item }: { item: ModerationItem }) {
           variant="ghost"
           size="sm"
           className="h-8 rounded-full gap-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
-          onClick={handleDismiss}
+          onClick={() => onDismiss(item.id)}
         >
           <CheckCircle2 className="h-3.5 w-3.5" />
           Dismiss
@@ -275,10 +281,10 @@ function ModerationCard({ item }: { item: ModerationItem }) {
           variant="outline"
           size="sm"
           className="h-8 rounded-full gap-1.5 text-xs font-semibold border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-          onClick={handleDelete}
+          onClick={() => onDelete(item.id)}
         >
-          <Trash2 className="h-3.5 w-3.5" />
-          Delete Content
+          <Ban className="h-3.5 w-3.5" />
+          Remove and notify
         </Button>
       </CardFooter>
     </Card>
@@ -290,6 +296,23 @@ function ModerationCard({ item }: { item: ModerationItem }) {
 export default function ModerationQueuePage() {
   const items = useModerationItems()
   const [activeTab, setActiveTab] = React.useState<SeverityTier>("all")
+  const [exitingIds, setExitingIds] = React.useState<Set<string>>(new Set())
+
+  const animateOut = (id: string, successMessage: string) => {
+    setExitingIds((prev) => new Set(prev).add(id))
+    setTimeout(() => {
+      removeModerationItem(id)
+      setExitingIds((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
+      toast.success(successMessage)
+    }, 300)
+  }
+
+  const handleDismiss = (id: string) => animateOut(id, "Complaint dismissed.")
+  const handleDelete = (id: string) => animateOut(id, "Content removed from platform.")
 
   // Filter items by severity tier
   const filteredItems = React.useMemo(() => {
@@ -347,7 +370,13 @@ export default function ModerationQueuePage() {
         {filteredItems.length > 0 ? (
           <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
             {filteredItems.map((item) => (
-              <ModerationCard key={item.id} item={item} />
+              <AnimatedRemoval key={item.id} isExiting={exitingIds.has(item.id)}>
+                <ModerationCard
+                  item={item}
+                  onDismiss={handleDismiss}
+                  onDelete={handleDelete}
+                />
+              </AnimatedRemoval>
             ))}
           </div>
         ) : (

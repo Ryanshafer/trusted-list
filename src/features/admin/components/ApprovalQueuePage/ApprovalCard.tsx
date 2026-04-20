@@ -3,21 +3,25 @@
 import * as React from "react"
 import {
   CheckCircle2,
-  Clock,
-  ChevronDown,
-  ChevronUp,
+  PauseCircle,
   Vote,
   ShieldCheck,
-  Users,
+  MoreVertical,
+  Ban,
   ExternalLink,
 } from "lucide-react"
 import type { QueueEntry } from "./types"
 import { CURRENT_ADMIN_ID, VOTE_THRESHOLD } from "./constants"
 import { initials, getMemberUrl, timeAgo } from "./utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
 import {
   Tooltip,
@@ -26,35 +30,32 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { VoteProgress } from "./VoteProgress"
+import { ApplicationTypeBadge } from "../shared/status-badges"
 
 export function ApprovalCard({
   entry,
   onApprove,
   onVote,
   onReject,
+  onBan,
 }: {
   entry: QueueEntry
   onApprove: (id: string) => void
   onVote: (id: string) => void
   onReject: (id: string) => void
+  onBan: (id: string) => void
 }) {
-  const [expanded, setExpanded] = React.useState(false)
-  const { applicant, inviter, recommendationText, appliedAt, requiresVote, votes } = entry
+  const { applicant, inviter, recommendationText, appliedAt, requiresVote, votes, applicationType } = entry
 
   const hasVoted = votes.some((v) => v.adminId === CURRENT_ADMIN_ID)
   const approveVotes = votes.filter((v) => v.decision === "approve").length
   const readyToApprove = requiresVote && approveVotes >= VOTE_THRESHOLD - 1
 
-  const shortText =
-    recommendationText.length > 160
-      ? recommendationText.slice(0, 160).trimEnd() + "…"
-      : recommendationText
-
   return (
     <TooltipProvider delayDuration={150}>
       <Card id={entry.applicant.id} className="rounded-xl overflow-hidden transition-shadow hover:shadow-md">
         {/* Card header */}
-        <div className="flex items-start gap-4 p-5">
+        <div className="flex items-start gap-4 p-5 relative">
           <Avatar className="h-11 w-11 shrink-0 rounded-full border border-border">
             <AvatarImage src={applicant.avatarUrl ?? ""} alt={applicant.name} className="object-cover" />
             <AvatarFallback className="rounded-full text-xs font-semibold">
@@ -63,103 +64,83 @@ export function ApprovalCard({
           </Avatar>
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">{applicant.name}</h3>
-                <p className="text-xs text-muted-foreground">
-                  {applicant.title} · {applicant.company}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                {/* {requiresVote ? (
-                  <Badge
-                    variant="outline"
-                    className="rounded-full border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-800 dark:bg-violet-950/50 dark:text-violet-400 text-[11px] font-semibold gap-1"
-                  >
-                    <Vote className="h-3 w-3" />
-                    Requires vote
-                  </Badge>
-                ) : (
-                  <Badge
-                    variant="outline"
-                    className="rounded-full border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 text-[11px] font-semibold gap-1"
-                  >
-                    <ShieldCheck className="h-3 w-3" />
-                    Direct approve
-                  </Badge>
-                )} */}
-                <span className="text-xs tabular-nums text-muted-foreground">
-                  {timeAgo(appliedAt)}
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-              {applicant.linkedInUrl && (
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              {applicant.linkedInUrl ? (
                 <a
                   href={applicant.linkedInUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-primary hover:underline"
+                  className="group flex min-w-0 items-center gap-1.5 rounded-sm text-foreground transition-colors hover:text-primary"
+                  aria-label={`Open ${applicant.name}'s LinkedIn profile`}
+                  title="Open LinkedIn profile"
                 >
-                  LinkedIn <ExternalLink className="h-3 w-3" />
+                  <h3 className="min-w-0 truncate text-sm font-semibold">{applicant.name}</h3>
+                  <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                 </a>
+              ) : (
+                <h3 className="text-sm font-semibold text-foreground truncate">{applicant.name}</h3>
               )}
-              <span>{applicant.location}</span>
-              <span className="hidden sm:inline text-muted-foreground/60">·</span>
-              <a href={`mailto:${applicant.email}`} className="hidden sm:inline hover:underline">
-                {applicant.email}
-              </a>
+              <div className="flex items-center gap-2 shrink-0">
+                <ApplicationTypeBadge applicationType={applicationType} />
+                <span className="text-xs tabular-nums text-muted-foreground">
+                  {timeAgo(appliedAt)}
+                </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 rounded-full text-muted-foreground hover:text-foreground"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                      <span className="sr-only">More options</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem
+                      className="gap-2 text-destructive focus:text-destructive"
+                      onClick={() => onBan(entry.id)}
+                    >
+                      <Ban className="h-3.5 w-3.5" />
+                      Ban Applicant
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">
+                Nominated by:{" "}
+                <a
+                  href={getMemberUrl(inviter.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-foreground hover:underline"
+                >
+                  {inviter.name}
+                </a>
+                {inviter.title ? `, ${inviter.title}` : ""}
+                {inviter.company ? ` · ${inviter.company}` : ""}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Known via: <span className="text-foreground/80">{applicant.company}</span>
+              </p>
             </div>
           </div>
         </div>
 
         <Separator />
 
-        {/* Inviter + recommendation */}
+        {/* Recommendation */}
         <div className="px-5 py-4 space-y-3">
-          <div className="flex items-center gap-2.5">
-            <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Nominated by</span>
-            <a
-              href={getMemberUrl(inviter.name)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:underline"
-            >
-              <Avatar className="h-5 w-5 shrink-0 rounded-full border border-border">
-                <AvatarImage src={inviter.avatarUrl ?? ""} alt={inviter.name} className="object-cover" />
-                <AvatarFallback className="rounded-full text-[8px] font-semibold">
-                  {initials(inviter.name)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-xs font-medium text-foreground">{inviter.name}</span>
-            </a>
-            <span className="text-xs text-muted-foreground">
-              · {inviter.title}, {inviter.company}
-            </span>
-          </div>
 
-          <blockquote className="relative pl-3 text-sm text-foreground/90 leading-relaxed">
+          <blockquote className="relative pl-3 mt-6 mb-10 text-base text-foreground/90 leading-relaxed max-w-[70ch]">
             <span
               aria-hidden
               className="absolute left-0 top-0 bottom-0 w-0.5 rounded-full bg-primary/30"
             />
-            {expanded ? recommendationText : shortText}
-            {recommendationText.length > 160 && (
-              <Button
-                variant="link"
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                className="ml-1.5 h-auto p-0 text-xs gap-0.5"
-              >
-                {expanded ? (
-                  <>Show less <ChevronUp className="h-3 w-3" /></>
-                ) : (
-                  <>Read more <ChevronDown className="h-3 w-3" /></>
-                )}
-              </Button>
-            )}
+            {recommendationText}
           </blockquote>
 
           {requiresVote && (
@@ -194,8 +175,8 @@ export function ApprovalCard({
               className="h-8 rounded-full gap-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
               onClick={() => onReject(entry.id)}
             >
-              <Clock className="h-3.5 w-3.5" />
-              Waitlist
+              <PauseCircle className="h-3.5 w-3.5" />
+              On Hold
             </Button>
 
             {requiresVote ? (

@@ -8,7 +8,6 @@ import {
   CreditCard,
   Settings,
   Bell,
-  Search,
   PanelLeft,
   ChevronsUpDown,
   LogOut,
@@ -24,6 +23,8 @@ import {
   Lightbulb,
   ShieldAlert,
   RotateCcw,
+  Ban,
+  PauseCircle,
 } from "lucide-react"
 import {
   Sidebar,
@@ -46,7 +47,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,6 +76,8 @@ const base = import.meta.env.BASE_URL ?? "/"
 const NAV_ITEMS = [
   { title: "Dashboard",      url: `${base}admin`,               icon: LayoutDashboard, badge: null as number | null, destructiveBadge: false },
   { title: "Members",        url: `${base}admin/members`,       icon: Users,         badge: null as number | null, destructiveBadge: false },
+  { title: "On Hold",        url: `${base}admin/on-hold`,       icon: PauseCircle,   badge: null as number | null, destructiveBadge: false },
+  { title: "Banned",         url: `${base}admin/banned`,        icon: Ban,           badge: null as number | null, destructiveBadge: false },
   { title: "Approval Queue", url: `${base}admin/approvals`,     icon: ClipboardList, badge: null as number | null, destructiveBadge: false },
   { title: "Moderation",     url: `${base}admin/moderation`,    icon: ShieldAlert,   badge: null as number | null, destructiveBadge: true  },
   // { title: "Tasks",          url: `${base}admin/tasks`,         icon: CheckSquare,   badge: 7    as number | null, destructiveBadge: false },
@@ -289,15 +291,6 @@ function AdminTopbar() {
 
       {/* Divider (mobile only) */}
       <div className="h-5 w-px bg-border lg:hidden" aria-hidden />
-
-      {/* Search */}
-      <div className="relative w-full max-w-xs">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search members, tasks…"
-          className="h-8 rounded-full border-border bg-muted/40 pl-8 text-sm placeholder:text-muted-foreground/60 focus-visible:bg-background"
-        />
-      </div>
 
       {/* Right cluster */}
       <div className="ml-auto flex items-center gap-1">

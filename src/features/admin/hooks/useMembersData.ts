@@ -2,6 +2,7 @@ import * as React from "react"
 import type { SortingState, VisibilityState, PaginationState } from "@tanstack/react-table"
 import { fetchMembers } from "../lib/members-api"
 import { DEFAULT_FILTERS, type MemberFilters, type TableMember } from "../lib/members-config"
+import { useMembersStore } from "../lib/members-store"
 
 // ── Debounce ──────────────────────────────────────────────────────────────────
 
@@ -52,6 +53,7 @@ export function useMembersData(initialSearch = ""): MembersDataState {
   const [error, setError] = React.useState<string | null>(null)
 
   const debouncedSearch = useDebounce(search, 500)
+  const members = useMembersStore()
 
   // Reset to page 0 when search or filters change.
   // Guard against already being on page 0 to avoid a spurious re-render.
@@ -62,6 +64,7 @@ export function useMembersData(initialSearch = ""): MembersDataState {
   // Fetch — fires when there is an active search query or any filters applied
   React.useEffect(() => {
     const hasActiveFilters =
+      appliedFilters.types.length > 0 ||
       appliedFilters.statuses.length > 0 ||
       appliedFilters.subscriptionStatuses.length > 0 ||
       !!appliedFilters.dateFrom ||
@@ -87,6 +90,7 @@ export function useMembersData(initialSearch = ""): MembersDataState {
           sortBy: sortState?.id,
           sortOrder: sortState ? (sortState.desc ? "desc" : "asc") : undefined,
           search: debouncedSearch,
+          types: appliedFilters.types.length ? appliedFilters.types : undefined,
           statuses: appliedFilters.statuses.length ? appliedFilters.statuses : undefined,
           subscriptionStatuses: appliedFilters.subscriptionStatuses.length ? appliedFilters.subscriptionStatuses : undefined,
           dateFrom: appliedFilters.dateFrom || undefined,
@@ -112,7 +116,9 @@ export function useMembersData(initialSearch = ""): MembersDataState {
       cancelled = true
     }
   }, [
+    members,
     debouncedSearch,
+    appliedFilters.types,
     appliedFilters.statuses,
     appliedFilters.subscriptionStatuses,
     appliedFilters.dateFrom,

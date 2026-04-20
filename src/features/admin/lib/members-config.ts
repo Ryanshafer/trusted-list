@@ -2,7 +2,7 @@ import type { BaseFilters } from "@/components/FilterSidebar"
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type MemberStatus = "Active" | "Banned" | "Waitlisted"
+export type MemberStatus = "Active" | "Banned" | "Waitlisted" | "On Hold"
 export type SubscriptionStatus = "Pro" | "Free" | "Trial" | "Cancelled" | "None"
 
 export type TableMember = {
@@ -15,13 +15,14 @@ export type TableMember = {
   location: string
   linkedInUrl: string | null
   status: MemberStatus
-  joinDate: string
+  joinDate: string | null
   subscriptionStatus: SubscriptionStatus
   inviteQuota: number
   hasUnlimitedInvites: boolean
   subscriptionEnabled: boolean
   subscriptionRenewalDate: Date
   stripe_customer_id: string | null
+  applicationType: "waitlist" | "invited"
 }
 
 export type EditMember = {
@@ -31,7 +32,7 @@ export type EditMember = {
   email: string
   avatarUrl: string | null
   linkedinUrl: string
-  status: "active" | "banned" | "waitlisted"
+  status: "active" | "banned" | "waitlisted" | "on-hold"
   inviteQuota: number
   hasUnlimitedInvites: boolean
   subscriptionEnabled: boolean
@@ -39,6 +40,7 @@ export type EditMember = {
 }
 
 export type MemberFilters = BaseFilters & {
+  types: string[]
   statuses: string[]
   subscriptionStatuses: string[]
 }
@@ -49,6 +51,7 @@ export const STATUS_CONFIG: Record<MemberStatus, { label: string; className: str
   Active:     { label: "Active",     className: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400" },
   Banned:     { label: "Banned",     className: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/50 dark:text-red-400" },
   Waitlisted: { label: "Waitlisted", className: "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-800 dark:bg-violet-950/50 dark:text-violet-400" },
+  "On Hold":  { label: "On Hold",   className: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-400" },
 }
 
 export const SUBSCRIPTION_CONFIG: Record<SubscriptionStatus, { label: string; className: string }> = {
@@ -59,12 +62,13 @@ export const SUBSCRIPTION_CONFIG: Record<SubscriptionStatus, { label: string; cl
   None:      { label: "—",         className: "border-transparent bg-transparent text-muted-foreground/50" },
 }
 
-export const ALL_STATUSES: MemberStatus[] = ["Active", "Waitlisted", "Banned"]
+export const ALL_STATUSES: MemberStatus[] = ["Active", "Banned", "On Hold"]
 
 export const DEFAULT_FILTERS: MemberFilters = {
   dateFrom: "",
   dateTo: "",
   audiences: [],
+  types: [],
   statuses: [],
   subscriptionStatuses: [],
 }

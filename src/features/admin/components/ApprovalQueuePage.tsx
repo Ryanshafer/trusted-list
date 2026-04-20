@@ -1,13 +1,15 @@
 "use client"
 
 import * as React from "react"
-import {
-  CheckCircle2,
-  Vote,
-  ShieldCheck,
-} from "lucide-react"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { CheckCircle2, SearchX } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
   Empty,
   EmptyHeader,
@@ -16,57 +18,106 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty"
 import { AdminPageLayout } from "./AdminShell"
-import { useApprovalQueueItems, removeApprovalQueueItem } from "@/features/admin/hooks/useApprovalQueueStore"
+import {
+  banApplicantFromQueue,
+  placeApplicantOnHold,
+  removeApprovalQueueItem,
+  useApprovalQueueItems,
+} from "@/features/admin/hooks/useApprovalQueueStore"
 import { ApprovalCard } from "./ApprovalQueuePage/ApprovalCard"
-import { FILTER_TABS, VOTE_THRESHOLD } from "./ApprovalQueuePage/constants"
-import type { FilterTab } from "./ApprovalQueuePage/types"
+import { toast } from "@/features/admin/lib/toast"
+import { AnimatedRemoval } from "./shared/AnimatedRemoval"
+import { AdminSearchField } from "./shared/admin-list-controls"
+
+type SortOption = "newest" | "oldest" | "member-first" | "self-first"
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ApprovalQueuePage() {
   const entries = useApprovalQueueItems()
-  const [activeTab, setActiveTab] = React.useState<FilterTab>("all")
+  const [sortBy, setSortBy] = React.useState<SortOption>("oldest")
+  const [query, setQuery] = React.useState("")
+
+  const [exitingIds, setExitingIds] = React.useState<Set<string>>(new Set())
+
+  const animateOut = (id: string, successMessage: string) => {
+    setExitingIds((prev) => new Set(prev).add(id))
+    setTimeout(() => {
+      removeApprovalQueueItem(id)
+      setExitingIds((prev) => { const next = new Set(prev); next.delete(id); return next })
+      toast.success(successMessage)
+    }, 300)
+  }
 
   const handleApprove = (id: string) => {
     removeApprovalQueueItem(id)
+    toast.success("Application approved.")
   }
-
-  const handleVote = (id: string) => {
-    // For vote-based approvals, we need to update the item and potentially remove it
-    // This is a bit more complex since we need to modify the item, not just remove it
-    // For now, we'll keep the simple removal approach to ensure sidebar updates
-    removeApprovalQueueItem(id)
-  }
-
+  const handleVote = (id: string) => animateOut(id, "Your vote has been cast.")
   const handleReject = (id: string) => {
-    removeApprovalQueueItem(id)
+    setExitingIds((prev) => new Set(prev).add(id))
+    setTimeout(() => {
+      placeApplicantOnHold(id)
+      setExitingIds((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
+      toast.success("Applicant moved to on hold.")
+    }, 300)
+  }
+  const handleBan = (id: string) => {
+    setExitingIds((prev) => new Set(prev).add(id))
+    setTimeout(() => {
+      banApplicantFromQueue(id)
+      setExitingIds((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
+      toast.success("Applicant banned.")
+    }, 300)
   }
 
-  const counts: Record<FilterTab, number> = {
-    all:    entries.length,
-    direct: entries.filter((e) => !e.requiresVote).length,
-    vote:   entries.filter((e) => e.requiresVote).length,
-  }
+  const filtered = React.useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return entries
+    return entries.filter(
+      (e) =>
+        e.applicant.name.toLowerCase().includes(q) ||
+        e.inviter.name.toLowerCase().includes(q)
+    )
+  }, [entries, query])
 
-  const visible = entries.filter((e) => {
-    if (activeTab === "direct") return !e.requiresVote
-    if (activeTab === "vote") return e.requiresVote
-    return true
-  })
+  const sorted = React.useMemo(() => {
+    const entries = filtered
+    const copy = [...entries]
+    const byDate = (a: typeof copy[0], b: typeof copy[0]) =>
+      new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime()
+    if (sortBy === "newest") return copy.sort((a, b) => -byDate(a, b))
+    if (sortBy === "oldest") return copy.sort(byDate)
+    if (sortBy === "member-first") {
+      return copy.sort((a, b) =>
+        a.applicationType !== b.applicationType ? (a.applicationType === "waitlist" ? 1 : -1) : byDate(a, b)
+      )
+    }
+    // self-first
+    return copy.sort((a, b) =>
+      a.applicationType !== b.applicationType ? (a.applicationType === "waitlist" ? -1 : 1) : byDate(a, b)
+    )
+  }, [filtered, sortBy])
 
   // Handle URL hash navigation to scroll to specific user
   React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.substring(1) // Remove the #
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.substring(1)
       if (hash) {
         const element = document.getElementById(hash)
         if (element) {
-          // Use smooth scrolling
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          // Add a highlight effect
-          element.classList.add('ring-2', 'ring-primary', 'ring-offset-2')
+          element.scrollIntoView({ behavior: "smooth", block: "center" })
+          element.classList.add("ring-2", "ring-primary", "ring-offset-2")
           setTimeout(() => {
-            element.classList.remove('ring-2', 'ring-primary', 'ring-offset-2')
+            element.classList.remove("ring-2", "ring-primary", "ring-offset-2")
           }, 3000)
         }
       }
@@ -77,7 +128,7 @@ export default function ApprovalQueuePage() {
     <AdminPageLayout>
       <div className="flex flex-col gap-6">
         {/* Page header */}
-        <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-foreground">Approval Queue</h1>
             <p className="mt-0.5 text-sm text-muted-foreground">
@@ -85,58 +136,53 @@ export default function ApprovalQueuePage() {
             </p>
           </div>
 
-          {/* Legend */}
-          {/* <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-2.5">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-              <span>Direct approve</span>
-              <span className="text-muted-foreground/40">—</span>
-              <span>any admin can approve immediately</span>
-            </div>
-            <Separator orientation="vertical" className="h-4" />
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Vote className="h-3.5 w-3.5 text-violet-600" />
-              <span>Requires vote</span>
-              <span className="text-muted-foreground/40">—</span>
-              <span>{VOTE_THRESHOLD} admins must approve</span>
-            </div>
-          </div> */}
+          <div className="flex items-center gap-2">
+            <AdminSearchField value={query} onChange={setQuery} placeholder="Search applicants…" className="w-52 min-w-0 flex-none" />
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+              <SelectTrigger className="h-8 w-52 rounded-full text-xs font-semibold">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value="oldest" className="text-xs">Oldest First</SelectItem>
+                <SelectItem value="newest" className="text-xs">Newest First</SelectItem>
+                <SelectItem value="member-first" className="text-xs">Invited First</SelectItem>
+                <SelectItem value="self-first" className="text-xs">Waitlist First</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <Separator />
 
-        {/* Filter tabs */}
-        {/* <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as FilterTab)} className="flex justify-center">
-          <TabsList className="gap-1 border border-border bg-muted/40">
-            {FILTER_TABS.map((tab: (typeof FILTER_TABS)[number]) => (
-              <TabsTrigger key={tab.id} value={tab.id} className="gap-1.5 text-xs">
-                {tab.label}
-                <span
-                  className={`flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold tabular-nums ${
-                    activeTab === tab.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {counts[tab.id]}
-                </span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs> */}
-
         {/* Cards grid */}
-        {visible.length > 0 ? (
+        {sorted.length > 0 ? (
           <div className="flex flex-col gap-8 max-w-3xl mx-auto w-full">
-            {visible.map((entry) => (
-              <ApprovalCard
-                key={entry.id}
-                entry={entry}
-                onApprove={handleApprove}
-                onVote={handleVote}
-                onReject={handleReject}
-              />
+            {sorted.map((entry) => (
+              <AnimatedRemoval key={entry.id} isExiting={exitingIds.has(entry.id)}>
+                <ApprovalCard
+                  entry={entry}
+                  onApprove={handleApprove}
+                  onVote={handleVote}
+                  onReject={handleReject}
+                  onBan={handleBan}
+                />
+              </AnimatedRemoval>
             ))}
           </div>
+        ) : query.trim() ? (
+          <Empty className="border border-dashed border-border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia
+                variant="icon"
+                className="size-12 rounded-full bg-muted text-muted-foreground"
+              >
+                <SearchX />
+              </EmptyMedia>
+              <EmptyTitle>No results</EmptyTitle>
+              <EmptyDescription>
+                No applicants match "{query.trim()}". Try a different name.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         ) : (
           <Empty className="border border-dashed border-border bg-muted/20">
             <EmptyHeader>

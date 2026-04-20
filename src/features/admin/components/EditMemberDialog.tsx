@@ -19,11 +19,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { CalendarDays, Ban, Trash2, UserX, UserCheck, RefreshCcw, KeyRound, MessageSquare, Infinity, CreditCard, ExternalLink, Mail, Send } from "lucide-react"
+import { CalendarDays, Ban, Trash2, UserX, UserCheck, RefreshCcw, KeyRound, MessageSquare, Infinity, CreditCard, ExternalLink, Mail, Send, PauseCircle } from "lucide-react"
 
 // ── Types & Schema ────────────────────────────────────────────────────────
 
-const memberStatuses = ["active", "banned", "waitlisted"] as const
+const memberStatuses = ["active", "banned", "waitlisted", "on-hold"] as const
 
 type MemberStatus = typeof memberStatuses[number]
 
@@ -60,9 +60,10 @@ type FormValues = z.infer<typeof memberSchema>
 // ── Status Config ──────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<MemberStatus, { label: string; icon: React.ReactNode; color: string; dot: string }> = {
-  active:     { label: "Active",     icon: <UserCheck className="h-3 w-3" />, color: "text-emerald-700", dot: "bg-emerald-500" },
-  banned:     { label: "Banned",     icon: <Ban className="h-3 w-3" />,       color: "text-red-700",     dot: "bg-red-500"     },
-  waitlisted: { label: "Waitlisted", icon: <CalendarDays className="h-3 w-3" />, color: "text-blue-700", dot: "bg-blue-500"    },
+  active:     { label: "Active",     icon: <UserCheck className="h-3 w-3" />,    color: "text-emerald-700", dot: "bg-emerald-500" },
+  banned:     { label: "Banned",     icon: <Ban className="h-3 w-3" />,          color: "text-red-700",     dot: "bg-red-500"     },
+  waitlisted: { label: "Waitlisted", icon: <CalendarDays className="h-3 w-3" />, color: "text-blue-700",   dot: "bg-blue-500"    },
+  "on-hold":  { label: "On Hold",    icon: <PauseCircle className="h-3 w-3" />,  color: "text-amber-700",   dot: "bg-amber-500"   },
 }
 
 // ── Member Avatar ──────────────────────────────────────────────────────────

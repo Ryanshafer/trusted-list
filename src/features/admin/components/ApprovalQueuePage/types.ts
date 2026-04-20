@@ -14,9 +14,7 @@ export type QueueEntry = {
     name: string
     email: string
     avatarUrl: string | null
-    title: string
     company: string
-    location: string
     linkedInUrl: string | null
   }
   inviter: {
@@ -29,6 +27,7 @@ export type QueueEntry = {
   recommendationText: string
   appliedAt: string
   requiresVote: boolean
+  applicationType: "waitlist" | "invited"
   votes: AdminVote[]
   status: string
 }

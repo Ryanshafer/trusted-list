@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import OnHoldPage from "../../features/admin/components/OnHoldPage";
+---
+
+<BaseLayout
+  title="On Hold — Admin"
+  description="View and manage members on hold."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <OnHoldPage client:load slot="main" />
+</BaseLayout>

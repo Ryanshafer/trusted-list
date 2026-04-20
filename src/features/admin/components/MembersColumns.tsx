@@ -4,7 +4,6 @@ import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Columns3 } fro
 import { useReactTable } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -17,30 +16,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
 import { TableCell, TableRow } from "@/components/ui/table"
 import { ExternalLink } from "lucide-react"
 
-import { STATUS_CONFIG, SUBSCRIPTION_CONFIG, type MemberStatus, type SubscriptionStatus, type TableMember } from "../lib/members-config"
+import { type TableMember } from "../lib/members-config"
+import { ApplicationTypeBadge, StatusBadge, SubscriptionBadge } from "./shared/status-badges"
+import { SortableHeaderButton } from "./shared/admin-list-controls"
 
 // ── Small helpers ─────────────────────────────────────────────────────────────
 
-export function StatusBadge({ status }: { status: MemberStatus }) {
-  const cfg = STATUS_CONFIG[status]
-  return (
-    <Badge variant="outline" className={`rounded-full text-[11px] font-semibold ${cfg.className}`}>
-      {cfg.label}
-    </Badge>
-  )
-}
-
-export function SubscriptionBadge({ status }: { status: SubscriptionStatus }) {
-  const cfg = SUBSCRIPTION_CONFIG[status]
-  return (
-    <Badge variant="outline" className={`rounded-full text-[11px] font-semibold ${cfg.className}`}>
-      {cfg.label}
-    </Badge>
-  )
-}
+export { ApplicationTypeBadge as TypeBadge, StatusBadge, SubscriptionBadge }
 
 export function SortIcon({ sorted }: { sorted: false | "asc" | "desc" }) {
   if (!sorted) return <ArrowUpDown className="ml-1.5 h-3.5 w-3.5 text-muted-foreground/60" />
@@ -82,6 +68,7 @@ export function TableSkeletonRows({ count = 5, colCount }: { count?: number; col
 const COLUMN_LABELS: Record<string, string> = {
   member: "Member",
   email: "Email",
+  type: "Type",
   status: "Status",
   joinDate: "Joined",
   subscriptionStatus: "Plan",
@@ -132,13 +119,11 @@ export function buildColumns(
       id: "member",
       accessorKey: "name",
       header: ({ column }) => (
-        <button
-          className="flex items-center text-xs font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+        <SortableHeaderButton
+          label="Member"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Member
-          <SortIcon sorted={column.getIsSorted()} />
-        </button>
+          icon={<SortIcon sorted={column.getIsSorted()} />}
+        />
       ),
       cell: ({ row }) => {
         const m = row.original
@@ -151,7 +136,7 @@ export function buildColumns(
             </Avatar>
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-foreground">{m.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{m.title} · {m.company}</p>
+              <p className="truncate text-xs text-muted-foreground max-w-[30ch]">{m.title} · {m.company}</p>
             </div>
           </div>
         )
@@ -165,11 +150,20 @@ export function buildColumns(
       cell: ({ row }) => (
         <a
           href={`mailto:${row.original.email}`}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           {row.original.email}
         </a>
       ),
+    },
+    {
+      id: "type",
+      accessorKey: "applicationType",
+      header: () => (
+        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Type</span>
+      ),
+      cell: ({ row }) => <ApplicationTypeBadge applicationType={row.original.applicationType} />,
+      enableSorting: false,
     },
     {
       accessorKey: "status",
@@ -181,21 +175,17 @@ export function buildColumns(
     {
       accessorKey: "joinDate",
       header: ({ column }) => (
-        <button
-          className="flex items-center text-xs font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+        <SortableHeaderButton
+          label="Joined"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Joined
-          <SortIcon sorted={column.getIsSorted()} />
-        </button>
+          icon={<SortIcon sorted={column.getIsSorted()} />}
+        />
       ),
       cell: ({ row }) => (
-        <span className="text-sm tabular-nums text-muted-foreground">
-          {new Date(row.original.joinDate + "T00:00:00").toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
+        <span className="text-xs tabular-nums text-muted-foreground">
+          {row.original.joinDate
+            ? new Date(row.original.joinDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+            : "—"}
         </span>
       ),
     },
@@ -216,7 +206,7 @@ export function buildColumns(
       cell: ({ row }) => {
         const stripeId = row.original.stripe_customer_id
         if (!stripeId) {
-          return <span className="text-sm text-muted-foreground/50">—</span>
+          return <span className="text-xs text-muted-foreground/50">—</span>
         }
         return (
           <a

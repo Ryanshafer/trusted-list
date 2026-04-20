@@ -1,5 +1,6 @@
 import * as React from "react"
 import queueRaw from "../../../../data/approval-queue.json"
+import { removeApplicantReviewRecord, upsertApplicantReviewRecord } from "@/features/admin/lib/applicant-review-store"
 
 // ── Type ──────────────────────────────────────────────────────────────────────
 
@@ -10,9 +11,7 @@ export type ApprovalQueueItem = {
     name: string
     email: string
     avatarUrl: string | null
-    title: string
     company: string
-    location: string
     linkedInUrl: string
   }
   inviter: {
@@ -25,6 +24,7 @@ export type ApprovalQueueItem = {
   recommendationText: string
   appliedAt: string
   requiresVote: boolean
+  applicationType: "waitlist" | "invited"
   votes: Array<{
     adminId: string
     adminName: string
@@ -40,6 +40,21 @@ export type ApprovalQueueItem = {
 // subscribe to the same state and stay in sync automatically.
 
 let _items: ApprovalQueueItem[] = queueRaw as ApprovalQueueItem[]
+
+// Initialize some applicants with on-hold status for demo purposes
+function initializeDemoOnHoldApplicants() {
+  const demoOnHoldIds = ["aq-002", "aq-004"] // Place Taylor Kim and Morgan Oakes on hold
+  demoOnHoldIds.forEach(id => {
+    const entry = _items.find(item => item.id === id)
+    if (entry) {
+      upsertApplicantReviewRecord(entry, "on-hold")
+      _items = _items.filter(item => item.id !== id)
+    }
+  })
+}
+
+// Initialize demo data
+initializeDemoOnHoldApplicants()
 const _listeners = new Set<() => void>()
 
 function _notify() {
@@ -59,6 +74,52 @@ const _getSnapshot = (): ApprovalQueueItem[] => _items
 export function removeApprovalQueueItem(id: string): void {
   _items = _items.filter((item) => item.id !== id)
   _notify()
+}
+
+function takeApprovalQueueItem(id: string): ApprovalQueueItem | undefined {
+  const existing = _items.find((item) => item.id === id)
+  if (!existing) return undefined
+  _items = _items.filter((item) => item.id !== id)
+  _notify()
+  return existing
+}
+
+export function placeApplicantOnHold(id: string): ApprovalQueueItem | undefined {
+  const entry = takeApprovalQueueItem(id)
+  if (!entry) return undefined
+  upsertApplicantReviewRecord(entry, "on-hold")
+  return entry
+}
+
+export function banApplicantFromQueue(id: string): ApprovalQueueItem | undefined {
+  const entry = takeApprovalQueueItem(id)
+  if (!entry) return undefined
+  upsertApplicantReviewRecord(entry, "banned")
+  return entry
+}
+
+export function returnApplicantToQueue(id: string): ApprovalQueueItem | undefined {
+  const record = removeApplicantReviewRecord(id)
+  if (!record) return undefined
+
+  const entry: ApprovalQueueItem = {
+    id: record.id,
+    applicant: {
+      ...record.applicant,
+      linkedInUrl: record.applicant.linkedInUrl ?? "",
+    },
+    inviter: record.inviter,
+    recommendationText: record.recommendationText,
+    appliedAt: record.appliedAt,
+    requiresVote: record.requiresVote,
+    applicationType: record.applicationType,
+    votes: record.votes,
+    status: "Pending",
+  }
+
+  _items = [..._items, entry]
+  _notify()
+  return entry
 }
 
 /** Subscribe to the approval queue item list. Re-renders on every change. */

@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BannedPage from "../../features/admin/components/BannedPage";
+---
+
+<BaseLayout
+  title="Banned Members — Admin"
+  description="View and manage banned members."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <BannedPage client:load slot="main" />
+</BaseLayout>

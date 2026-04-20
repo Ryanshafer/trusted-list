@@ -7,10 +7,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -38,7 +36,8 @@ import { EditMemberDialog } from "./EditMemberDialog"
 import { InviteDialog } from "@/features/invites/components/InviteDialog"
 import { toast } from "@/features/admin/lib/toast"
 import { useMembersData } from "@/features/admin/hooks/useMembersData"
-import { buildColumns, TableSkeletonRows, ColumnVisibilityToggle } from "./MembersColumns"
+import { buildColumns, TableSkeletonRows, ColumnVisibilityToggle, TypeBadge } from "./MembersColumns"
+import { AdminFilterButton, AdminPagination, AdminSearchField } from "./shared/admin-list-controls"
 import {
   STATUS_CONFIG,
   SUBSCRIPTION_CONFIG,
@@ -157,6 +156,7 @@ export default function MembersPage() {
   })
 
   const activeFilterCount =
+    appliedFilters.types.length +
     appliedFilters.statuses.length +
     appliedFilters.subscriptionStatuses.length +
     (appliedFilters.dateFrom ? 1 : 0) +
@@ -190,43 +190,10 @@ export default function MembersPage() {
 
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, email, company…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-8 rounded-full border-border bg-muted/40 pl-8 pr-8 text-sm placeholder:text-muted-foreground/60 focus-visible:bg-background"
-            />
-            {search && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground hover:text-foreground"
-                onClick={() => setSearch("")}
-                aria-label="Clear search"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
+          <AdminSearchField value={search} onChange={setSearch} placeholder="Search by name, email, company…" />
 
           <div className="flex items-center gap-2 ml-auto">
-            <Button
-              variant="outline"
-              size="sm"
-              className={`h-8 rounded-full gap-2 font-semibold text-xs${activeFilterCount > 0 ? " border-primary text-primary" : ""}`}
-              onClick={() => setFilterOpen(true)}
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-              Filters
-              {activeFilterCount > 0 && (
-                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/10 px-1 text-[10px] font-bold text-primary">
-                  {activeFilterCount}
-                </span>
-              )}
-            </Button>
+            <AdminFilterButton count={activeFilterCount} onClick={() => setFilterOpen(true)} />
             <ColumnVisibilityToggle table={table} />
           </div>
         </div>
@@ -282,48 +249,19 @@ export default function MembersPage() {
           </Table>
         </div>
 
-        {/* Pagination — only shown when there are results */}
         {hasResults && (
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-xs tabular-nums text-muted-foreground">
-              Showing {pageStart}–{pageEnd} of {totalCount} member{totalCount !== 1 ? "s" : ""}
-            </p>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                aria-label="Previous page"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="flex items-center gap-1">
-                {Array.from({ length: table.getPageCount() }, (_, i) => (
-                  <Button
-                    key={i}
-                    variant={pageIndex === i ? "default" : "ghost"}
-                    size="icon"
-                    className="h-8 w-8 rounded-full text-xs font-medium"
-                    onClick={() => table.setPageIndex(i)}
-                  >
-                    {i + 1}
-                  </Button>
-                ))}
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                aria-label="Next page"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <AdminPagination
+            pageIndex={pageIndex}
+            pageCount={table.getPageCount()}
+            pageStart={pageStart}
+            pageEnd={pageEnd}
+            totalCount={totalCount}
+            canPreviousPage={table.getCanPreviousPage()}
+            canNextPage={table.getCanNextPage()}
+            onPreviousPage={() => table.previousPage()}
+            onNextPage={() => table.nextPage()}
+            onSetPage={(nextPageIndex) => table.setPageIndex(nextPageIndex)}
+          />
         )}
 
         {/* Filter sidebar */}
@@ -336,6 +274,22 @@ export default function MembersPage() {
           audienceOptions={{ contact: false, circle: false, community: false }}
           extraSections={(pending, toggle) => (
             <>
+              <FilterAccordionSection title="Type">
+                <div className="flex flex-col gap-3">
+                  {(["invited", "waitlist"] as const).map((type) => (
+                    <div key={type} className="flex items-center gap-3">
+                      <Checkbox
+                        id={`filter-type-${type}`}
+                        checked={pending.types.includes(type)}
+                        onCheckedChange={() => toggle("types", type)}
+                      />
+                      <Label htmlFor={`filter-type-${type}`} className="cursor-pointer font-normal">
+                        <TypeBadge applicationType={type} />
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </FilterAccordionSection>
               <FilterAccordionSection title="Member Status">
                 <div className="flex flex-col gap-3">
                   {ALL_STATUSES.map((s) => (
