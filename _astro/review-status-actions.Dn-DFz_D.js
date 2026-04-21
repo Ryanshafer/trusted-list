@@ -1,1 +1,0 @@
-import{u}from"./members-store.DpBa3ymj.js";import{a as t}from"./AdminShell.hBRw0shV.js";function o(r){return t(r)}function p(r,e){return e==="member"?(u(r,"Active"),{kind:e,id:r}):t(r)}export{o as r,p as u};
