@@ -3734,5 +3734,84 @@
       "requests": 3,
       "trustRating": "Trustworthy"
     }
+  },
+  "connect-priya": {
+    "audience": "Trusted List",
+    "audienceCategory": "Connection Request",
+    "topics": [
+      "Networking",
+      "Professional Development"
+    ],
+    "author": {
+      "role": "Product Designer",
+      "company": "Innovate Design Co",
+      "connectionDegree": "3rd+",
+      "trustedFor": "Design Systems, Product Design"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "requester",
+        "role": "Product Designer · Innovate Design Co",
+        "relationship": null
+      }
+    ],
+    "about": {
+      "career": "5 years in product design with a focus on design systems and UX/UI design.",
+      "location": "San Francisco, CA",
+      "trustedExpertise": "Design Systems, Product Design, User Experience"
+    },
+    "stats": {
+      "peopleHelped": 5,
+      "requests": 2,
+      "trustRating": "Reliable"
+    }
+  },
+  "connect-donna": {
+    "audience": "Trusted List",
+    "audienceCategory": "Connection Request",
+    "topics": [
+      "Networking",
+      "Workshop Facilitation"
+    ],
+    "author": {
+      "role": "Design Operations Manager",
+      "company": "Creative Solutions Inc",
+      "connectionDegree": "2nd",
+      "trustedFor": "Design Management, Workshops"
+    },
+    "connectionPath": [
+      {
+        "type": "you",
+        "role": "Design Director · Acme Corp",
+        "relationship": null
+      },
+      {
+        "type": "connector",
+        "name": "Michael Chen",
+        "role": "Design Lead · Creative Solutions Inc",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+        "relationship": "Colleagues 2019–2021 · Design Conference"
+      },
+      {
+        "type": "requester",
+        "role": "Design Operations Manager · Creative Solutions Inc",
+        "relationship": "Colleagues 2019–2021 · Creative Solutions Inc"
+      }
+    ],
+    "about": {
+      "career": "8 years in design operations and workshop facilitation.",
+      "location": "New York, NY",
+      "trustedExpertise": "Design Management, Workshop Facilitation, Team Leadership"
+    },
+    "stats": {
+      "peopleHelped": 15,
+      "requests": 4,
+      "trustRating": "Trustworthy"
+    }
   }
 }

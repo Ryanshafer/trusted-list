@@ -102,7 +102,12 @@ export default function RequestDetailPage({ id }: { id: string }) {
       };
     }
     if (node.type === "requester") {
-      return { ...node, name: request.name, avatarUrl: request.avatarUrl ?? null };
+      return { 
+        ...node, 
+        name: request.name, 
+        role: detail.author.role, 
+        avatarUrl: request.avatarUrl ?? null 
+      };
     }
     return { ...node, name: node.name ?? "", avatarUrl: node.avatarUrl ?? null };
   };
