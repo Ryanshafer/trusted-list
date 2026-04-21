@@ -239,13 +239,13 @@ export default function BannedPage() {
     <AdminPageLayout>
       <div className="flex flex-col gap-6">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">Banned</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-destructive">Banned</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
             {isLoading
               ? "Loading…"
               : debouncedSearch || isFiltered
               ? `${totalCount} result${totalCount !== 1 ? "s" : ""}`
-              : `${totalCount} banned record${totalCount !== 1 ? "s" : ""}`}
+              : `${totalCount} banned individual${totalCount !== 1 ? "s" : ""}`}
           </p>
         </div>
 

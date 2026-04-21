@@ -113,7 +113,7 @@ function buildColumns(
         />
       ),
       cell: ({ row }) => (
-        <span className="text-sm tabular-nums text-muted-foreground">
+        <span className="text-xs tabular-nums text-muted-foreground">
           {new Date(row.original.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
         </span>
       ),
@@ -227,7 +227,7 @@ export default function OnHoldPage() {
               ? "Loading…"
               : debouncedSearch || isFiltered
               ? `${totalCount} result${totalCount !== 1 ? "s" : ""}`
-              : `${totalCount} applicant${totalCount !== 1 ? "s" : ""} on hold`}
+              : `${totalCount} candidate${totalCount !== 1 ? "s" : ""} on hold`}
           </p>
         </div>
 
