@@ -16,21 +16,32 @@ export function cardVariantToAudienceKey(variant: string): AudienceKey {
   return "circle";
 }
 
+const COLOR_CONFIG = {
+  blue:    { badge: "border-blue-200 bg-blue-50 text-blue-800",       icon: "text-blue-700" },
+  emerald: { badge: "border-emerald-200 bg-emerald-50 text-emerald-800", icon: "text-emerald-700" },
+};
+
 interface AudienceBadgeProps {
   audience: AudienceKey;
   category?: string | null;
   showDegree?: boolean;
+  /** When false, only the category is shown — the audience label is suppressed */
+  showLabel?: boolean;
+  color?: keyof typeof COLOR_CONFIG;
 }
 
-export function AudienceBadge({ audience, category, showDegree }: AudienceBadgeProps) {
+export function AudienceBadge({ audience, category, showDegree, showLabel = true, color = "blue" }: AudienceBadgeProps) {
   const { label, icon: Icon, degree } = AUDIENCE_CONFIG[audience];
   const displayCategory = category ? category.charAt(0).toUpperCase() + category.slice(1) : null;
-  const text = displayCategory ? `${label} · ${displayCategory}` : label;
+  const text = !showLabel
+    ? (displayCategory ?? label)
+    : displayCategory ? `${label} · ${displayCategory}` : label;
+  const colors = COLOR_CONFIG[color];
 
   return (
     <span className="inline-flex items-center gap-1.5">
-      <Badge variant="outline" className="rounded-full gap-1 border-blue-200 bg-blue-50 text-blue-800 font-semibold text-xs leading-4">
-        <Icon className="h-3 w-3 text-blue-700 -translate-y-[0.5px] shrink-0" />
+      <Badge variant="outline" className={`rounded-full gap-1 font-semibold text-xs leading-4 ${colors.badge}`}>
+        <Icon className={`h-3 w-3 -translate-y-[0.5px] shrink-0 ${colors.icon}`} />
         {text}
       </Badge>
       {showDegree && degree && (

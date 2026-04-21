@@ -435,6 +435,69 @@
     { "dimension": "Engagement",      "value": 85 }
   ],
 
+  "suggestedConnections": [
+    {
+      "userId": "user-sam-smith",
+      "name": "Sam Smith",
+      "firstName": "Sam",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+      "role": "Head of Product · Fieldwork",
+      "company": "Fieldwork",
+      "connectionDegree": "2nd",
+      "trustTier": "Rising",
+      "reason": "you_helped",
+      "reasonDetail": "Gut check my promotion packet"
+    },
+    {
+      "userId": "user-alex-rivera",
+      "name": "Alex Rivera",
+      "firstName": "Alex",
+      "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
+      "role": "VP of Growth · Lumio",
+      "company": "Lumio",
+      "connectionDegree": "2nd",
+      "trustTier": "Emerging",
+      "reason": "university",
+      "reasonDetail": "Rhode Island School of Design"
+    },
+    {
+      "userId": "user-devon-hart",
+      "name": "Devon Hart",
+      "firstName": "Devon",
+      "avatarUrl": "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&h=400&fit=crop",
+      "role": "Engineering Manager · StrataWorks",
+      "company": "StrataWorks",
+      "connectionDegree": "3rd+",
+      "trustTier": "Proven",
+      "reason": "company",
+      "reasonDetail": "Viacom Music Group"
+    },
+    {
+      "userId": "user-taylor-kim",
+      "name": "Taylor Kim",
+      "firstName": "Taylor",
+      "avatarUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop",
+      "role": "Brand Strategist · Design Co.",
+      "company": "Design Co.",
+      "connectionDegree": "3rd+",
+      "trustTier": "Rising",
+      "reason": "university",
+      "reasonDetail": "Rhode Island School of Design"
+    },
+    {
+      "userId": "user-morgan-oakes",
+      "name": "Morgan Oakes",
+      "firstName": "Morgan",
+      "avatarUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
+      "role": "Product Manager · Pivot Labs",
+      "company": "Pivot Labs",
+      "connectionDegree": "2nd",
+      "trustTier": "Proven",
+      "reason": "you_helped",
+      "reasonDetail": "UX audit for product onboarding"
+    }
+  ],
+
   "notificationSettings": {
     "myRequests":    { "inApp": true,  "email": true  },
     "helpingOthers": { "inApp": true,  "email": true  },

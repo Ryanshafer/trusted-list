@@ -11,6 +11,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 import { AudienceBadge, cardVariantToAudienceKey, type AudienceKey } from "@/components/AudienceBadge";
 
 import type { CardData, CardVariant } from "../types";
@@ -51,6 +52,7 @@ function getDegreeBadge(variant: CardVariant, override?: string | null): string 
 
 
 export const IncomingRequestCard = (card: HelpRequestCardProps) => {
+  if (card.category === "request-connection") return <ConnectRequestCard {...card} />;
   if (card.variant === "contact") return <DirectConnectionCard {...card} />;
   if (card.variant === "circle") return <NetworkConnectionCard {...card} />;
   if (card.variant === "community") return <SkillsMatchCard {...card} />;
@@ -254,6 +256,11 @@ const IncomingRequestCardBase = ({
   category,
   trustedFor,
   degreeBadge,
+  showAudienceLabel = true,
+  audienceColor,
+  showAllDegrees = false,
+  onPrimaryActionOverride,
+  dismissAfterOverride = false,
 }: {
   id: string;
   name: string;
@@ -270,6 +277,11 @@ const IncomingRequestCardBase = ({
   category?: string | null;
   trustedFor?: string | null;
   degreeBadge?: string | null;
+  showAudienceLabel?: boolean;
+  audienceColor?: "blue" | "emerald";
+  showAllDegrees?: boolean;
+  onPrimaryActionOverride?: () => void | Promise<void>;
+  dismissAfterOverride?: boolean;
 }) => {
   const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
@@ -308,10 +320,18 @@ const IncomingRequestCardBase = ({
     };
   }, []);
 
-  const handleHelpClick = () => {
+  const handleHelpClick = async () => {
+    if (onPrimaryActionOverride) {
+      await onPrimaryActionOverride();
+      if (dismissAfterOverride) handleDismiss();
+      return;
+    }
     if (celebrating) return;
     setCelebrating(true);
-    chatOpenTimeout.current = setTimeout(() => setChatOpen(true), 700);
+    chatOpenTimeout.current = setTimeout(() => {
+      setIsDismissing(true);
+      setChatOpen(true);
+    }, 600);
     celebrationTimeout.current = setTimeout(() => setCelebrating(false), 1000);
   };
 
@@ -339,7 +359,7 @@ const IncomingRequestCardBase = ({
           {/* Top: audience badge + ⋮ menu */}
           <div className="flex items-center justify-between">
             {audience ? (
-              <AudienceBadge audience={audience} category={category} />
+              <AudienceBadge audience={audience} category={category} showLabel={showAudienceLabel} color={audienceColor} />
             ) : (
               <div />
             )}
@@ -361,6 +381,7 @@ const IncomingRequestCardBase = ({
               href={`/trusted-list/members/${name.toLowerCase().replace(/\s+/g, "-")}`}
               avatarSize="md"
               showTrustedFor={!!trustedFor}
+              showAllDegrees={showAllDegrees}
               groupClass="group/member"
               className="min-w-0"
             />
@@ -412,7 +433,13 @@ const IncomingRequestCardBase = ({
 
     <ChatMultiHelperModal
         open={chatOpen}
-        onOpenChange={setChatOpen}
+        onOpenChange={(open) => {
+          setChatOpen(open);
+          if (!open) {
+            if (onClear) onClear();
+            else setIsHidden(true);
+          }
+        }}
         title={requestSummary ?? request.slice(0, 60)}
         contacts={[{
           id,
@@ -422,6 +449,7 @@ const IncomingRequestCardBase = ({
           avatarUrl: avatarUrl ?? null,
         }]}
         messagesByContactId={{ [id]: chatInitialMessage }}
+        isMyRequest={false}
       />
 
       <SetReminderDialog
@@ -528,6 +556,49 @@ const SkillsMatchCard = (props: HelpRequestCardProps) => (
     degreeBadge={getDegreeBadge(props.variant, props.degreeBadge)}
   />
 );
+
+const ConnectRequestCard = (props: HelpRequestCardProps) => {
+  const firstName = props.name.split(" ")[0];
+
+  const handleConnect = React.useCallback(async () => {
+    try {
+      // TODO: replace with real endpoint when available
+      await fetch(`/api/connections`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: props.id }),
+      });
+    } catch {
+      // proceed optimistically even if the endpoint isn't live yet
+    }
+    toast.success(`You are connected to ${props.name}`);
+  }, [props.id, props.name]);
+
+  return (
+    <IncomingRequestCardBase
+      id={props.id}
+      name={props.name}
+      request={props.request}
+      requestSummary={props.requestSummary}
+      avatarUrl={props.avatarUrl}
+      primaryActionLabel={`Connect with ${firstName}`}
+      endDate={props.endDate}
+      onClear={props.onClear}
+      onReminderSet={props.onReminderSet}
+      onReminderClear={props.onReminderClear}
+      reminderLabel={props.reminderLabel}
+      audience={cardVariantToAudienceKey(props.variant)}
+      category="Connection Request"
+      showAudienceLabel={false}
+      audienceColor="emerald"
+      showAllDegrees
+      trustedFor={props.trustedFor ?? props.profession ?? undefined}
+      degreeBadge={getDegreeBadge(props.variant, props.degreeBadge)}
+      onPrimaryActionOverride={handleConnect}
+      dismissAfterOverride
+    />
+  );
+};
 
 const confettiColors = ["bg-primary", "bg-amber-400", "bg-emerald-400", "bg-rose-400", "bg-sky-400", "bg-purple-400"];
 

@@ -440,6 +440,10 @@ type CreateProps = BaseProps & {
   initialSummary?: string;
   initialDetails?: string;
   initialVouchType?: "myself" | "skill";
+  /** When true, renders a simplified "request to connect" flow with custom title/context label */
+  connectRequestMode?: boolean;
+  /** Dialog title override — used with connectRequestMode */
+  overrideTitle?: string;
   onSubmit?: (payload: CreatePayload) => void;
 };
 
@@ -463,6 +467,7 @@ export function HelpRequestDialog(props: Props) {
   const isEdit = props.mode === "edit";
   const createProps = props.mode === "create" ? props : undefined;
   const editProps = props.mode === "edit" ? props : undefined;
+  const isConnectRequest = !isEdit && createProps?.connectRequestMode === true;
 
   const [shortDescription, setShortDescription] = React.useState(
     props.initialSummary ?? ""
@@ -683,6 +688,12 @@ export function HelpRequestDialog(props: Props) {
   const handleSubmit = () => {
     if (!isEdit && sendState !== "idle") return;
 
+    if (isConnectRequest) {
+      const nextErrors: DialogErrors = {};
+      if (!requestDetails.trim()) nextErrors.requestDetails = "Please add some context";
+      if (Object.keys(nextErrors).length > 0) { setErrors(nextErrors); return; }
+      setErrors({});
+    } else {
     const newErrors = validateHelpRequest({
       isEdit,
       askMode,
@@ -697,6 +708,7 @@ export function HelpRequestDialog(props: Props) {
       return;
     }
     setErrors({});
+    }
 
     if (props.mode === "edit") {
       props.onSubmit?.({
@@ -705,6 +717,16 @@ export function HelpRequestDialog(props: Props) {
         requestCategories: [...requestCategories],
         askMode,
         dueDate,
+      });
+      handleOpenChange(false);
+    } else if (isConnectRequest) {
+      props.onSubmit?.({
+        shortDescription: (createProps?.overrideTitle ?? shortDescription).trim(),
+        requestDetails: requestDetails.trim(),
+        requestCategories: ["request-connection"],
+        askMode: "contact",
+        selectedContacts: [...selectedContacts],
+        dueDate: undefined,
       });
       handleOpenChange(false);
     } else {
@@ -744,8 +766,10 @@ export function HelpRequestDialog(props: Props) {
     <BaseDialog
       open={open}
       onOpenChange={handleOpenChange}
-      title={isEdit ? "Edit your request" : "What are you trying to achieve?"}
-      description={isEdit
+      title={isConnectRequest ? (createProps?.overrideTitle ?? "Request to connect") : isEdit ? "Edit your request" : "What are you trying to achieve?"}
+      description={isConnectRequest
+        ? "Send a connection request to get in touch."
+        : isEdit
         ? "Update your need, category, or timeframe."
         : "Name your need, choose who to ask, and add a timeframe if helpful."}
       size="xl"
@@ -768,7 +792,7 @@ export function HelpRequestDialog(props: Props) {
             {isEdit ? (
               <>Save Changes <ArrowRight className="h-4 w-4" /></>
             ) : sendState === "idle" ? (
-              <>Request Help <ArrowRight className="h-4 w-4" /></>
+              isConnectRequest ? <>Send Request <ArrowRight className="h-4 w-4" /></> : <>Request Help <ArrowRight className="h-4 w-4" /></>
             ) : sendState === "sending" ? (
               <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
             ) : (
@@ -781,7 +805,7 @@ export function HelpRequestDialog(props: Props) {
         <div className="flex flex-col gap-8 overflow-x-hidden">
 
           {/* ── Who do you want to ask? ─────────────────────────── */}
-          {!detailsExpanded && (
+          {!detailsExpanded && !isConnectRequest && (
             <AskModeSection
               askMode={askMode}
               errors={errors}
@@ -805,7 +829,7 @@ export function HelpRequestDialog(props: Props) {
           )}
 
           {/* ── What kind of help is this? ───────────────────── */}
-          {!detailsExpanded && (
+          {!detailsExpanded && !isConnectRequest && (
             <CategorySection
               errors={errors}
               categoryOpen={categoryOpen}
@@ -1104,7 +1128,7 @@ export function HelpRequestDialog(props: Props) {
           )}
 
           {/* ── What would you like help with? ───────────────── */}
-          {!detailsExpanded && (
+          {!detailsExpanded && !isConnectRequest && (
             <div className="space-y-3">
               <p className="text-base font-semibold text-foreground">What would you like help with?</p>
               {errors.shortDescription && (
@@ -1132,7 +1156,7 @@ export function HelpRequestDialog(props: Props) {
 
           {/* ── Add some context ─────────────────────────────── */}
           <div className="space-y-2">
-            <p className="text-base font-normal text-secondary-foreground">Add some context to get better advice</p>
+            <p className="text-base font-normal text-secondary-foreground">{isConnectRequest ? "How do you know this person?" : "Add some context to get better advice"}</p>
             {errors.requestDetails && (
               <p className="mb-1 text-xs text-destructive">{errors.requestDetails}</p>
             )}
@@ -1158,7 +1182,7 @@ export function HelpRequestDialog(props: Props) {
           </div>
 
           {/* ── When do you need this by? ─────────────────────── */}
-          {!detailsExpanded && (
+          {!detailsExpanded && !isConnectRequest && (
             <DueDateSection
               dueDate={dueDate}
               dueDatePickerOpen={dueDatePickerOpen}

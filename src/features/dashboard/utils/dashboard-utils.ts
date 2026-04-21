@@ -7,6 +7,10 @@ export const filterAndSortCards = (cards: CardData[]): CardData[] => {
       return new Date(card.endDate).getTime() > Date.now();
     })
     .sort((a, b) => {
+      const aIsConnect = a.category === "request-connection";
+      const bIsConnect = b.category === "request-connection";
+      if (aIsConnect !== bIsConnect) return aIsConnect ? -1 : 1;
+
       // Cards without deadlines go to the end
       if (!a.endDate && !b.endDate) return 0;
       if (!a.endDate) return 1;

@@ -8,10 +8,12 @@ import type { OpenRequest, ProfileData } from "../types";
 interface ProfileCTAsProps {
   profile: ProfileData;
   isOwner: boolean;
+  connectionDegree?: string | null;
 }
 
-export function ProfileCTAs({ profile, isOwner }: ProfileCTAsProps) {
+export function ProfileCTAs({ profile, isOwner, connectionDegree }: ProfileCTAsProps) {
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [connectDialogOpen, setConnectDialogOpen] = useState(false);
 
   const profileUser: AskContact = {
     id: profile.id,
@@ -19,6 +21,8 @@ export function ProfileCTAs({ profile, isOwner }: ProfileCTAsProps) {
     role: profile.title || "Trust Network Member",
     avatarUrl: profile.avatarUrl ?? undefined,
   };
+
+  const is3rdPlusDegree = connectionDegree !== "1st" && connectionDegree !== "2nd";
 
   if (isOwner) {
     return null;
@@ -35,8 +39,16 @@ export function ProfileCTAs({ profile, isOwner }: ProfileCTAsProps) {
           Request help from {profile.firstName}
         </Button>
 
-        {/* Secondary: anchors to help requests in the sidebar aside, only if requests exist */}
-        {profile.openRequests.length > 0 && (
+        {/* Secondary: for 3rd+ degree show connect button; otherwise anchor to open requests */}
+        {is3rdPlusDegree ? (
+          <Button
+            variant="outline"
+            className="rounded-full font-medium h-10 px-6 text-sm border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            onClick={() => setConnectDialogOpen(true)}
+          >
+            Request to connect
+          </Button>
+        ) : profile.openRequests.length > 0 && (
           <Button
             variant="outline"
             asChild
@@ -58,7 +70,20 @@ export function ProfileCTAs({ profile, isOwner }: ProfileCTAsProps) {
         initialSelectedContacts={[profileUser]}
         onSubmit={(payload) => {
           console.log("Help request submitted:", payload);
-          // Actual submission logic would go here
+        }}
+      />
+
+      <HelpRequestDialog
+        mode="create"
+        open={connectDialogOpen}
+        onOpenChange={setConnectDialogOpen}
+        categories={HELP_CATEGORIES}
+        contacts={[profileUser]}
+        initialSelectedContacts={[profileUser]}
+        connectRequestMode
+        overrideTitle={`Connect with ${profile.firstName} ${profile.lastName}`}
+        onSubmit={(payload) => {
+          console.log("Connect request submitted:", payload);
         }}
       />
     </>

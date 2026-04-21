@@ -89,6 +89,19 @@ export interface TrustScoreDimension {
   value: number;
 }
 
+export interface SuggestedConnection {
+  userId: string;
+  name: string;
+  firstName: string;
+  avatarUrl: string | null;
+  role: string;
+  company: string;
+  connectionDegree: string;
+  trustTier: string;
+  reason: "company" | "university" | "you_helped";
+  reasonDetail: string;
+}
+
 export interface ProfileData {
   id: string;
   name: string;
@@ -124,6 +137,7 @@ export interface ProfileData {
     education: EducationEntry[];
   };
   trustScoreBreakdown?: TrustScoreDimension[];
+  suggestedConnections?: SuggestedConnection[];
 }
 
 export interface ViewerData {

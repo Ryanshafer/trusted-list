@@ -155,6 +155,7 @@ export const HelpingCard = ({
       <ChatMultiHelperModal
         open={chatOpen}
         onOpenChange={setChatOpen}
+        isMyRequest={false}
         title={currentCard.requestSummary ?? currentCard.request}
         contacts={[
           {

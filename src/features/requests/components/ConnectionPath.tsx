@@ -114,7 +114,7 @@ export function ConnectionPath({
     `${basePath}/members/${name.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
-    <div className="flex flex-col gap-3.5">
+    <div className="flex flex-col gap-6">
       {!hideHeader && (
         <p className="text-xs text-muted-foreground tracking-widest uppercase">Your Connection</p>
       )}

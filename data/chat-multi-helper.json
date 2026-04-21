@@ -6,6 +6,7 @@
       "role": "Engineering Director",
       "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
       "isCompleted": false,
+      "isConnected": true,
       "trustedFor": "Observability, System Architecture, Engineering"
     },
     {
@@ -14,6 +15,7 @@
       "role": "Engineering Manager",
       "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop",
       "isCompleted": false,
+      "isConnected": false,
       "trustedFor": "Engineering Management, Hiring, Technical Strategy"
     },
     {
@@ -22,6 +24,7 @@
       "role": "Engineering Manager",
       "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
       "isCompleted": false,
+      "isConnected": false,
       "trustedFor": "Engineering Management, Technical Leadership, Mentorship"
     },
     {
@@ -30,6 +33,7 @@
       "role": "Engineering Director",
       "avatarUrl": null,
       "isCompleted": true,
+      "isConnected": false,
       "trustedFor": "Engineering Leadership, System Design, Scaling Teams"
     }
   ],

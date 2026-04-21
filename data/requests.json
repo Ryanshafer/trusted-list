@@ -1,5 +1,33 @@
 [
   {
+    "id": "connect-donna",
+    "category": "request-connection",
+    "variant": "community",
+    "name": "Donna Thyme",
+    "requestSummary": "Can I connect with you",
+    "request": "I've been following your work on workshop facilitation and it really resonates with what my team is trying to do. Would love to connect and swap notes sometime.",
+    "relationshipTag": "Connection request",
+    "primaryCTA": "Connect with Donna",
+    "avatarUrl": "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?w=120&h=120&fit=crop&crop=faces",
+    "degreeBadge": "2rd",
+    "trustedFor": "Design Management, Workshops",
+    "endDate": null
+  },
+  {
+    "id": "connect-priya",
+    "category": "request-connection",
+    "variant": "community",
+    "name": "Priya Nair",
+    "requestSummary": "Can I connect with you",
+    "request": "Hi — we met briefly at the design systems conference last month and I'd love to stay in touch. I think there's a lot of overlap in what we're both building.",
+    "relationshipTag": "Connection request",
+    "primaryCTA": "Connect with Priya",
+    "avatarUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop&crop=faces",
+    "degreeBadge": "3rd+",
+    "trustedFor": "Design Systems, Product Design",
+    "endDate": null
+  },
+  {
     "id": "req-career-1",
     "category": "Career",
     "variant": "community",

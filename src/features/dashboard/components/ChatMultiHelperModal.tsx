@@ -44,6 +44,7 @@ interface Contact {
   trustedFor?: string | null;
   avatarUrl?: string | null;
   isCompleted?: boolean;
+  isConnected?: boolean;
 }
 
 interface Attachment {
@@ -503,31 +504,38 @@ function ConversationCompletionCard({
 
 function ActiveConversationComposer({
   composer,
+  isMyRequest,
   onComposerChange,
   onSend,
   onMarkComplete,
+  textareaRef,
 }: {
   composer: string;
+  isMyRequest: boolean;
   onComposerChange: (value: string) => void;
   onSend: () => void;
   onMarkComplete: () => void;
+  textareaRef?: React.RefObject<HTMLTextAreaElement | null>;
 }) {
   return (
     <div className="flex flex-col gap-4 px-6 pb-6 pt-4 shrink-0">
-      <div className="flex items-center justify-center">
-        <Button
-          variant="outline"
-          className="w-full rounded-full font-semibold text-primary border-border gap-2 px-4 shadow-none"
-          onClick={onMarkComplete}
-        >
-          <CircleCheckBig className="h-4 w-4 shrink-0 mb-0.5" />
-          Mark this as completed
-        </Button>
-      </div>
+      {isMyRequest && (
+        <div className="flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="w-full rounded-full font-semibold text-primary border-border gap-2 px-4 shadow-none"
+            onClick={onMarkComplete}
+          >
+            <CircleCheckBig className="h-4 w-4 shrink-0 mb-0.5" />
+            Mark this as completed
+          </Button>
+        </div>
+      )}
 
       <div className="relative">
         <div className="bg-secondary border border-border rounded-2xl h-[120px] overflow-hidden px-3.5 pt-3 pb-12">
           <textarea
+            ref={textareaRef}
             value={composer}
             onChange={(event) => onComposerChange(event.target.value)}
             onKeyDown={(event) => {
@@ -568,16 +576,22 @@ function ClosingConversationPanel({
   selectedFirstName,
   outcome,
   feedback,
+  connectOnTrustedList,
+  alreadyConnected,
   onOutcomeChange,
   onFeedbackChange,
+  onConnectChange,
   onCancel,
   onShareClose,
 }: {
   selectedFirstName: string;
   outcome: OutcomeOption;
   feedback: string;
+  connectOnTrustedList: boolean;
+  alreadyConnected: boolean;
   onOutcomeChange: (value: OutcomeOption) => void;
   onFeedbackChange: (value: string) => void;
+  onConnectChange: (value: boolean) => void;
   onCancel: () => void;
   onShareClose: () => void;
 }) {
@@ -628,6 +642,20 @@ function ClosingConversationPanel({
             />
           </div>
 
+          {!alreadyConnected && (
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={connectOnTrustedList}
+                onChange={(e) => onConnectChange(e.target.checked)}
+                className="h-4 w-4 rounded border-border accent-primary cursor-pointer"
+              />
+              <span className="text-sm font-semibold text-foreground leading-5">
+                Connect with {selectedFirstName} on The Trusted List
+              </span>
+            </label>
+          )}
+
           <div className="flex items-center justify-end gap-4">
             <Button
               variant="ghost"
@@ -669,6 +697,7 @@ export interface ChatMultiHelperModalProps {
   completionFeedbackByContactId?: Record<string, CompletionFeedback>;
   requesterName?: string;
   initialContactId?: string;
+  isMyRequest?: boolean;
 }
 
 const OUTCOME_COPY: Record<OutcomeOption, { emoji: string; title: string }> = {
@@ -687,6 +716,7 @@ export function ChatMultiHelperModal({
   completionFeedbackByContactId,
   requesterName = currentUser.firstName,
   initialContactId,
+  isMyRequest = true,
 }: ChatMultiHelperModalProps) {
   const [selectedContactId, setSelectedContactId] = React.useState(
     initialContactId ?? contacts[0]?.id
@@ -704,9 +734,11 @@ export function ChatMultiHelperModal({
   const [reopenedContactIds, setReopenedContactIds] = React.useState<Set<string>>(new Set());
   const [sessionCompletedIds, setSessionCompletedIds] = React.useState<Set<string>>(new Set());
   const [localMessages, setLocalMessages] = React.useState<Record<string, Message[]>>({});
+  const [connectOnTrustedList, setConnectOnTrustedList] = React.useState(false);
   const [flagOpen, setFlagOpen] = React.useState(false);
   const [blockedIds, setBlockedIds] = React.useState<Set<string>>(new Set());
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const composerRef = React.useRef<HTMLTextAreaElement>(null);
 
   const filtered = contacts.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
@@ -732,11 +764,12 @@ export function ChatMultiHelperModal({
     ?? (status === "completed" ? { outcome, text: submittedFeedback } : undefined);
   const outcomeCopy = OUTCOME_COPY[activeFeedback?.outcome ?? "worked-out"];
 
-  // After modal opens or contact changes, wait for animation then jump to bottom
+  // After modal opens or contact changes, wait for animation then jump to bottom and focus composer
   React.useEffect(() => {
     if (!open) return;
     const id = setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+      composerRef.current?.focus();
     }, 220);
     return () => clearTimeout(id);
   }, [open, selectedContactId]);
@@ -872,9 +905,11 @@ export function ChatMultiHelperModal({
                 {status === "active" && (!selected?.isCompleted || isReopened) && (
                   <ActiveConversationComposer
                     composer={composer}
+                    isMyRequest={isMyRequest}
                     onComposerChange={setComposer}
                     onSend={handleSend}
                     onMarkComplete={handleMarkComplete}
+                    textareaRef={composerRef}
                   />
                 )}
 
@@ -884,8 +919,11 @@ export function ChatMultiHelperModal({
                     selectedFirstName={selectedFirst}
                     outcome={outcome}
                     feedback={feedback}
+                    connectOnTrustedList={connectOnTrustedList}
+                    alreadyConnected={!!selected?.isConnected}
                     onOutcomeChange={setOutcome}
                     onFeedbackChange={setFeedback}
+                    onConnectChange={setConnectOnTrustedList}
                     onCancel={handleCancel}
                     onShareClose={handleShareClose}
                   />

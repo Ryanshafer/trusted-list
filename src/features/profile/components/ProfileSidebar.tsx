@@ -10,7 +10,8 @@ import { ConnectionPath } from "@/features/requests/components/ConnectionPath";
 import type { ConnectionPathNode, ResolvedNode } from "@/features/requests/components/ConnectionPath";
 import { HelpRequestDialog, REQUEST_CONNECTION_CATEGORY, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import { ChatMultiHelperModal } from "@/features/dashboard/components/ChatMultiHelperModal";
-import type { ProfileData, OpenRequest, ViewerData } from "../types";
+import { SuggestedConnectionsSection } from "./SuggestedConnectionsSection";
+import type { ProfileData, OpenRequest, ViewerData, SuggestedConnection } from "../types";
 
 interface ProfileSidebarProps {
   profile: ProfileData;
@@ -33,6 +34,23 @@ export function ProfileSidebar({
   const [activeRequest, setActiveRequest] = useState<OpenRequest | null>(null);
   const [connectDialogOpen, setConnectDialogOpen] = useState(false);
   const [connectDialogConnector, setConnectDialogConnector] = useState<AskContact | null>(null);
+  const [suggestedDialogOpen, setSuggestedDialogOpen] = useState(false);
+  const [suggestedDialogData, setSuggestedDialogData] = useState<{ contact: AskContact; title: string; message: string } | null>(null);
+
+  function handleConnectSuggested(c: SuggestedConnection) {
+    const message =
+      c.reason === "company"
+        ? `We worked at ${c.reasonDetail} and I wanted to connect.`
+        : c.reason === "university"
+          ? `We both went to ${c.reasonDetail} and I wanted to connect.`
+          : "Reconnecting after our last exchange.";
+    setSuggestedDialogData({
+      contact: { id: c.userId, name: c.name, role: c.role, avatarUrl: c.avatarUrl ?? undefined },
+      title: `Connect with ${c.name}`,
+      message,
+    });
+    setSuggestedDialogOpen(true);
+  }
 
   function handleConnectRequest(connector: ResolvedNode) {
     setConnectDialogConnector({
@@ -44,7 +62,6 @@ export function ProfileSidebar({
     setConnectDialogOpen(true);
   }
 
-  const connectInitialSummary = `Can you introduce me to ${profile.name}?`;
   const visibleOpenRequests = profile.openRequests.filter((request) => {
     const isOpen = (request.status ?? "Open") === "Open";
     const isPromotable = ["circle", "community"].includes(request.type ?? "circle");
@@ -148,6 +165,18 @@ export function ProfileSidebar({
         </>
       )}
 
+      {/* Suggested connections — owner private view only */}
+      {isOwner && !publicView && (profile.suggestedConnections?.length ?? 0) > 0 && (
+        <>
+          <div className="h-px w-full shrink-0 bg-border" />
+          <SuggestedConnectionsSection
+            connections={profile.suggestedConnections!}
+            onConnect={handleConnectSuggested}
+            basePath={basePath}
+          />
+        </>
+      )}
+
       {/* Open requests */}
       {visibleOpenRequests.length > 0 && (
         <>
@@ -192,10 +221,25 @@ export function ProfileSidebar({
           open={connectDialogOpen}
           onOpenChange={setConnectDialogOpen}
           categories={[REQUEST_CONNECTION_CATEGORY]}
-          contacts={[connectDialogConnector]}
+          contacts={[{ id: profile.id, name: profile.name, role: profile.title, avatarUrl: profile.avatarUrl ?? undefined }]}
           initialCategories={[REQUEST_CONNECTION_CATEGORY.value]}
-          initialSelectedContacts={[connectDialogConnector]}
-          initialSummary={connectInitialSummary}
+          initialSelectedContacts={[{ id: profile.id, name: profile.name, role: profile.title, avatarUrl: profile.avatarUrl ?? undefined }]}
+          initialSummary={`I'm reaching out via ${connectDialogConnector.name} to connect`}
+        />
+      )}
+
+      {/* Connect dialog for suggested connections */}
+      {suggestedDialogData && (
+        <HelpRequestDialog
+          mode="create"
+          open={suggestedDialogOpen}
+          onOpenChange={setSuggestedDialogOpen}
+          categories={[REQUEST_CONNECTION_CATEGORY]}
+          contacts={[suggestedDialogData.contact]}
+          initialCategories={[REQUEST_CONNECTION_CATEGORY.value]}
+          initialSelectedContacts={[suggestedDialogData.contact]}
+          initialSummary={suggestedDialogData.title}
+          initialDetails={suggestedDialogData.message}
         />
       )}
 

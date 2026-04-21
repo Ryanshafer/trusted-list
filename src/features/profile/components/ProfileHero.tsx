@@ -266,7 +266,7 @@ export function ProfileHero({ profile, isOwner, publicView = false, basePath = "
             </div>
 
             {/* User Actions Container */}
-            <ProfileCTAs profile={profile} isOwner={isOwner} />
+            <ProfileCTAs profile={profile} isOwner={isOwner} connectionDegree={connectionDegree} />
           </div>
         </div>
       </div>

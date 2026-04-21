@@ -12,6 +12,7 @@ interface UserIdentityLinkProps {
   avatarSize?: "sm" | "md" | "lg" | "xl";
   avatarBorderClass?: string;
   showTrustedFor?: boolean;
+  showAllDegrees?: boolean;
   className?: string;
   groupClass?: string;
   children?: React.ReactNode;
@@ -27,6 +28,7 @@ export function UserIdentityLink({
   avatarSize = "md",
   avatarBorderClass,
   showTrustedFor = true,
+  showAllDegrees = false,
   className,
   groupClass = "group",
   children,
@@ -34,9 +36,9 @@ export function UserIdentityLink({
 }: UserIdentityLinkProps) {
   // Add validation for connectionDegree
   const validConnectionDegrees = ["1st", "2nd"];
-  const validatedConnectionDegree = validConnectionDegrees.includes(connectionDegree || "")
+  const validatedConnectionDegree = showAllDegrees
     ? connectionDegree
-    : undefined;
+    : validConnectionDegrees.includes(connectionDegree || "") ? connectionDegree : undefined;
 
   const getAvatarSize = () => {
     switch (avatarSize) {

@@ -167,6 +167,7 @@ export const ReminderListRow = ({
       <ChatMultiHelperModal
         open={chatOpen}
         onOpenChange={setChatOpen}
+        isMyRequest={false}
         title={card.requestSummary ?? card.request.slice(0, 60)}
         contacts={[
           {
