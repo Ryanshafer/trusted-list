@@ -29,7 +29,7 @@ export type ApprovalQueueItem = {
     adminId: string
     adminName: string
     votedAt: string
-    decision: "approve" | "reject"
+    decision: "approve" | "hold"
   }>
   status: string
 }
@@ -69,6 +69,12 @@ const _subscribe = (cb: () => void): (() => void) => {
 const _getSnapshot = (): ApprovalQueueItem[] => _items
 
 // ── Public API ────────────────────────────────────────────────────────────────
+
+/** Add an item back to the queue (e.g. after an undo). */
+export function restoreApprovalQueueItem(entry: ApprovalQueueItem): void {
+  _items = [..._items, entry]
+  _notify()
+}
 
 /** Remove an item by id and notify all subscribers. */
 export function removeApprovalQueueItem(id: string): void {
@@ -120,6 +126,52 @@ export function returnApplicantToQueue(id: string): ApprovalQueueItem | undefine
   _items = [..._items, entry]
   _notify()
   return entry
+}
+
+/**
+ * Add the current admin's vote to an entry. Returns vote totals so the caller
+ * can decide whether to resolve (approve/hold) the application.
+ */
+export function castVoteOnQueueItem(
+  id: string,
+  decision: "approve" | "hold",
+  adminId: string,
+  adminName: string,
+): { approveVotes: number; holdVotes: number } {
+  const entry = _items.find((item) => item.id === id)
+  if (!entry) return { approveVotes: 0, holdVotes: 0 }
+
+  const newVote = { adminId, adminName, votedAt: new Date().toISOString(), decision }
+  const updatedVotes = [
+    ...entry.votes.filter((v) => v.adminId !== adminId),
+    newVote,
+  ]
+
+  _items = _items.map((item) =>
+    item.id === id ? { ...item, votes: updatedVotes } : item
+  )
+
+  _notify()
+
+  const approveVotes = updatedVotes.filter((v) => v.decision === "approve").length
+  const holdVotes = updatedVotes.filter((v) => v.decision === "hold").length
+  return { approveVotes, holdVotes }
+}
+
+export function retractVoteOnQueueItem(
+  id: string,
+  adminId: string,
+): void {
+  const entry = _items.find((item) => item.id === id)
+  if (!entry) return
+
+  _items = _items.map((item) =>
+    item.id === id
+      ? { ...item, votes: item.votes.filter((v) => v.adminId !== adminId) }
+      : item
+  )
+
+  _notify()
 }
 
 /** Subscribe to the approval queue item list. Re-renders on every change. */

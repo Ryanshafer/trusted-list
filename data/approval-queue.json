@@ -41,7 +41,7 @@
     "requiresVote": true,
     "applicationType": "invited",
     "votes": [
-      { "adminId": "user-monica-jonas", "adminName": "Monica Jonas", "votedAt": "2026-04-12T10:00:00Z", "decision": "approve" }
+      { "adminId": "admin-sarah-k", "adminName": "Sarah K.", "votedAt": "2026-04-12T10:00:00Z", "decision": "approve" }
     ],
     "status": "Pending"
   },
@@ -64,7 +64,9 @@
     "appliedAt": "2026-04-12T11:45:00Z",
     "requiresVote": true,
     "applicationType": "waitlist",
-    "votes": [],
+    "votes": [
+      { "adminId": "admin-sarah-k", "adminName": "Sarah K.", "votedAt": "2026-04-13T09:10:00Z", "decision": "approve" }
+    ],
     "status": "Pending"
   },
   {
@@ -109,7 +111,7 @@
     "requiresVote": true,
     "applicationType": "invited",
     "votes": [
-      { "adminId": "user-jen-wu", "adminName": "Jen Wu", "votedAt": "2026-04-12T14:30:00Z", "decision": "approve" }
+      { "adminId": "admin-james-t", "adminName": "James T.", "votedAt": "2026-04-13T11:15:00Z", "decision": "hold" }
     ],
     "status": "Pending"
   },
@@ -132,7 +134,10 @@
     "appliedAt": "2026-04-12T13:00:00Z",
     "requiresVote": true,
     "applicationType": "waitlist",
-    "votes": [],
+    "votes": [
+      { "adminId": "admin-sarah-k", "adminName": "Sarah K.", "votedAt": "2026-04-13T08:45:00Z", "decision": "approve" },
+      { "adminId": "admin-james-t", "adminName": "James T.", "votedAt": "2026-04-13T09:30:00Z", "decision": "hold" }
+    ],
     "status": "Pending"
   }
 ]

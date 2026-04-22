@@ -20,11 +20,16 @@ import {
 import { AdminPageLayout } from "./AdminShell"
 import {
   banApplicantFromQueue,
+  castVoteOnQueueItem,
+  retractVoteOnQueueItem,
+  restoreApprovalQueueItem,
   placeApplicantOnHold,
   removeApprovalQueueItem,
+  returnApplicantToQueue,
   useApprovalQueueItems,
 } from "@/features/admin/hooks/useApprovalQueueStore"
 import { ApprovalCard } from "./ApprovalQueuePage/ApprovalCard"
+import { CURRENT_ADMIN_ID, CURRENT_ADMIN_NAME, VOTE_THRESHOLD } from "./ApprovalQueuePage/constants"
 import { toast } from "@/features/admin/lib/toast"
 import { AnimatedRemoval } from "./shared/AnimatedRemoval"
 import { AdminSearchField } from "./shared/admin-list-controls"
@@ -40,20 +45,67 @@ export default function ApprovalQueuePage() {
 
   const [exitingIds, setExitingIds] = React.useState<Set<string>>(new Set())
 
-  const animateOut = (id: string, successMessage: string) => {
-    setExitingIds((prev) => new Set(prev).add(id))
-    setTimeout(() => {
-      removeApprovalQueueItem(id)
-      setExitingIds((prev) => { const next = new Set(prev); next.delete(id); return next })
-      toast.success(successMessage)
-    }, 300)
+  const scrollToCard = (applicantId: string) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(applicantId)
+        if (!el) return
+        el.scrollIntoView({ behavior: "smooth", block: "center" })
+        el.classList.add("ring-2", "ring-primary", "ring-offset-2")
+        setTimeout(() => el.classList.remove("ring-2", "ring-primary", "ring-offset-2"), 3000)
+      })
+    })
   }
 
   const handleApprove = (id: string) => {
     removeApprovalQueueItem(id)
     toast.success("Application approved.")
   }
-  const handleVote = (id: string) => animateOut(id, "Your vote has been cast.")
+  const handleCastVote = (id: string, decision: "approve" | "hold") => {
+    const preVoteEntry = entries.find((e) => e.id === id)
+    if (!preVoteEntry) return
+
+    const { approveVotes, holdVotes } = castVoteOnQueueItem(
+      id,
+      decision,
+      CURRENT_ADMIN_ID,
+      CURRENT_ADMIN_NAME,
+    )
+
+    if (approveVotes >= VOTE_THRESHOLD) {
+      removeApprovalQueueItem(id)
+      toast.success("Application approved.", {
+        duration: 8000,
+        action: {
+          label: "Undo",
+          onClick: () => {
+            restoreApprovalQueueItem(preVoteEntry)
+            scrollToCard(preVoteEntry.applicant.id)
+          },
+        },
+      })
+    } else if (holdVotes >= VOTE_THRESHOLD) {
+      setExitingIds((prev) => new Set(prev).add(id))
+      setTimeout(() => {
+        placeApplicantOnHold(id)
+        setExitingIds((prev) => { const next = new Set(prev); next.delete(id); return next })
+        toast.success("Applicant placed on hold.", {
+          duration: 8000,
+          action: {
+            label: "Undo",
+            onClick: () => {
+              returnApplicantToQueue(id)
+              retractVoteOnQueueItem(id, CURRENT_ADMIN_ID)
+              scrollToCard(preVoteEntry.applicant.id)
+            },
+          },
+        })
+      }, 300)
+    }
+  }
+  const handleRetractVote = (id: string) => {
+    retractVoteOnQueueItem(id, CURRENT_ADMIN_ID)
+  }
   const handleReject = (id: string) => {
     setExitingIds((prev) => new Set(prev).add(id))
     setTimeout(() => {
@@ -161,7 +213,8 @@ export default function ApprovalQueuePage() {
                 <ApprovalCard
                   entry={entry}
                   onApprove={handleApprove}
-                  onVote={handleVote}
+                  onCastVote={handleCastVote}
+                  onRetractVote={handleRetractVote}
                   onReject={handleReject}
                   onBan={handleBan}
                 />

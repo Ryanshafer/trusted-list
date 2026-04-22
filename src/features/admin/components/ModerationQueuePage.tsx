@@ -238,7 +238,7 @@ function ModerationCard({
                 <ExternalLink className="h-3 w-3 text-muted-foreground" />
               </a>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Request by 
+                Request by {" "} 
                 <Button
                   type="button"
                   variant="link"

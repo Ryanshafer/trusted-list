@@ -32,7 +32,7 @@ export type EditMember = {
   email: string
   avatarUrl: string | null
   linkedinUrl: string
-  status: "active" | "banned" | "waitlisted" | "on-hold"
+  status: "active" | "banned" | "on-hold"
   inviteQuota: number
   hasUnlimitedInvites: boolean
   subscriptionEnabled: boolean

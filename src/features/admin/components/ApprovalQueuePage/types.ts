@@ -4,7 +4,7 @@ export type AdminVote = {
   adminId: string
   adminName: string
   votedAt: string
-  decision: "approve" | "reject"
+  decision: "approve" | "hold"
 }
 
 export type QueueEntry = {
