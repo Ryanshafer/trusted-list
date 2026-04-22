@@ -6,6 +6,7 @@ import {
   CircleCheck,
   PauseCircle,
   ThumbsUp,
+  Vote,
   ShieldCheck,
   MoreVertical,
   Ban,
@@ -171,12 +172,12 @@ export function ApprovalCard({
                 </>
               ) : (approveVotes + holdVotes) === 0 ? (
                 <>
-                  <ThumbsUp className="h-3.5 w-3.5 text-violet-500" />
+                  <Vote className="h-3.5 w-3.5 text-violet-500" />
                   Cast the first vote
                 </>
               ) : (
                 <>
-                  <ThumbsUp className="h-3.5 w-3.5 text-violet-500" />
+                  <Vote className="h-3.5 w-3.5 text-violet-500" />
                   {holdVotes} hold · {approveVotes} approve
                 </>
               )
