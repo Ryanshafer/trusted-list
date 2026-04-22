@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChatMultiHelperModal } from "@/features/dashboard/components/ChatMultiHelperModal";
-import { HelpRequestDialog, HELP_CATEGORIES, type AskContact } from "@/features/requests/components/HelpRequestDialog";
+import { HelpRequestDialog, HELP_CATEGORIES, REQUEST_CONNECTION_CATEGORY, type AskContact } from "@/features/requests/components/HelpRequestDialog";
 import type { OpenRequest, ProfileData } from "../types";
 
 interface ProfileCTAsProps {
@@ -77,11 +77,10 @@ export function ProfileCTAs({ profile, isOwner, connectionDegree }: ProfileCTAsP
         mode="create"
         open={connectDialogOpen}
         onOpenChange={setConnectDialogOpen}
-        categories={HELP_CATEGORIES}
+        categories={[REQUEST_CONNECTION_CATEGORY]}
         contacts={[profileUser]}
+        initialCategories={[REQUEST_CONNECTION_CATEGORY.value]}
         initialSelectedContacts={[profileUser]}
-        connectRequestMode
-        overrideTitle={`Connect with ${profile.firstName} ${profile.lastName}`}
         onSubmit={(payload) => {
           console.log("Connect request submitted:", payload);
         }}

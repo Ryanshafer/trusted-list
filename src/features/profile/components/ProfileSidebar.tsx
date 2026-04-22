@@ -222,9 +222,9 @@ export function ProfileSidebar({
           onOpenChange={setConnectDialogOpen}
           categories={[REQUEST_CONNECTION_CATEGORY]}
           contacts={[{ id: profile.id, name: profile.name, role: profile.title, avatarUrl: profile.avatarUrl ?? undefined }]}
-          initialCategories={[REQUEST_CONNECTION_CATEGORY.value]}
           initialSelectedContacts={[{ id: profile.id, name: profile.name, role: profile.title, avatarUrl: profile.avatarUrl ?? undefined }]}
-          initialSummary={`I'm reaching out via ${connectDialogConnector.name} to connect`}
+          connectRequestMode
+          overrideTitle={`Connect with ${profile.firstName} ${profile.lastName}`}
         />
       )}
 

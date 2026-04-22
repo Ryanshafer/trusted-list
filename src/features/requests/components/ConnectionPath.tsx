@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ChevronsRight } from "lucide-react";
+import { ChevronsRight, Plus } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 
 export type ConnectionPathNode = {
@@ -160,10 +160,11 @@ export function ConnectionPath({
       {connectorNode && onConnectRequest && (
         <Button
           variant="outline"
-          size="sm"
-          className="rounded-full font-semibold w-full"
+          size="default"
+          className="rounded-full font-semibold w-full h-8 bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground"
           onClick={() => onConnectRequest(connectorNode)}
         >
+          <Plus className="h-4 w-4" />
           Connect with {requesterNode.name.split(" ")[0]}
         </Button>
       )}
