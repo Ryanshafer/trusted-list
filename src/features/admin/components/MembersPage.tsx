@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
+import { Plus, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -183,9 +184,16 @@ export default function MembersPage() {
                 : "Search or filter to find members"}
             </p>
           </div>
-          <Button className="rounded-full font-semibold" size="sm" onClick={() => setInviteOpen(true)}>
-            Invite member
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button className="rounded-full font-semibold" size="sm" onClick={() => setInviteOpen(true)}>
+              <Plus className="h-3.5 w-3.5" />
+              Invite member
+            </Button>
+            <Button variant="outline" className="rounded-full font-semibold" size="sm">
+              <Download className="h-3.5 w-3.5" />
+              Export
+            </Button>
+          </div>
         </div>
 
         {/* Toolbar */}

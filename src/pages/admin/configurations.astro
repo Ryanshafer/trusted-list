@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ConfigPage from "../../features/admin/components/ConfigPage";
+---
+
+<BaseLayout
+  title="Configurations — Admin"
+  description="Manage platform configurations."
+  bodyClass="bg-background"
+  showHeader={false}
+  showFooter={false}
+>
+  <ConfigPage client:load slot="main" />
+</BaseLayout>

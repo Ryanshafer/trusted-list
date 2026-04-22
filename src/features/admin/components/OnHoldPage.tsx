@@ -99,7 +99,7 @@ function buildColumns(
     {
       id: "type",
       accessorKey: "applicationType",
-      header: () => <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Type</span>,
+      header: () => <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Source</span>,
       cell: ({ row }) => <ApplicationTypeBadge applicationType={row.original.applicationType} />,
       enableSorting: false,
     },

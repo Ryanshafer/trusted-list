@@ -68,7 +68,7 @@ export function TableSkeletonRows({ count = 5, colCount }: { count?: number; col
 const COLUMN_LABELS: Record<string, string> = {
   member: "Member",
   email: "Email",
-  type: "Type",
+  type: "Source",
   status: "Status",
   joinDate: "Joined",
   subscriptionStatus: "Plan",
@@ -160,7 +160,7 @@ export function buildColumns(
       id: "type",
       accessorKey: "applicationType",
       header: () => (
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Type</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Source</span>
       ),
       cell: ({ row }) => <ApplicationTypeBadge applicationType={row.original.applicationType} />,
       enableSorting: false,

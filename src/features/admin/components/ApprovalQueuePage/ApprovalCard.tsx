@@ -176,7 +176,7 @@ export function ApprovalCard({
               onClick={() => onReject(entry.id)}
             >
               <PauseCircle className="h-3.5 w-3.5" />
-              On Hold
+              Place on hold
             </Button>
 
             {requiresVote ? (

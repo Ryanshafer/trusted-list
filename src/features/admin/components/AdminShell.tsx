@@ -5,6 +5,7 @@ import {
   Users,
   ClipboardList,
   CheckSquare,
+  ListChecks,
   CreditCard,
   Settings,
   Bell,
@@ -20,7 +21,7 @@ import {
   AlertCircle,
   Clock,
   LayoutDashboard,
-  Lightbulb,
+  Cog,
   ShieldAlert,
   RotateCcw,
   Ban,
@@ -68,6 +69,7 @@ import approvalQueueData from "../../../../data/approval-queue.json"
 import { useModerationCount } from "@/features/admin/hooks/useModerationStore"
 import { useApprovalQueueCount } from "@/features/admin/hooks/useApprovalQueueStore"
 import { NotificationPanel, type Notification } from "@/features/notifications/components/NotificationPanel"
+import { ApplicationTypeBadge } from "./shared/status-badges"
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -82,7 +84,7 @@ const NAV_ITEMS = [
   { title: "Moderation",     url: `${base}admin/moderation`,    icon: ShieldAlert,   badge: null as number | null, destructiveBadge: true  },
   // { title: "Tasks",          url: `${base}admin/tasks`,         icon: CheckSquare,   badge: 7    as number | null, destructiveBadge: false },
   // { title: "Subscriptions",  url: `${base}admin/subscriptions`, icon: CreditCard,    badge: null as number | null, destructiveBadge: false },
-  { title: "Skills",         url: `${base}admin/skills`,        icon: Lightbulb,     badge: null as number | null, destructiveBadge: false },
+  { title: "Configurations", url: `${base}admin/configurations`, icon: Cog,     badge: null as number | null, destructiveBadge: false },
   { title: "Settings",       url: `${base}admin/settings`,      icon: Settings,      badge: null as number | null, destructiveBadge: false },
 ]
 
@@ -438,13 +440,13 @@ function StatCard({
 function QueueRow({
   name,
   email,
-  type,
+  applicationType,
   time,
   userId,
 }: {
   name: string
   email: string
-  type: string
+  applicationType: "invited" | "waitlist"
   time: string
   userId: string
 }) {
@@ -466,13 +468,10 @@ function QueueRow({
         <p className="truncate text-sm font-medium text-foreground">{name}</p>
         <p className="truncate text-xs text-muted-foreground">{email}</p>
       </div>
-      <Badge
-        variant="outline"
-        className="hidden shrink-0 rounded-full text-[11px] font-medium sm:flex"
-      >
-        {type}
-      </Badge>
-      <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{time}</span>
+      <span className="hidden sm:flex shrink-0">
+        <ApplicationTypeBadge applicationType={applicationType} />
+      </span>
+      <span className="w-14 shrink-0 text-right text-xs tabular-nums text-muted-foreground">{time}</span>
       <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
     </a>
   )
@@ -492,12 +491,12 @@ function DashboardContent() {
       trend: "up" as Trend,
     },
     {
-      label: "Pending Approvals",
-      value: approvalQueueCount.toString(),
-      change: "+3",
-      changeLabel: "since yesterday",
-      icon: ClipboardList,
-      trend: "down" as Trend,
+      label: "Tasks Closed in Past Week",
+      value: "47",
+      change: "+3%",
+      changeLabel: "from last week",
+      icon: ListChecks,
+      trend: "up" as Trend,
     },
     {
       label: "Active Tasks",
@@ -505,7 +504,7 @@ function DashboardContent() {
       change: "−7%",
       changeLabel: "from last week",
       icon: CheckSquare,
-      trend: "neutral" as Trend,
+      trend: "down" as Trend,
     },
     {
       label: "Active Subscriptions",
@@ -537,58 +536,90 @@ function DashboardContent() {
     return {
       name: item.applicant.name,
       email: item.applicant.email,
-      type: "New Member", // All items in approval queue are new members
+      applicationType: item.applicationType as "invited" | "waitlist",
       time: timeAgo,
-      userId: item.applicant.id // Add user ID for navigation
+      userId: item.applicant.id,
     }
   }).slice(0, 5) // Show only first 5 items
 
-  const activity = [
+  type ActivityItem = {
+    icon: React.ElementType
+    label: string
+    actor: string
+    time: string
+    colorClass: string
+  }
+
+  const activityGroups: { date: string; items: ActivityItem[] }[] = [
     {
-      icon: UserCheck,
-      label: "18 new members approved",
-      time: "Today, 9:41 AM",
-      colorClass: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400",
+      date: "Today",
+      items: [
+        {
+          icon: UserCheck,
+          label: "Approved Devon Hart",
+          actor: "Ryan S.",
+          time: "9:41 AM",
+          colorClass: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400",
+        },
+        {
+          icon: Ban,
+          label: "Banned Ethan Cole — repeated violations",
+          actor: "Ryan S.",
+          time: "9:12 AM",
+          colorClass: "bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400",
+        },
+        {
+          icon: ShieldAlert,
+          label: "Dismissed complaint on Marcus Bell's post",
+          actor: "Sarah K.",
+          time: "8:50 AM",
+          colorClass: "bg-muted/60 text-muted-foreground",
+        },
+        {
+          icon: PauseCircle,
+          label: "Put Layla Monroe on hold",
+          actor: "Ryan S.",
+          time: "8:15 AM",
+          colorClass: "bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400",
+        },
+      ],
     },
     {
-      icon: AlertCircle,
-      label: "3 flagged profiles need review",
-      time: "Today, 8:15 AM",
-      colorClass: "bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400",
-    },
-    {
-      icon: TrendingUp,
-      label: "Membership hit monthly record",
-      time: "Yesterday, 6:00 PM",
-      colorClass: "bg-primary/10 text-primary",
-    },
-    {
-      icon: Clock,
-      label: "Scheduled maintenance at midnight",
-      time: "Yesterday, 3:30 PM",
-      colorClass: "bg-muted/60 text-muted-foreground",
-    },
-    {
-      icon: CreditCard,
-      label: "12 subscriptions renewed",
-      time: "Yesterday, 2:00 PM",
-      colorClass: "bg-primary/10 text-primary",
+      date: "Yesterday",
+      items: [
+        {
+          icon: UserCheck,
+          label: "Approved 6 applications",
+          actor: "Sarah K.",
+          time: "5:30 PM",
+          colorClass: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400",
+        },
+        {
+          icon: Cog,
+          label: `Updated skills — added "Rust", "Solidity"`,
+          actor: "Ryan S.",
+          time: "2:14 PM",
+          colorClass: "bg-muted/60 text-muted-foreground",
+        },
+        {
+          icon: ShieldAlert,
+          label: "Removed post — illegal activity report",
+          actor: "Sarah K.",
+          time: "11:02 AM",
+          colorClass: "bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400",
+        },
+      ],
     },
   ]
 
   return (
     <div className="flex flex-col gap-8">
       {/* Page header */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">Dashboard</h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            Welcome back. Here's what's happening today.
-          </p>
-        </div>
-        <Button className="rounded-full font-semibold" size="sm">
-          Export report
-        </Button>
+      <div>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">Dashboard</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
+          Welcome back. Here's what's happening today.
+        </p>
       </div>
 
       {/* Stat cards */}
@@ -629,24 +660,33 @@ function DashboardContent() {
         <div className="rounded-xl border border-border bg-card">
           <div className="border-b border-border px-5 py-3.5">
             <h2 className="text-sm font-semibold text-foreground">Recent Activity</h2>
-            <p className="text-xs text-muted-foreground">System events in the last 24h</p>
+            <p className="text-xs text-muted-foreground">Admin audit log</p>
           </div>
           <div className="px-2 py-2">
-            {activity.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/40"
-              >
-                <div
-                  className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${item.colorClass}`}
-                >
-                  <item.icon className="h-3.5 w-3.5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm leading-snug text-foreground">{item.label}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{item.time}</p>
-                </div>
-              </div>
+            {activityGroups.map((group) => (
+              <React.Fragment key={group.date}>
+                <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/50">
+                  {group.date}
+                </p>
+                {group.items.map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-muted/40"
+                  >
+                    <div
+                      className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${item.colorClass}`}
+                    >
+                      <item.icon className="h-3 w-3" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm leading-snug text-foreground">{item.label}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {item.actor} · {item.time}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </React.Fragment>
             ))}
           </div>
         </div>
