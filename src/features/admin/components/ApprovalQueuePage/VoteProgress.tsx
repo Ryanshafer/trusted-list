@@ -49,22 +49,6 @@ export function VoteProgress({
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="flex items-center gap-6">
-        {/* Approve group */}
-        <div className="flex flex-col items-center gap-1.5">
-          <span className="text-[11px] font-semibold text-emerald-600">Approve</span>
-          <div className="flex -space-x-1.5">
-            {approveVotes.map((v) => (
-              <VoteSlot key={v.adminId} vote={v} color="emerald" />
-            ))}
-            {Array.from({ length: Math.max(0, threshold - approveVotes.length) }).map((_, i) => (
-              <EmptySlot key={i} />
-            ))}
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-8 w-px bg-border" />
-
         {/* Hold group */}
         <div className="flex flex-col items-center gap-1.5">
           <span className="text-[11px] font-semibold text-amber-600">Hold</span>
@@ -73,6 +57,22 @@ export function VoteProgress({
               <VoteSlot key={v.adminId} vote={v} color="amber" />
             ))}
             {Array.from({ length: Math.max(0, threshold - holdVotes.length) }).map((_, i) => (
+              <EmptySlot key={i} />
+            ))}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-8 w-px bg-border" />
+
+        {/* Approve group */}
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="text-[11px] font-semibold text-emerald-600">Approve</span>
+          <div className="flex -space-x-1.5">
+            {approveVotes.map((v) => (
+              <VoteSlot key={v.adminId} vote={v} color="emerald" />
+            ))}
+            {Array.from({ length: Math.max(0, threshold - approveVotes.length) }).map((_, i) => (
               <EmptySlot key={i} />
             ))}
           </div>

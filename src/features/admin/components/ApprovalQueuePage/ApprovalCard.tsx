@@ -177,7 +177,7 @@ export function ApprovalCard({
               ) : (
                 <>
                   <ThumbsUp className="h-3.5 w-3.5 text-violet-500" />
-                  {approveVotes} approve · {holdVotes} hold
+                  {holdVotes} hold · {approveVotes} approve
                 </>
               )
             ) : (
