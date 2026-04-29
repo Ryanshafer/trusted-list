@@ -25,6 +25,7 @@ export type EditFormState = {
 
 export const DEFAULT_ASK_MODE: AskMode = "contact";
 export const SUMMARY_MAX_LENGTH = 60;
+export const REQUEST_DETAILS_MIN_LENGTH = 20;
 
 export function getVisibleCategories(
   categories: HelpCategory[],
@@ -123,6 +124,8 @@ export function validateHelpRequest({
 
   if (!requestDetails.trim()) {
     nextErrors.requestDetails = "Please add some context";
+  } else if (requestDetails.trim().length < REQUEST_DETAILS_MIN_LENGTH) {
+    nextErrors.requestDetails = `Please add at least ${REQUEST_DETAILS_MIN_LENGTH} characters`;
   }
 
   if (requestCategories.length === 0) {

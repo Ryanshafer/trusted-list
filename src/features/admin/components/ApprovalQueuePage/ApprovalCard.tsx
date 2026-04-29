@@ -12,6 +12,7 @@ import {
   Ban,
   ExternalLink,
   AlertTriangle,
+  NotebookPen,
 } from "lucide-react"
 import type { QueueEntry } from "./types"
 import { CURRENT_ADMIN_ID, VOTE_THRESHOLD } from "./constants"
@@ -19,6 +20,7 @@ import { initials, getMemberUrl, timeAgo } from "./utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,6 +56,29 @@ export function ApprovalCard({
   const approveVotes = votes.filter((v) => v.decision === "approve").length
   const holdVotes = votes.filter((v) => v.decision === "hold").length
   const isTied = approveVotes > 0 && approveVotes === holdVotes
+
+  const [isEditingNote, setIsEditingNote] = React.useState(false)
+  const [draftNote, setDraftNote] = React.useState("")
+  const [savedNote, setSavedNote] = React.useState<string | null>(null)
+  const [noteSaved, setNoteSaved] = React.useState(false)
+
+  const handleOpenNote = () => {
+    setDraftNote(savedNote ?? "")
+    setIsEditingNote(true)
+  }
+
+  const handleCancelNote = () => {
+    setIsEditingNote(false)
+    setDraftNote("")
+  }
+
+  const handleSaveNote = () => {
+    setSavedNote(draftNote.trim() || null)
+    setIsEditingNote(false)
+    setDraftNote("")
+    setNoteSaved(true)
+    setTimeout(() => setNoteSaved(false), 2500)
+  }
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -136,126 +161,189 @@ export function ApprovalCard({
 
         <Separator />
 
-        {/* Recommendation */}
-        <div className="px-5 py-4 space-y-3">
-          <blockquote className="relative pl-3 mt-6 mb-10 text-base text-foreground/90 leading-relaxed max-w-[70ch]">
-            <span
-              aria-hidden
-              className="absolute left-0 top-0 bottom-0 w-0.5 rounded-full bg-primary/30"
+        {/* Recommendation / Note editor */}
+        {isEditingNote ? (
+          <div className="px-5 py-4 space-y-2">
+            <label className="text-sm font-semibold">
+              Add a note to your vote
+            </label>
+            <Textarea
+              value={draftNote}
+              onChange={(e) => setDraftNote(e.target.value)}
+              placeholder="Capture your thoughts or justification…"
+              className="resize-none text-sm"
+              rows={7}
+              autoFocus
             />
-            {recommendationText}
-          </blockquote>
+          </div>
+        ) : (
+          <div className="px-5 py-4 space-y-3">
+            <blockquote className="relative pl-3 mt-6 mb-10 text-base text-foreground/90 leading-relaxed max-w-[70ch]">
+              <span
+                aria-hidden
+                className="absolute left-0 top-0 bottom-0 w-0.5 rounded-full bg-primary/30"
+              />
+              {recommendationText}
+            </blockquote>
 
-          {requiresVote && (
-            <VoteProgress votes={votes} threshold={VOTE_THRESHOLD} />
-          )}
-        </div>
+            {requiresVote && (
+              <VoteProgress votes={votes} threshold={VOTE_THRESHOLD} />
+            )}
+          </div>
+        )}
 
         <Separator />
 
         {/* Action bar */}
         <CardFooter className="justify-between gap-3 px-5 py-3 bg-muted/20">
-          {/* Status label */}
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            {requiresVote ? (
-              isTied ? (
-                <>
-                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-                  <span className="font-medium text-amber-600">
-                    {hasVoted ? "Tied — another vote decides" : "Tied — your vote decides"}
-                  </span>
-                </>
-              ) : hasVoted ? (
-                <>
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                  You voted to {myVote === "approve" ? "approve" : "hold"}
-                </>
-              ) : (approveVotes + holdVotes) === 0 ? (
-                <>
-                  <Vote className="h-3.5 w-3.5 text-violet-500" />
-                  Cast the first vote
-                </>
-              ) : (
-                <>
-                  <Vote className="h-3.5 w-3.5 text-violet-500" />
-                  {holdVotes} hold · {approveVotes} approve
-                </>
-              )
-            ) : (
-              <>
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                You can approve this directly
-              </>
-            )}
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex items-center gap-2 shrink-0">
-            {requiresVote ? (
-              <>
-                {/* Vote to hold */}
+          {isEditingNote ? (
+            <>
+              <div />
+              <div className="flex items-center gap-2 shrink-0">
                 <Button
                   size="sm"
                   variant="outline"
-                  disabled={myVote === "approve"}
-                  className={`h-8 rounded-full gap-1.5 text-xs font-semibold ${
-                    myVote === "hold"
-                      ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-400"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  onClick={() => myVote === "hold" ? onRetractVote(entry.id) : onCastVote(entry.id, "hold")}
+                  className="h-8 rounded-full gap-1.5 text-xs font-semibold"
+                  onClick={handleCancelNote}
                 >
-                  {myVote === "hold" ? <CircleCheck className="h-3.5 w-3.5" /> : <PauseCircle className="h-3.5 w-3.5" />}
-                  {myVote === "hold" ? "Voted hold" : "Vote to hold"}
+                  Cancel
                 </Button>
-
-                {/* Vote to approve */}
                 <Button
                   size="sm"
-                  disabled={myVote === "hold"}
-                  variant="outline"
-                  className={`h-8 rounded-full gap-1.5 text-xs font-semibold ${
-                    myVote === "approve"
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  onClick={() => myVote === "approve" ? onRetractVote(entry.id) : onCastVote(entry.id, "approve")}
+                  className="h-8 rounded-full gap-1.5 text-xs font-semibold"
+                  onClick={handleSaveNote}
                 >
-                  {myVote === "approve" ? (
+                  Save note
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Status label */}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                {requiresVote ? (
+                  isTied ? (
                     <>
-                      <CircleCheck className="h-3.5 w-3.5" />
-                      Voted approve
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                      <span className="font-medium text-amber-600">
+                        {hasVoted ? "Tied — another vote decides" : "Tied — your vote decides"}
+                      </span>
+                    </>
+                  ) : hasVoted ? (
+                    <>
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                      You voted to {myVote === "approve" ? "approve" : "hold"}
+                    </>
+                  ) : (approveVotes + holdVotes) === 0 ? (
+                    <>
+                      <Vote className="h-3.5 w-3.5 text-violet-500" />
+                      Cast the first vote
                     </>
                   ) : (
                     <>
-                      <ThumbsUp className="h-3.5 w-3.5" />
-                      Vote to approve
+                      <Vote className="h-3.5 w-3.5 text-violet-500" />
+                      {holdVotes} hold · {approveVotes} approve
                     </>
-                  )}
-                </Button>
-              </>
-            ) : (
-              <>
+                  )
+                ) : (
+                  <>
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                    You can approve this directly
+                  </>
+                )}
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-2 shrink-0">
+                {/* Note button */}
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="h-8 rounded-full gap-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
-                  onClick={() => onReject(entry.id)}
+                  size="icon"
+                  className={`h-8 w-8 rounded-full transition-colors ${
+                    noteSaved
+                      ? "text-emerald-600"
+                      : savedNote
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  onClick={handleOpenNote}
+                  title={savedNote ? "Edit note" : "Add note"}
                 >
-                  <PauseCircle className="h-3.5 w-3.5" />
-                  Place on hold
+                  {noteSaved ? (
+                    <CircleCheck className="h-3.5 w-3.5" />
+                  ) : (
+                    <NotebookPen className="h-3.5 w-3.5" />
+                  )}
+                  <span className="sr-only">{savedNote ? "Edit note" : "Add note"}</span>
                 </Button>
-                <Button
-                  size="sm"
-                  className="h-8 rounded-full gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-700 dark:hover:bg-emerald-600"
-                  onClick={() => onApprove(entry.id)}
-                >
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  Approve
-                </Button>
-              </>
-            )}
-          </div>
+
+                {requiresVote ? (
+                  <>
+                    {/* Vote to hold */}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={myVote === "approve"}
+                      className={`h-8 rounded-full gap-1.5 text-xs font-semibold ${
+                        myVote === "hold"
+                          ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-400"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                      onClick={() => myVote === "hold" ? onRetractVote(entry.id) : onCastVote(entry.id, "hold")}
+                    >
+                      {myVote === "hold" ? <CircleCheck className="h-3.5 w-3.5" /> : <PauseCircle className="h-3.5 w-3.5" />}
+                      {myVote === "hold" ? "Voted hold" : "Vote to hold"}
+                    </Button>
+
+                    {/* Vote to approve */}
+                    <Button
+                      size="sm"
+                      disabled={myVote === "hold"}
+                      variant="outline"
+                      className={`h-8 rounded-full gap-1.5 text-xs font-semibold ${
+                        myVote === "approve"
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                      onClick={() => myVote === "approve" ? onRetractVote(entry.id) : onCastVote(entry.id, "approve")}
+                    >
+                      {myVote === "approve" ? (
+                        <>
+                          <CircleCheck className="h-3.5 w-3.5" />
+                          Voted approve
+                        </>
+                      ) : (
+                        <>
+                          <ThumbsUp className="h-3.5 w-3.5" />
+                          Vote to approve
+                        </>
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 rounded-full gap-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+                      onClick={() => onReject(entry.id)}
+                    >
+                      <PauseCircle className="h-3.5 w-3.5" />
+                      Place on hold
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="h-8 rounded-full gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                      onClick={() => onApprove(entry.id)}
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Approve
+                    </Button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </CardFooter>
       </Card>
     </TooltipProvider>

@@ -9,6 +9,7 @@ import {
   Globe,
   MoreVertical,
   Users,
+  UserX,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -175,9 +176,13 @@ export function ReadFullRequestButton({ href, className }: { href: string; class
 const MoreOptionsButton = ({
   onDismiss,
   onFlag,
+  dismissLabel = "I can't help with this request",
+  DismissIcon = EyeOff,
 }: {
   onDismiss?: () => void;
   onFlag?: () => void;
+  dismissLabel?: string;
+  DismissIcon?: React.ElementType;
 }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
@@ -189,8 +194,8 @@ const MoreOptionsButton = ({
     <DropdownMenuContent align="end">
       {onDismiss && (
         <DropdownMenuItem onClick={onDismiss}>
-          <EyeOff className="mr-2 h-4 w-4" />
-          I can't help with this request
+          <DismissIcon className="mr-2 h-4 w-4" />
+          {dismissLabel}
         </DropdownMenuItem>
       )}
       <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onFlag}>
@@ -261,6 +266,8 @@ const IncomingRequestCardBase = ({
   showAllDegrees = false,
   onPrimaryActionOverride,
   dismissAfterOverride = false,
+  dismissLabel,
+  dismissIcon,
 }: {
   id: string;
   name: string;
@@ -282,6 +289,8 @@ const IncomingRequestCardBase = ({
   showAllDegrees?: boolean;
   onPrimaryActionOverride?: () => void | Promise<void>;
   dismissAfterOverride?: boolean;
+  dismissLabel?: string;
+  dismissIcon?: React.ElementType;
 }) => {
   const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
@@ -363,7 +372,7 @@ const IncomingRequestCardBase = ({
             ) : (
               <div />
             )}
-            <MoreOptionsButton onDismiss={onClear ? handleDismiss : undefined} onFlag={() => setFlagOpen(true)} />
+            <MoreOptionsButton onDismiss={onClear ? handleDismiss : undefined} onFlag={() => setFlagOpen(true)} dismissLabel={dismissLabel} DismissIcon={dismissIcon} />
           </div>
 
           {/* Content: title, date, body */}
@@ -596,6 +605,8 @@ const ConnectRequestCard = (props: HelpRequestCardProps) => {
       degreeBadge={getDegreeBadge(props.variant, props.degreeBadge)}
       onPrimaryActionOverride={handleConnect}
       dismissAfterOverride
+      dismissLabel="I don't want to connect"
+      dismissIcon={UserX}
     />
   );
 };

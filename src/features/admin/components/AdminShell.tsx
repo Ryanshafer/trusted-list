@@ -540,7 +540,7 @@ function DashboardContent() {
       time: timeAgo,
       userId: item.applicant.id,
     }
-  }).slice(0, 5) // Show only first 5 items
+  }).slice(0, 8) // Show only first 5 items
 
   type ActivityItem = {
     icon: React.ElementType

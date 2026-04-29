@@ -14,6 +14,7 @@ import { BaseDialog } from "@/components/BaseDialog";
 import {
   DEFAULT_ASK_MODE,
   SUMMARY_MAX_LENGTH,
+  REQUEST_DETAILS_MIN_LENGTH,
   filterSelectableContacts,
   getShortDescriptionPlaceholder,
   getVisibleCategories,
@@ -690,7 +691,11 @@ export function HelpRequestDialog(props: Props) {
 
     if (isConnectRequest) {
       const nextErrors: DialogErrors = {};
-      if (!requestDetails.trim()) nextErrors.requestDetails = "Please add some context";
+      if (!requestDetails.trim()) {
+        nextErrors.requestDetails = "Please add some context";
+      } else if (requestDetails.trim().length < REQUEST_DETAILS_MIN_LENGTH) {
+        nextErrors.requestDetails = `Please add at least ${REQUEST_DETAILS_MIN_LENGTH} characters`;
+      }
       if (Object.keys(nextErrors).length > 0) { setErrors(nextErrors); return; }
       setErrors({});
     } else {
@@ -1156,7 +1161,21 @@ export function HelpRequestDialog(props: Props) {
 
           {/* ── Add some context ─────────────────────────────── */}
           <div className="space-y-2">
-            <p className="text-base font-normal text-secondary-foreground">{isConnectRequest ? "How do you know this person?" : "Add some context to get better advice"}</p>
+            <div className="flex items-baseline justify-between">
+              <p className="text-base font-normal text-secondary-foreground">{isConnectRequest ? "How do you know this person?" : "Add some context to get better advice"}</p>
+              {isConnectRequest && (
+                <span
+                  aria-live="polite"
+                  className={`text-xs tabular-nums transition-colors ${
+                    requestDetails.trim().length >= REQUEST_DETAILS_MIN_LENGTH
+                      ? "text-emerald-600"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {requestDetails.trim().length}/{REQUEST_DETAILS_MIN_LENGTH}
+                </span>
+              )}
+            </div>
             {errors.requestDetails && (
               <p className="mb-1 text-xs text-destructive">{errors.requestDetails}</p>
             )}

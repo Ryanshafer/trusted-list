@@ -31,5 +31,3 @@ export type QueueEntry = {
   votes: AdminVote[]
   status: string
 }
-
-export type FilterTab = "all" | "direct" | "vote"

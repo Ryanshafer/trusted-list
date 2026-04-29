@@ -140,4 +140,56 @@
     ],
     "status": "Pending"
   }
+  ,
+  {
+    "id": "aq-006",
+    "applicant": {
+      "id": "user-cole-huang",
+      "name": "Cole Huang",
+      "email": "cole@strikezone.io",
+      "company": "StrikeZone",
+      "linkedInUrl": "https://www.linkedin.com/in/colehuang-gtm"
+    },
+    "inviter": {
+      "id": "user-benedict-cumberbatch",
+      "name": "Benedict Cumberbatch",
+      "title": "Director of Infrastructure",
+      "company": "PulseGrid"
+    },
+    "recommendationText": "Cole has helped three B2B startups I know build GTM motions that actually stuck. He combines deep market intuition with the ability to run fast, low-ego experiments. He is the kind of person who makes everyone around him sharper about how they think about go-to-market.",
+    "appliedAt": "2026-04-12T13:00:00Z",
+    "requiresVote": true,
+    "applicationType": "waitlist",
+    "votes": [
+      { "adminId": "admin-sarah-k", "adminName": "Sarah K.", "votedAt": "2026-04-13T08:45:00Z", "decision": "approve" },
+      { "adminId": "admin-james-t", "adminName": "James T.", "votedAt": "2026-04-13T09:30:00Z", "decision": "hold" }
+    ],
+    "status": "Pending"
+  }
+  ,
+  {
+    "id": "aq-006",
+    "applicant": {
+      "id": "user-cole-huang",
+      "name": "Cole Huang",
+      "email": "cole@strikezone.io",
+      "company": "StrikeZone",
+      "linkedInUrl": "https://www.linkedin.com/in/colehuang-gtm"
+    },
+    "inviter": {
+      "id": "user-benedict-cumberbatch",
+      "name": "Benedict Cumberbatch",
+      "title": "Director of Infrastructure",
+      "company": "PulseGrid"
+    },
+    "recommendationText": "Cole has helped three B2B startups I know build GTM motions that actually stuck. He combines deep market intuition with the ability to run fast, low-ego experiments. He is the kind of person who makes everyone around him sharper about how they think about go-to-market.",
+    "appliedAt": "2026-04-12T13:00:00Z",
+    "requiresVote": true,
+    "applicationType": "waitlist",
+    "votes": [
+      { "adminId": "admin-sarah-k", "adminName": "Sarah K.", "votedAt": "2026-04-13T08:45:00Z", "decision": "approve" },
+      { "adminId": "admin-james-t", "adminName": "James T.", "votedAt": "2026-04-13T09:30:00Z", "decision": "hold" }
+    ],
+    "status": "Pending"
+  }
 ]
