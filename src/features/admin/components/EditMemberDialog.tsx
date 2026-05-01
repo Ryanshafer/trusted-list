@@ -551,7 +551,7 @@ export function EditMemberDialog({
           </div>
 
           {/* ── Footer ─────────────────────────────────────────── */}
-          <DialogFooter className="border-t border-border px-6 py-4 flex-row gap-2 sm:justify-between">
+          <DialogFooter className="border-t border-border px-6 py-4 flex-row gap-2 sm:justify-end">
             <Button
               type="button"
               variant="outline"
