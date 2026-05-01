@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, Eye, EyeClosed, Loader2, Lock, Mail } from "lucide-react"
+import { Check, Eye, EyeClosed, ImagePlus, Loader2, Lock, Mail } from "lucide-react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,7 +12,8 @@ import { cn } from "@/lib/utils"
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
-type Step = 1 | 2 | 3 | 4 | 5
+type Step = 1 | 2 | 3 | 4 | 5 | 6
+type PhotoState = { file: File; previewUrl: string } | null
 
 type SignupData = {
   firstName: string
@@ -47,13 +49,13 @@ const EMPTY_ANSWERS = ["", "", ""]
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
 const StepIndicator = ({ step }: { step: Step }) => (
-  <div className="flex items-center justify-center gap-1.5">
-    {([1, 2, 3, 4, 5] as const).map((s) => (
+  <div className="flex items-center justify-center gap-1.5 py-3">
+    {([1, 2, 3, 4, 5, 6] as const).map((s) => (
       <div
         key={s}
         className={cn(
           "h-1.5 rounded-full transition-all duration-300",
-          s === step ? "w-6 bg-neutral-700" : "w-1.5 bg-neutral-300",
+          s === step ? "w-6 bg-primary-500" : "w-1.5 bg-neutral-300",
         )}
       />
     ))}
@@ -87,7 +89,6 @@ function QuestionStep({
   onAnswer,
   onBack,
   onNext,
-  isLast = false,
   isSubmitting = false,
 }: {
   step: Step
@@ -97,7 +98,6 @@ function QuestionStep({
   onAnswer: (value: string) => void
   onBack: () => void
   onNext: () => void
-  isLast?: boolean
   isSubmitting?: boolean
 }) {
   return (
@@ -124,9 +124,7 @@ function QuestionStep({
             Back
           </Button>
           <Button type="button" className="flex-1 rounded-full font-semibold" disabled={isSubmitting} onClick={onNext}>
-            {isLast
-              ? isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving</> : "Create account"
-              : "Continue"}
+            {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving</> : "Continue"}
           </Button>
         </div>
         <StepIndicator step={step} />
@@ -151,6 +149,10 @@ export function SignupForm({ className }: { className?: string }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+
+  const [photo, setPhoto] = useState<PhotoState>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFieldChange =
     (field: keyof SignupData) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -183,13 +185,32 @@ export function SignupForm({ className }: { className?: string }) {
     setStep(nextStep)
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!answers[2].trim()) {
       setAnswerErrors((prev) => { const n = [...prev]; n[2] = "This field is required"; return n })
       return
     }
+    setStep(6)
+  }
+
+  const handlePhotoSelect = useCallback((file: File) => {
+    if (!file.type.startsWith("image/")) return
+    setPhoto((prev) => {
+      if (prev) URL.revokeObjectURL(prev.previewUrl)
+      return { file, previewUrl: URL.createObjectURL(file) }
+    })
+  }, [])
+
+  const handlePhotoDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) handlePhotoSelect(file)
+  }, [handlePhotoSelect])
+
+  const handlePhotoSubmit = async () => {
     setIsSubmitting(true)
-    await new Promise((r) => setTimeout(r, 1800))
+    await new Promise((r) => setTimeout(r, 1200))
     setIsSubmitting(false)
     setIsSuccess(true)
   }
@@ -220,15 +241,15 @@ export function SignupForm({ className }: { className?: string }) {
           <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center">
             <Check className="h-8 w-8 text-primary" />
           </div>
-          <div>
-            <h2 className="font-serif text-3xl font-thin mb-2">You're in!</h2>
-            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              Your account is ready. Welcome to The Trusted List.
+          <div className="flex flex-col gap-4">
+            <h2 className="font-serif text-3xl font-thin py-5">We have received and will review your profile with care</h2>
+            <p className="text-muted-foreground max-w-sm mx-auto">
+              You will receive an email once your invitation is ready. This can take a few days.
+            </p>
+            <p className="text-muted-foreground max-w-sm mx-auto">
+              We look forward to welcoming you.
             </p>
           </div>
-          <Button asChild className="rounded-full font-semibold">
-            <a href="/trusted-list/">Go to dashboard</a>
-          </Button>
         </motion.div>
       </AuthCard>
     )
@@ -407,9 +428,87 @@ export function SignupForm({ className }: { className?: string }) {
             onAnswer={setAnswer(2)}
             onBack={() => setStep(4)}
             onNext={handleSubmit}
-            isLast
             isSubmitting={isSubmitting}
           />
+        )}
+
+        {/* ── Step 6: Profile photo ─────────────────────────────────────── */}
+        {step === 6 && (
+          <motion.div key="step-6" variants={stepVariants} initial="initial" animate="animate" exit="exit" className="flex-1 flex flex-col gap-6">
+            <AuthCardHeader title="Add a profile photo" description="Real photos of real people build more trust." />
+
+            <div className="flex flex-col items-center gap-6">
+              <Avatar className="h-28 w-28 border-4 border-primary-foreground shadow-md">
+                <AvatarImage src={photo?.previewUrl} alt="Profile preview" className="object-cover" />
+                <AvatarFallback className="text-3xl select-none">
+                  {(data.firstName[0] ?? '').toUpperCase()}
+                  {(data.lastName[0] ?? '').toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              <div
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handlePhotoDrop}
+                className={cn(
+                  "w-full rounded-2xl border-2 border-dashed transition-colors duration-200 p-8 flex flex-col items-center gap-3 text-center cursor-default",
+                  isDragging ? "border-primary bg-primary/5" : "border-border hover:border-border/60",
+                )}
+              >
+                <ImagePlus className="h-6 w-6 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">
+                  Drag a photo here, or{" "}
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="h-auto p-0 text-sm font-semibold text-foreground"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    browse files
+                  </Button>
+                </p>
+                <p className="text-xs text-muted-foreground">JPG, PNG or GIF · max 5 MB</p>
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) handlePhotoSelect(file)
+                  e.target.value = ''
+                }}
+              />
+            </div>
+
+            <div className="mt-auto flex flex-col gap-4">
+              <div className="flex gap-3">
+                <Button type="button" variant="outline" className="flex-1 rounded-full font-semibold" onClick={() => setStep(5)}>
+                  Back
+                </Button>
+                <Button
+                  type="button"
+                  className="flex-1 rounded-full font-semibold"
+                  disabled={isSubmitting}
+                  onClick={handlePhotoSubmit}
+                >
+                  {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving</> : "Save profile photo"}
+                </Button>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full rounded-full font-semibold"
+                disabled={isSubmitting}
+                onClick={() => setIsSuccess(true)}
+              >
+                Skip for now
+              </Button>
+              <StepIndicator step={6} />
+            </div>
+          </motion.div>
         )}
 
       </AnimatePresence>

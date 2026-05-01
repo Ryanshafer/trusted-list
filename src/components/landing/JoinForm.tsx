@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Loader2, ArrowRight, X } from 'lucide-react';
+import { Check, Loader2, ArrowRight, X, ImagePlus } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Referrer = { firstName: string; lastName: string; id: string };
+type PhotoState = { file: File; previewUrl: string } | null;
 type JoinFormData = {
   firstName: string;
   lastName: string;
@@ -117,9 +119,9 @@ const ReferrerBadge = ({ name }: { name: string }) => (
   </motion.div>
 );
 
-const StepIndicator = ({ step }: { step: 1 | 2 | 3 }) => (
+const StepIndicator = ({ step, total }: { step: number; total: number }) => (
   <div className="flex items-center justify-center gap-1.5 mt-6">
-    {([1, 2, 3] as const).map((s) => (
+    {Array.from({ length: total }, (_, i) => i + 1).map((s) => (
       <div
         key={s}
         className={cn(
@@ -146,7 +148,7 @@ export const JoinForm = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState<JoinFormErrors>({});
 
@@ -162,7 +164,12 @@ export const JoinForm = () => {
     undefined,
   ]);
 
-  const initialInviteRef = React.useRef<InviteState | null>(null);
+  // Step 4 — photo upload
+  const [photo, setPhoto] = useState<PhotoState>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const initialInviteRef = useRef<InviteState | null>(null);
 
   // ── Reset ──────────────────────────────────────────────────────────────────
 
@@ -174,6 +181,9 @@ export const JoinForm = () => {
     setAnswerErrors(EMPTY_ANSWER_ERRORS);
     setIsSubmitting(false);
     setIsSuccess(false);
+    if (photo) URL.revokeObjectURL(photo.previewUrl);
+    setPhoto(null);
+    setIsDragging(false);
   };
 
   const applyInviteState = (invite: InviteState) => {
@@ -256,24 +266,39 @@ export const JoinForm = () => {
     setStep(3);
   };
 
-  const handleStep3Submit = async () => {
+  const handleStep3Submit = () => {
     const newErrors = validateAnswers(answers);
     if (newErrors.some(Boolean)) {
       setAnswerErrors(newErrors);
       return;
     }
     setAnswerErrors(EMPTY_ANSWER_ERRORS);
-    setIsSubmitting(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1800));
-
     if (referrer) {
-      window.location.href = "/trusted-list/";
+      setStep(4);
     } else {
-      setIsSubmitting(false);
       setIsSuccess(true);
     }
+  };
+
+  const handlePhotoSelect = useCallback((file: File) => {
+    if (!file.type.startsWith('image/')) return;
+    setPhoto((prev) => {
+      if (prev) URL.revokeObjectURL(prev.previewUrl);
+      return { file, previewUrl: URL.createObjectURL(file) };
+    });
+  }, []);
+
+  const handlePhotoDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handlePhotoSelect(file);
+  }, [handlePhotoSelect]);
+
+  const handleStep4Submit = async () => {
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    window.location.href = "/trusted-list/";
   };
 
   const handleSkillSelect = useCallback(
@@ -665,6 +690,78 @@ export const JoinForm = () => {
               <Button
                 type="button"
                 onClick={handleStep3Submit}
+                className="w-full h-12 text-base font-bold bg-neutral-900 hover:bg-neutral-800 text-white rounded-full mt-8 leading-none"
+              >
+                Save answers
+              </Button>
+            </motion.div>
+          )}
+
+          {/* ── Step 4: Profile photo ───────────────────────────────────── */}
+          {step === 4 && (
+            <motion.div key="step-4" variants={stepVariants} initial="initial" animate="animate" exit="exit">
+              <div className="my-6">
+                <h2 className="text-3xl font-serif font-normal text-neutral-600">
+                  Add a profile photo
+                </h2>
+                <p className="text-neutral-600">
+                  Real photos of real people build more trust.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-6">
+                {/* Avatar preview */}
+                <Avatar className="h-28 w-28 border-4 border-primary-foreground shadow-md">
+                  <AvatarImage src={photo?.previewUrl} alt="Profile preview" className="object-cover" />
+                  <AvatarFallback className="text-3xl select-none">
+                    {(formData.firstName[0] ?? '').toUpperCase()}
+                    {(formData.lastName[0] ?? '').toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                {/* Drop zone */}
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handlePhotoDrop}
+                  className={cn(
+                    "w-full rounded-2xl border-2 border-dashed transition-colors duration-200 p-8 flex flex-col items-center gap-3 text-center cursor-default",
+                    isDragging
+                      ? "border-primary-500 bg-primary-500/5"
+                      : "border-neutral-200 bg-white/40 hover:border-neutral-300",
+                  )}
+                >
+                  <ImagePlus className="h-6 w-6 text-neutral-400" />
+                  <p className="text-sm text-neutral-500">
+                    Drag a photo here, or{" "}
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="h-auto p-0 text-sm font-semibold text-neutral-700"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      browse files
+                    </Button>
+                  </p>
+                  <p className="text-xs text-neutral-400">JPG, PNG or GIF · max 5 MB</p>
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handlePhotoSelect(file);
+                    e.target.value = '';
+                  }}
+                />
+              </div>
+
+              <Button
+                type="button"
+                onClick={handleStep4Submit}
                 disabled={isSubmitting}
                 className="w-full h-12 text-base font-bold bg-neutral-900 hover:bg-neutral-800 text-white rounded-full mt-8 leading-none"
               >
@@ -674,14 +771,23 @@ export const JoinForm = () => {
                     Saving
                   </>
                 ) : (
-                  "Save answers"
+                  "Save profile photo"
                 )}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isSubmitting}
+                onClick={() => { window.location.href = "/trusted-list/"; }}
+                className="w-full h-12 text-base font-semibold rounded-full leading-none text-neutral-500 mt-3 hover:text-primary-500 hover:bg-primary-500/10"
+              >
+                Skip for now
               </Button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <StepIndicator step={step} />
+        <StepIndicator step={step} total={referrer ? 4 : 3} />
       </motion.div>
     </div>
   );
