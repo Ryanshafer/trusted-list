@@ -126,7 +126,7 @@ function buildColumns(
     {
       id: "holdReason",
       accessorKey: "holdReason",
-      header: () => <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Reason</span>,
+      header: () => <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Notes</span>,
       cell: ({ row }) => <HoldReasonCell reason={row.original.holdReason} />,
       enableSorting: false,
     },
