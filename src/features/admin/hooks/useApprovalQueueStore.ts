@@ -41,13 +41,17 @@ export type ApprovalQueueItem = {
 
 let _items: ApprovalQueueItem[] = queueRaw as ApprovalQueueItem[]
 
+const DEMO_ON_HOLD: Record<string, string> = {
+  "aq-002": "Applicant profile lacks sufficient seniority for the current cohort.",
+  "aq-004": "Needs more demonstrated leadership experience before approval.",
+}
+
 // Initialize some applicants with on-hold status for demo purposes
 function initializeDemoOnHoldApplicants() {
-  const demoOnHoldIds = ["aq-002", "aq-004"] // Place Taylor Kim and Morgan Oakes on hold
-  demoOnHoldIds.forEach(id => {
+  Object.keys(DEMO_ON_HOLD).forEach(id => {
     const entry = _items.find(item => item.id === id)
     if (entry) {
-      upsertApplicantReviewRecord(entry, "on-hold")
+      upsertApplicantReviewRecord(entry, "on-hold", DEMO_ON_HOLD[id])
       _items = _items.filter(item => item.id !== id)
     }
   })

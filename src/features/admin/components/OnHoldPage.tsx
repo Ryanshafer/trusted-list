@@ -56,6 +56,26 @@ import { DEFAULT_ON_HOLD_FILTERS, type OnHoldFilters } from "@/features/admin/li
 import type { EditMember } from "@/features/admin/lib/members-config"
 import type { OnHoldApplicantRow } from "@/features/admin/lib/review-status-types"
 
+function HoldReasonCell({ reason }: { reason?: string }) {
+  const [expanded, setExpanded] = React.useState(false)
+  if (!reason) return <span className="text-sm italic text-muted-foreground opacity-50">No reason provided</span>
+  return (
+    <div className="max-w-[36ch]">
+      <span className="text-sm text-muted-foreground">
+        {expanded ? reason : reason.length > 60 ? `${reason.slice(0, 60)}…` : reason}
+      </span>
+      {reason.length > 60 && (
+        <button
+          onClick={() => setExpanded((v) => !v)}
+          className="ml-1 text-xs font-medium text-foreground underline-offset-2 hover:underline"
+        >
+          {expanded ? "less" : "more"}
+        </button>
+      )}
+    </div>
+  )
+}
+
 function buildColumns(
   onAction: (action: "edit" | "release", applicant: OnHoldApplicantRow) => void
 ): ColumnDef<OnHoldApplicantRow>[] {
@@ -101,6 +121,13 @@ function buildColumns(
       accessorKey: "applicationType",
       header: () => <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Source</span>,
       cell: ({ row }) => <ApplicationTypeBadge applicationType={row.original.applicationType} />,
+      enableSorting: false,
+    },
+    {
+      id: "holdReason",
+      accessorKey: "holdReason",
+      header: () => <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Reason</span>,
+      cell: ({ row }) => <HoldReasonCell reason={row.original.holdReason} />,
       enableSorting: false,
     },
     {

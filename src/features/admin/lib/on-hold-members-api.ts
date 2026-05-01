@@ -30,6 +30,7 @@ function getOnHoldApplicants(): OnHoldApplicantRow[] {
       appliedAt: record.appliedAt,
       inviterName: record.inviter.name,
       recommendationText: record.recommendationText,
+      holdReason: record.holdReason,
     }))
 }
 

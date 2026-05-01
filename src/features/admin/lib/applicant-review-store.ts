@@ -14,6 +14,7 @@ export type ApplicantReviewRecord = {
   recommendationText: string
   applicant: ApprovalQueueItem["applicant"]
   inviter: ApprovalQueueItem["inviter"]
+  holdReason?: string
 }
 
 let _records: ApplicantReviewRecord[] = []
@@ -40,7 +41,7 @@ export function getApplicantReviewRecords(): ApplicantReviewRecord[] {
   return _records
 }
 
-export function upsertApplicantReviewRecord(entry: ApprovalQueueItem, status: Exclude<ApplicantReviewStatus, "pending">): void {
+export function upsertApplicantReviewRecord(entry: ApprovalQueueItem, status: Exclude<ApplicantReviewStatus, "pending">, holdReason?: string): void {
   const nextRecord: ApplicantReviewRecord = {
     id: entry.id,
     applicantId: entry.applicant.id,
@@ -59,6 +60,7 @@ export function upsertApplicantReviewRecord(entry: ApprovalQueueItem, status: Ex
       ...entry.inviter,
       avatarUrl: entry.inviter.avatarUrl ?? null,
     },
+    holdReason,
   }
 
   _records = [..._records.filter((record) => record.id !== entry.id), nextRecord]

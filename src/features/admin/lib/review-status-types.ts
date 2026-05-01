@@ -15,6 +15,7 @@ export type OnHoldApplicantRow = {
   appliedAt: string
   inviterName: string
   recommendationText: string
+  holdReason?: string
 }
 
 export type BannedApplicantRow = {
