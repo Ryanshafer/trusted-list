@@ -199,7 +199,7 @@ export function EditMemberDialog({
       },
   })
 
-  const { watch, setValue, handleSubmit, control } = form
+  const { watch, setValue, handleSubmit, control, formState: { isDirty } } = form
   const hasUnlimitedInvites = watch("hasUnlimitedInvites")
   const currentStatus = watch("status")
   const watchedFirstName = watch("firstName")
@@ -226,11 +226,11 @@ export function EditMemberDialog({
   const handleBanMember = () => {
     if (currentStatus === "banned") {
       // Unban: restore to active status
-      setValue("status", "active")
+      setValue("status", "active", { shouldDirty: true })
       toast.success("Member has been unbanned and access restored")
     } else {
       // Ban: set to banned status
-      setValue("status", "banned")
+      setValue("status", "banned", { shouldDirty: true })
       toast.success("Member has been banned (you can reverse this later)")
     }
     setIsBanDialogOpen(false)
@@ -258,7 +258,7 @@ export function EditMemberDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-2xl overflow-hidden rounded-2xl p-0 gap-0"
+        className="max-w-2xl overflow-hidden rounded-2xl p-0 gap-0 [&>button]:z-20"
         onPointerDownOutside={(e) => {
           const target = e.detail.originalEvent.target as HTMLElement
           if (target.closest("[data-radix-popper-content-wrapper]")) {
@@ -266,6 +266,15 @@ export function EditMemberDialog({
           }
         }}
       >
+
+        {/* ── Unsaved Changes Badge ──────────────────────────────── */}
+        {isDirty && (
+          <div className="absolute top-[14px] right-10 z-10 pointer-events-none">
+            <Badge variant="destructive" className="text-xs font-medium">
+              Unsaved changes
+            </Badge>
+          </div>
+        )}
 
         {/* ── Header ─────────────────────────────────────────────── */}
         <DialogHeader className="px-6 pt-5 pb-4 border-b border-border">
@@ -396,7 +405,7 @@ export function EditMemberDialog({
                   title="Unlimited Invites"
                   description="Allow this member to invite without a cap"
                   checked={hasUnlimitedInvites}
-                  onCheckedChange={(v) => setValue("hasUnlimitedInvites", v)}
+                  onCheckedChange={(v) => setValue("hasUnlimitedInvites", v, { shouldDirty: true })}
                 />
 
                 <FormField control={control} name="inviteQuota" render={({ field }) => (
@@ -440,7 +449,7 @@ export function EditMemberDialog({
                   title="Subscription Active"
                   description="Enable or disable this member's subscription"
                   checked={watch("subscriptionEnabled")}
-                  onCheckedChange={(v) => setValue("subscriptionEnabled", v)}
+                  onCheckedChange={(v) => setValue("subscriptionEnabled", v, { shouldDirty: true })}
                 />
 
                 <FormField control={control} name="subscriptionRenewalDate" render={({ field }) => (
@@ -558,7 +567,7 @@ export function EditMemberDialog({
               className="rounded-full font-semibold"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {isDirty ? "Discard changes" : "Cancel"}
             </Button>
             <Button type="submit" className="rounded-full font-semibold px-6">
               Save Changes
