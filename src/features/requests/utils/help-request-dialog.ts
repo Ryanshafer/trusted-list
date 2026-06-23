@@ -5,6 +5,8 @@ export type DialogErrors = {
   shortDescription?: string;
   requestDetails?: string;
   requestCategories?: string;
+  askMode?: string;
+  context?: string;
 };
 
 export type CreateFormState = {
@@ -12,7 +14,7 @@ export type CreateFormState = {
   requestDetails: string;
   requestCategories: string[];
   selectedContacts: AskContact[];
-  vouchType: "myself" | "skill";
+  vouchType: "myself" | "skill" | "";
 };
 
 export type EditFormState = {

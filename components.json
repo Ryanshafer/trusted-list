@@ -18,5 +18,7 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@jalco": "https://ui.justinlevine.me/r/{name}.json"
+  }
 }

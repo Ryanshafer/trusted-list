@@ -232,7 +232,7 @@
 
   --shadow-2xs: none;
   --shadow-xs: none;
-  --shadow-sm: none;
+  --shadow-sm: var(--shadow-sm);
   --shadow: none;
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);

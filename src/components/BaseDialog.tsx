@@ -4,6 +4,8 @@ import {
   Dialog,
   DialogContent,
   DialogClose,
+  DialogTitle,
+  DialogDescription,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -20,8 +22,9 @@ interface BaseDialogProps {
   onCancel?: () => void;
   onConfirm?: () => void;
   confirmDisabled?: boolean;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
   showCloseButton?: boolean;
+  contentClassName?: string;
 }
 
 export function BaseDialog({
@@ -38,6 +41,7 @@ export function BaseDialog({
   confirmDisabled = false,
   size = "md",
   showCloseButton = true,
+  contentClassName,
 }: BaseDialogProps) {
   const handleCancel = () => {
     onCancel?.();
@@ -55,20 +59,23 @@ export function BaseDialog({
     md: "max-w-md",
     lg: "max-w-lg",
     xl: "max-w-[672px]",
+    "2xl": "max-w-[768px]",
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
         sizeClasses[size],
-        "p-0 gap-0 overflow-hidden rounded-2xl [&>button]:hidden"
+        "top-[10vh] translate-y-0 p-0 gap-0 overflow-hidden rounded-2xl [&>button]:hidden"
       )}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex flex-col gap-0">
-            <h2 className="font-serif text-2xl font-normal leading-8">{title}</h2>
-            {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
+            <DialogTitle className="font-serif text-2xl font-normal leading-8 tracking-normal">{title}</DialogTitle>
+            {description ? (
+              <DialogDescription className="text-sm text-muted-foreground">{description}</DialogDescription>
+            ) : (
+              <DialogDescription className="sr-only">{title}</DialogDescription>
             )}
           </div>
           {showCloseButton && (
@@ -86,7 +93,7 @@ export function BaseDialog({
         </div>
 
         {/* Scrollable content */}
-        <div className="overflow-y-auto max-h-[calc(100vh-220px)] px-6 pt-4 pb-6">
+        <div className={cn("overflow-y-auto max-h-[calc(100vh-220px)] px-6 pt-4 pb-6", contentClassName)}>
           {children}
         </div>
 
